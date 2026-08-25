@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kalkulator Falakiyah Modern & Interaktif (Tema Terang)</title>
+  <title>Kalkulator Falakiyah Modern & Interaktif</title>
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -41,7 +41,6 @@
       overflow-x: hidden;
     }
 
-    /* Glassmorphism Light Card */
     .glass-card {
       background: var(--card-bg);
       backdrop-filter: blur(12px);
@@ -51,7 +50,6 @@
       box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
     }
 
-    /* Custom Light Scrollbar */
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -67,7 +65,6 @@
       background: rgba(99, 102, 241, 0.7);
     }
 
-    /* Soft Glow Animation */
     @keyframes pulse-glow-light {
       0%, 100% { box-shadow: 0 0 12px rgba(79, 70, 229, 0.25); }
       50% { box-shadow: 0 0 20px rgba(79, 70, 229, 0.45); }
@@ -87,7 +84,6 @@
 </head>
 <body class="p-2 sm:p-4 md:p-6 flex flex-col justify-between min-h-screen relative">
 
-  <!-- Toast Notification -->
   <div id="toast" class="fixed top-4 right-4 z-50 transform translate-y-[-100px] opacity-0 transition-all duration-300 bg-emerald-700 text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-2 border border-emerald-500">
     <span id="toastIcon">✨</span>
     <span id="toastMsg" class="text-xs sm:text-sm font-semibold">Notifikasi</span>
@@ -95,7 +91,6 @@
 
   <div class="max-w-[1700px] w-full mx-auto relative z-10 space-y-4 flex-1 flex flex-col justify-between">
     
-    <!-- Header App -->
     <header class="glass-card p-3.5 sm:p-5 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4 border-slate-200">
       <div class="flex items-center gap-3 w-full md:w-auto">
         <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-xl sm:text-2xl shadow-xs shrink-0">
@@ -103,10 +98,10 @@
         </div>
         <div>
           <div class="flex flex-wrap items-center gap-2">
-            <h1 class="text-lg sm:text-2xl font-extrabold text-slate-900 tracking-tight">Kalkulator Falakiyah</h1>
-            <span class="text-[10px] sm:text-xs bg-indigo-100 text-indigo-800 border border-indigo-200 px-2 py-0.5 rounded-full font-bold">Abdul Hannan Achmad Ismail as-Shufy</span>
+            <h1 class="text-lg sm:text-2xl font-extrabold text-slate-900 tracking-tight">Kalkulator Falakiyah Modern</h1>
+            <span class="text-[10px] sm:text-xs bg-indigo-100 text-indigo-800 border border-indigo-200 px-2 py-0.5 rounded-full font-bold">Terrevisi & Presisi Non-Exceed</span>
           </div>
-          <p class="text-xs text-slate-500">Kalkulasi Waktu Sholat Klasik Mikyal & Azimuth Kiblat Presisi (75+ Langkah Rinci)</p>
+          <p class="text-xs text-slate-500">Kalkulasi Waktu Sholat Mikyal & Azimuth Kiblat Presisi (Koreksi LogCos Kiblat, Subuh Dinamis & Non-Exceed Inverse Log)</p>
         </div>
       </div>
       <div class="w-full md:w-auto text-center md:text-right">
@@ -116,13 +111,11 @@
       </div>
     </header>
 
-    <!-- Control Panel / Inputs -->
     <section class="glass-card p-3.5 sm:p-5 space-y-3">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-200">
         <h2 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-indigo-900 flex items-center gap-2">
           <span>⚙️</span> Parameter Perhitungan Hisab & Koordinat Lokasi
         </h2>
-        <!-- GPS Button -->
         <button onclick="getGPSLocation()" class="glow-btn bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-xs w-full sm:w-auto">
           <span>📍</span> Gunakan Lokasi GPS Saya
         </button>
@@ -151,7 +144,7 @@
           </div>
         </div>
 
-        <!-- Lintang Kota (Ardhul Balad) -->
+        <!-- Lintang Kota -->
         <div class="space-y-1">
           <label class="text-xs font-bold text-slate-700 flex justify-between">
             <span>'Ardh Al-Balad (Latitude)</span>
@@ -169,7 +162,7 @@
           </div>
         </div>
 
-        <!-- Bujur Kota (Thul Balad) -->
+        <!-- Bujur Kota -->
         <div class="space-y-1">
           <label class="text-xs font-bold text-slate-700 flex justify-between">
             <span>Thul Al-Balad (Longitude)</span>
@@ -202,11 +195,10 @@
       </div>
     </section>
 
-    <!-- KPI Highlight Hasil Waktu Sholat & Kiblat -->
     <section class="space-y-2">
       <div class="flex items-center justify-between px-1">
         <h2 class="text-xs font-bold uppercase tracking-wider text-indigo-900 flex items-center gap-1.5">
-          <span>🕌</span> Jadwal Waktu Sholat & Kiblat (Hasil Presisi)
+          <span>🕌</span> Jadwal Waktu Sholat & Kiblat (Hasil Presisi Non-Exceed)
         </h2>
         <span class="text-[11px] text-slate-500 hidden sm:inline">Kalkulasi Mikyal & Logaritma Bola</span>
       </div>
@@ -240,7 +232,7 @@
           </div>
         </div>
 
-        <!-- Terbit (Thulu') -->
+        <!-- Terbit -->
         <div class="glass-card p-3 flex flex-col justify-between border-l-4 border-l-yellow-600 bg-yellow-50/40 hover:bg-yellow-50/70 transition-all">
           <div class="flex justify-between items-center text-slate-600 text-[11px] sm:text-xs">
             <span class="font-extrabold text-yellow-900">TERBIT</span>
@@ -305,7 +297,7 @@
           </div>
           <div>
             <div class="text-xs text-emerald-900 font-extrabold uppercase tracking-wider">Arah Kiblat (Samt Al-Qiblah)</div>
-            <div class="text-xs text-slate-600">Sudut kemiringan Azimuth dari titik Utara menuju Barat</div>
+            <div class="text-xs text-slate-600">Sudut azimuth kemiringan titik Utara menuju Barat (LogCos Method Presisi)</div>
           </div>
         </div>
 
@@ -321,19 +313,16 @@
       </div>
     </section>
 
-    <!-- Detailed Step-by-Step Table -->
     <main class="glass-card p-3 sm:p-5 space-y-3 flex-1 flex flex-col">
       <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-slate-200">
         <div>
           <h3 class="text-sm font-extrabold text-slate-900 flex items-center gap-2">
-            <span>📊</span> Tabel Rincian Hisab Falakiyah (75+ Langkah Utuh)
+            <span>📊</span> Tabel Rincian Hisab Falakiyah Lengkap (75+ Langkah Utuh)
           </h3>
           <p class="text-xs text-slate-500">Seluruh urutan rumus, logaritma, busur, hingga lattice visual perkalian 4 (Mikyal)</p>
         </div>
 
-        <!-- Filter & Search Controls -->
         <div class="flex flex-wrap items-center gap-2">
-          <!-- Filter Kategori -->
           <select id="filterKategori" onchange="filterTabel()" class="bg-white border border-slate-300 text-slate-800 text-xs rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-indigo-500 outline-none font-bold shadow-2xs flex-1 sm:flex-none">
             <option value="ALL">Semua Langkah (Lengkap)</option>
             <option value="AWAL">1. Data Awal & Syams</option>
@@ -343,7 +332,6 @@
             <option value="KIBLAT">5. Detail Arah Kiblat</option>
           </select>
 
-          <!-- Search Box -->
           <input type="text" id="searchTabel" onkeyup="filterTabel()" placeholder="Cari istilah / arab..." class="bg-white border border-slate-300 text-slate-800 text-xs rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-indigo-500 outline-none w-full sm:w-44 shadow-2xs">
           
           <div class="text-[11px] bg-indigo-50 text-indigo-900 border border-indigo-200 px-2.5 py-1 rounded-lg font-mono font-bold">
@@ -352,7 +340,6 @@
         </div>
       </div>
 
-      <!-- Table responsive scroll container -->
       <div class="overflow-x-auto rounded-xl border border-slate-200 max-h-[580px] bg-white shadow-2xs">
         <table class="w-full text-left text-xs text-slate-700 border-collapse min-w-[700px]">
           <thead class="bg-slate-100 text-slate-800 sticky top-0 z-20 uppercase font-extrabold text-[11px] border-b border-slate-300">
@@ -375,7 +362,6 @@
     </main>
   </div>
 
-  <!-- Interactive Detail Modal -->
   <div id="infoModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs hidden flex items-center justify-center p-3 sm:p-4" onclick="closeModal(event)">
     <div class="glass-card modal-bounce max-w-lg w-full p-4 sm:p-6 space-y-4 border border-indigo-200 shadow-2xl relative bg-white" onclick="event.stopPropagation()">
       <button onclick="closeModalDirect()" class="absolute top-3 right-3 text-slate-400 hover:text-slate-800 text-2xl font-bold transition-colors">&times;</button>
@@ -403,7 +389,6 @@
   </div>
 
   <script>
-    // PRESET DATA KOTA CEPAT
     const PRESET_KOTA = {
       surabaya: { latDeg: 7, latMin: 39, latArah: "SELATAN", longDeg: 112, longMin: 45, longArah: "TIMUR" },
       jakarta: { latDeg: 6, latMin: 12, latArah: "SELATAN", longDeg: 106, longMin: 49, longArah: "TIMUR" },
@@ -413,7 +398,6 @@
       makkah: { latDeg: 21, latMin: 25, latArah: "UTARA", longDeg: 39, longMin: 49, longArah: "TIMUR" }
     };
 
-    // DATABASE ACUAN BULAN
     const DATABASE_BULAN = {
       4:  { nama: "April",     buruj: 0,  tafawut: 10, dBuruj: 0,  arah: "UTARA" },
       5:  { nama: "Mei",       buruj: 1,  tafawut: 9,  dBuruj: 30, arah: "UTARA" },
@@ -444,7 +428,6 @@
       { dBuruj: 60, arah: "SELATAN" }
     ];
 
-    // FUNGSI TRIGONOMETRI & LOGARITMA FALAK
     function calcLogSin(degFloat) {
       const rad = (degFloat * Math.PI) / 180;
       return 10 + Math.log10(Math.sin(rad));
@@ -465,20 +448,33 @@
       return 1 / Math.tan(rad);
     }
 
+    // TERREVISI: Mencegah nilai log/trig yang terpilih MELEBIHI target angka penjumlahan
     function invLogSin(logVal) {
       let target = parseFloat(logVal.toFixed(5));
       let bestD = 0, bestM = 0;
       for (let d = 0; d < 90; d++) {
         for (let m = 0; m < 60; m++) {
-          let currentLog = parseFloat(calcLogSin(d + m / 60).toFixed(5));
-          if (currentLog <= target) {
-            bestD = d; bestM = m;
-          } else {
-            return { deg: bestD, min: bestM };
+          let currentLog = calcLogSin(d + m / 60);
+          if (currentLog <= target + 1e-7) {
+            bestD = d;
+            bestM = m;
           }
         }
       }
       return { deg: bestD, min: bestM };
+    }
+
+    function invLogCos(logVal) {
+      let target = parseFloat(logVal.toFixed(5));
+      for (let d = 0; d < 90; d++) {
+        for (let m = 0; m < 60; m++) {
+          let currentLog = calcLogCos(d + m / 60);
+          if (currentLog <= target + 1e-7) {
+            return { deg: d, min: m };
+          }
+        }
+      }
+      return { deg: 89, min: 59 };
     }
 
     function invSin(sinVal) {
@@ -486,11 +482,10 @@
       let bestD = 0, bestM = 0;
       for (let d = 0; d < 90; d++) {
         for (let m = 0; m < 60; m++) {
-          let currentSin = parseFloat(calcSin(d + m / 60).toFixed(5));
-          if (currentSin <= target) {
-            bestD = d; bestM = m;
-          } else {
-            return { deg: bestD, min: bestM };
+          let currentSin = calcSin(d + m / 60);
+          if (currentSin <= target + 1e-7) {
+            bestD = d;
+            bestM = m;
           }
         }
       }
@@ -499,17 +494,15 @@
 
     function invCot(cotVal) {
       let target = parseFloat(cotVal.toFixed(5));
-      let bestD = 1, bestM = 0;
       for (let d = 1; d < 90; d++) {
         for (let m = 0; m < 60; m++) {
-          let currentCot = parseFloat(calcCot(d + m / 60).toFixed(5));
-          if (currentCot <= target) {
+          let currentCot = calcCot(d + m / 60);
+          if (currentCot <= target + 1e-7) {
             return { deg: d, min: m };
           }
-          bestD = d; bestM = m;
         }
       }
-      return { deg: bestD, min: bestM };
+      return { deg: 89, min: 59 };
     }
 
     function addDms(d1, m1, d2, m2) {
@@ -523,7 +516,6 @@
       return { deg: Math.floor(totalMin / 60), min: totalMin % 60 };
     }
 
-    // VISUALISASI KOTAK MIKYAL / GARIS MIRING PERKALIAN 4 (SVG DIAGONAL GRID TEMA TERANG)
     function convertLattice4(deg, min) {
       let minMult = min * 4;
       let minCarry = Math.floor(minMult / 60);
@@ -537,7 +529,7 @@
       let menitSum = minCarry + degRem;
       let jamCarry = Math.floor(menitSum / 60);
       let menit = menitSum % 60;
-      let jam = degCarry + jamCarry;
+      let jam = (degCarry + jamCarry) % 24;
 
       return {
         degCarry, degRem,
@@ -629,7 +621,6 @@
 
     let globalRows = [];
 
-    // PROSES PERHITUNGAN UTAMA FALAKIAH LENGKAP TANPA DILONCATI
     function hitungFalak() {
       const tglInput = parseInt(document.getElementById('tanggal')?.value) || 19;
       const blnInput = parseInt(document.getElementById('bulan')?.value) || 9;
@@ -752,8 +743,8 @@
         R.qausHaqiqiDeg = qausHaqiqiRes.deg; R.qausHaqiqiMin = qausHaqiqiRes.min;
       }
 
-      let qausMaraiRes = addDms(R.qausHaqiqiDeg, R.qausHaqiqiMin, R.tamkiniyahDeg, R.tamkiniyahMin);
-      R.qausMaraiDeg = qausMaraiRes.deg; R.qausMaraiMin = qausMaraiRes.min;
+      R.qausMaraiRes = addDms(R.qausHaqiqiDeg, R.qausHaqiqiMin, R.tamkiniyahDeg, R.tamkiniyahMin);
+      R.qausMaraiDeg = R.qausMaraiRes.deg; R.qausMaraiMin = R.qausMaraiRes.min;
       R.maghribBox = convertLattice4(R.qausMaraiDeg, R.qausMaraiMin);
 
       let qausThuluRes = subDms(180, 0, R.qausMaraiDeg, R.qausMaraiMin);
@@ -789,7 +780,7 @@
       R.awalIsyaDeg = awalIsyaRes.deg; R.awalIsyaMin = awalIsyaRes.min;
       R.isyaBox = convertLattice4(R.awalIsyaDeg, R.awalIsyaMin);
 
-      // 6. INKHIFADH SUBH
+      // 6. INKHIFADH SUBH (TERREVISI: Nishf Qaus Al-Lail Al-Mar'i Dinamis dari Qaus Thulu')
       R.inkhifadhSubhDeg = 19; R.inkhifadhSubhMin = 0; R.logSinSubhPaten = 9.51264;
       R.logSinBaqiSubh = (R.logSinSubhPaten + 10) - R.logSinAslMutlaq;
       const baqiSubhDms = invLogSin(R.logSinBaqiSubh);
@@ -813,8 +804,11 @@
         R.hishshahFajrDeg = res.deg; R.hishshahFajrMin = res.min;
       }
 
-      R.patenSubhDeg = 89; R.patenSubhMin = 12;
-      let awalSubhRes = subDms(R.patenSubhDeg, R.patenSubhMin, R.hishshahFajrDeg, R.hishshahFajrMin);
+      // REVISI CATATAN: Mengambil derajat & menit نِصْف قَوْس اللَيْل المَرْئِيْ dari hasil Qaus Thulu' di atas
+      R.nishfQausLailDeg = R.qausThuluDeg; 
+      R.nishfQausLailMin = R.qausThuluMin;
+
+      let awalSubhRes = subDms(R.nishfQausLailDeg, R.nishfQausLailMin, R.hishshahFajrDeg, R.hishshahFajrMin);
       R.awalSubhDeg = awalSubhRes.deg; R.awalSubhMin = awalSubhRes.min;
       R.subhBox = convertLattice4(R.awalSubhDeg, R.awalSubhMin);
 
@@ -872,7 +866,7 @@
       R.dairBainAsrMaghribDeg = dairBainAsrMaghribRes.deg; R.dairBainAsrMaghribMin = dairBainAsrMaghribRes.min;
       R.bainAsrMaghribBox = convertLattice4(R.dairBainAsrMaghribDeg, R.dairBainAsrMaghribMin);
 
-      // 9. PERHITUNGAN SAMT AL-QIBLAH (ARAH KIBLAT DETAIL)
+      // 9. PERHITUNGAN SAMT AL-QIBLAH (TERREVISI: LOGCOS METODE & INVERSE LOGCOS)
       R.thulBaladKotaDeg = longDegInput; R.thulBaladKotaMin = longMinInput;
       R.thulBaladMakkahDeg = 39; R.thulBaladMakkahMin = 57;
 
@@ -933,11 +927,13 @@
 
       R.logCosIrtifaKiblat = calcLogCos(R.irtifaKiblatDeg + R.irtifaKiblatMin / 60);
 
-      R.logSinSamtQiblah = (R.logSinMajmu2Kiblat + 10) - R.logCosIrtifaKiblat;
-      const samtQiblahDms = invLogSin(R.logSinSamtQiblah);
-      R.samtQiblahDeg = samtQiblahDms.deg; R.samtQiblahMin = samtQiblahDms.min;
+      // REVISI CATATAN: Menggunakan LOGCOS (bukan LOGSIN) untuk Samt Qiblah
+      R.logCosSamtQiblah = (R.logSinMajmu2Kiblat + 10) - R.logCosIrtifaKiblat;
+      const samtQiblahDms = invLogCos(R.logCosSamtQiblah);
+      R.samtQiblahDeg = samtQiblahDms.deg; 
+      R.samtQiblahMin = samtQiblahDms.min;
 
-      // UPDATE TOP KPI CARDS RESULT
+      // UPDATE DISPLAY HASIL SHOLAT & KIBLAT
       const pad = (n) => String(n).padStart(2, '0');
       document.getElementById('resSubuh').innerText = `${pad(R.subhBox.jam)}:${pad(R.subhBox.menit)}:${pad(R.subhBox.detik)}`;
       document.getElementById('resDhuha').innerText = `${pad(R.jamDhuha)}:${pad(R.menitDhuha)}:${pad(R.detikDhuha)}`;
@@ -948,7 +944,6 @@
       
       document.getElementById('resQiblah').innerText = `${R.samtQiblahDeg}° ${R.samtQiblahMin}' UB`;
 
-      // REKONSTRUKSI SELURUH 75+ BARIS TABEL 100% UTUH BEBAS DILONCATI
       globalRows = [
         // --- KATEGORI 1: DATA AWAL & SYAMS ---
         { kat: "AWAL", op: "", logType: "-", logVal: "-", buruj: "-", deg: R.tgl, min: "-", sec: "-", label: "تَاغْكَالْ", title: "Tanggal Acuan Masehi", desc: "Tanggal input untuk perhitungan posisi matahari." },
@@ -999,7 +994,7 @@
         { kat: "QAUS", op: "=", logType: "-", logVal: "-", buruj: "", deg: R.tamkiniyahDeg, min: R.tamkiniyahMin, sec: "00", label: "تَمْكِيْنِيَّة", title: "Tamkiniyah (Koreksi Pengamatan)", desc: "Hasil koreksi Tamkiniyah ikhtilaf terbit/terbenam." },
         { kat: "QAUS", op: "=", logType: "-", logVal: "-", buruj: "", deg: R.qausHaqiqiDeg, min: R.qausHaqiqiMin, sec: "00", label: "قَوْس حَقِيْقِي", title: "Qaus Haqiqi", desc: "Busur siang/malam sejati (90° ± Nishf Fadhlah)." },
 
-        // --- KATEGORI 4: WAKTU SHOLAT & MIKYAL (LATTICE X4) ---
+        // --- KATEGORI 4: WAKTU SHOLAT & MIKYAL (REVISI SUBUH DINAMIS) ---
         { kat: "SHOLAT", op: "=", logType: "-", logVal: "-", buruj: "", deg: R.qausMaraiDeg, min: R.qausMaraiMin, sec: "00", label: "قَوْس مَرْئِي مَغْرِب", title: "Qaus Mar'i Maghrib", desc: "Busur pengamatan Maghrib (Qaus Haqiqi + Tamkiniyah)." },
         { kat: "SHOLAT", op: "X4", logType: "MIKYAL", logVal: "X4", buruj: "", deg: R.maghribBox.jam, min: R.maghribBox.menit, sec: R.maghribBox.detik, customWidget: R.maghribBox.svgHtml, label: "جامِيا مَغْرِب", title: "Jam'iya Maghrib (Waktu Maghrib)", desc: `Perkalian 4 busur Maghrib = ${pad(R.maghribBox.jam)}:${pad(R.maghribBox.menit)}:${pad(R.maghribBox.detik)}` },
         
@@ -1018,12 +1013,13 @@
 
         { kat: "SHOLAT", op: "", logType: "-", logVal: "-", buruj: "", deg: R.inkhifadhSubhDeg, min: R.inkhifadhSubhMin, sec: "00", label: "إِنْخِفَاض صُبْح", title: "Inkhifadh Subh (19°)", desc: "Sudut fajar sadiq di bawah horizon untuk awal Subuh." },
         { kat: "SHOLAT", op: "", logType: "LOGSIN", logVal: R.logSinSubhPaten.toFixed(5), buruj: "", deg: 19, min: 0, sec: "00", label: "لوج جيب ١٩", title: "LogSin Paten 19°", desc: "LogSin dari sudut 19°." },
-        { kat: "SHOLAT", op: "=", logType: "LOGSIN", logVal: R.logSinBaqiSubh.toFixed(5), buruj: "", deg: R.baqiSubhDeg, min: R.baqiSubhDeg, sec: "00", label: "بَقِي صُبْح", title: "Baqi Subh", desc: "Baqi Subuh hasil pengurangan Asl Mutlaq." },
+        { kat: "SHOLAT", op: "=", logType: "LOGSIN", logVal: R.logSinBaqiSubh.toFixed(5), buruj: "", deg: R.baqiSubhDeg, min: R.baqiSubhMin, sec: "00", label: "بَقِي صُبْح", title: "Baqi Subh", desc: "Baqi Subuh hasil pengurangan Asl Mutlaq." },
         { kat: "SHOLAT", op: "", logType: "SIN", logVal: R.sinBaqiSubh.toFixed(5), buruj: "", deg: R.baqiSubhDeg, min: R.baqiSubhMin, sec: "00", label: "جيب بَقِي صُبْح", title: "Sin Baqi Subh", desc: "Sinus murni Baqi Subh." },
         { kat: "SHOLAT", op: "=", logType: "SIN", logVal: R.sinHasilSubh.toFixed(5), buruj: "", deg: R.hasilSubhDeg, min: R.hasilSubhMin, sec: "00", label: "حاصِل صُبْح", title: "Hasil Subh (Deg/Min)", desc: "Sinus hasil penyesuaian fajar." },
         { kat: "SHOLAT", op: "=", logType: "-", logVal: "-", buruj: "", deg: R.hishshahFajrDeg, min: R.hishshahFajrMin, sec: "00", label: "حِصَّة الفَجْر", title: "Hishshah Al-Fajr", desc: "Durasi waktu fajar sadiq sebelum terbit." },
-        { kat: "SHOLAT", op: "", logType: "-", logVal: "-", buruj: "", deg: R.patenSubhDeg, min: R.patenSubhMin, sec: "00", label: "قَاعِدَة ٨٩°١٢", title: "Qaidah Paten Subh (89° 12')", desc: "Konstanta acuan busur malam Subuh." },
-        { kat: "SHOLAT", op: "=", logType: "-", logVal: "-", buruj: "", deg: R.awalSubhDeg, min: R.awalSubhMin, sec: "00", label: "قَوْس أَوَّل صُبْح", title: "Qaus Awal Subh", desc: "Busur total awal Subuh (89° 12' - Hishshah Fajr)." },
+        // REVISI CATATAN: Mengambil derajat & menit Nishf Qaus Al-Lail Al-Mar'i secara dinamis dari Qaus Thulu'
+        { kat: "SHOLAT", op: "", logType: "-", logVal: "-", buruj: "", deg: R.nishfQausLailDeg, min: R.nishfQausLailMin, sec: "00", label: "نِصْف قَوْس اللَيْل المَرْئِيْ", title: "Nishf Qaus Al-Lail Al-Mar'i (Revisi Dinamis)", desc: "Derajat & Menit Nishf Qaus Al-Lail Al-Mar'i yang diambil dari hasil Qaus Thulu' di atas (180° - Qaus Mar'i Maghrib) secara dinamis." },
+        { kat: "SHOLAT", op: "=", logType: "-", logVal: "-", buruj: "", deg: R.awalSubhDeg, min: R.awalSubhMin, sec: "00", label: "قَوْس أَوَّل صُبْح", title: "Qaus Awal Subh", desc: "Busur total awal Subuh (Nishf Qaus Al-Lail Al-Mar'i - Hishshah Fajr)." },
         { kat: "SHOLAT", op: "X4", logType: "MIKYAL", logVal: "X4", buruj: "", deg: R.subhBox.jam, min: R.subhBox.menit, sec: R.subhBox.detik, customWidget: R.subhBox.svgHtml, label: "جامِيا صُبْح", title: "Jam'iya Subh (Waktu Subuh)", desc: `Waktu Subuh = ${pad(R.subhBox.jam)}:${pad(R.subhBox.menit)}:${pad(R.subhBox.detik)}` },
 
         { kat: "SHOLAT", op: "", logType: "-", logVal: "-", buruj: "", deg: R.irtifaDhuhaDeg, min: R.irtifaDhuhaMin, sec: "00", label: "إِرْتِفَاع ضُحَى", title: "Irtifa' Dhuha (4° 30')", desc: "Ketinggian matahari minimal saat Dhuha." },
@@ -1044,7 +1040,7 @@
         { kat: "SHOLAT", op: "X4", logType: "MIKYAL", logVal: "X4", buruj: "", deg: R.asrBox.jam, min: R.asrBox.menit, sec: R.asrBox.detik, customWidget: R.asrBox.svgHtml, label: "جامِيا عصر", title: "Jam'iya 'Asr (Waktu Asar)", desc: `Waktu Asar = ${pad(R.asrBox.jam)}:${pad(R.asrBox.menit)}:${pad(R.asrBox.detik)}` },
         { kat: "SHOLAT", op: "X4", logType: "MIKYAL", logVal: "X4", buruj: "", deg: R.bainAsrMaghribBox.jam, min: R.bainAsrMaghribBox.menit, sec: R.bainAsrMaghribBox.detik, customWidget: R.bainAsrMaghribBox.svgHtml, label: "جامِيا بَيْنَ العَصْرِ وَالمَغْرِب", title: "Jam Bainal 'Asri Wal Maghrib", desc: "Durasi rentang waktu antara Asar dan Maghrib." },
 
-        // --- KATEGORI 5: DETAIL PERHITUNGAN ARAH KIBLAT (SAMT AL-QIBLAH) ---
+        // --- KATEGORI 5: DETAIL PERHITUNGAN ARAH KIBLAT TERREVISI (LOGCOS SAMT QIBLAH) ---
         { kat: "KIBLAT", op: "", logType: "-", logVal: "-", buruj: "", deg: R.thulBaladKotaDeg, min: R.thulBaladKotaMin, sec: "00", label: "طُوْل البَلَد الكَوْتَا", title: "Thul Al-Balad Kota", desc: "Bujur geografis lokasi pengguna." },
         { kat: "KIBLAT", op: "-", logType: "-", logVal: "-", buruj: "", deg: R.thulBaladMakkahDeg, min: R.thulBaladMakkahMin, sec: "00", label: "طُوْل البَلَد مَكَّة", title: "Thul Al-Balad Makkah (39° 57')", desc: "Bujur geografis Ka'bah Makkah Al-Mukarramah." },
         { kat: "KIBLAT", op: "=", logType: "-", logVal: "-", buruj: "", deg: R.fadhlThulDeg, min: R.fadhlThulMin, sec: "00", label: "فَضْل الطُّوْل", title: "Fadhl Ath-Thul", desc: "Selisih bujur antara lokasi pengguna dan Ka'bah Makkah." },
@@ -1052,117 +1048,124 @@
         { kat: "KIBLAT", op: "+", logType: "LOGSIN", logVal: R.logSinArdhMakkah.toFixed(5), buruj: "", deg: R.ardhMakkahDeg, min: R.ardhMakkahMin, sec: "00", label: "عَرْض مَكَّة (٢١° ٣٠)", title: "'Ardh Makkah (21° 30')", desc: "LogSin Lintang Ka'bah Makkah (9.56408)." },
         { kat: "KIBLAT", op: "=", logType: "LOGSIN", logVal: R.logSinBudQutrKiblat.toFixed(5), buruj: "", deg: R.budQutrKiblatDeg, min: R.budQutrKiblatMin, sec: "00", label: "بُعْد القُطْر قِبْلَة", title: "Bu'd Al-Qutr Kiblat", desc: "LogSin Lintang Kota + LogSin Lintang Makkah." },
         { kat: "KIBLAT", op: "", logType: "LOGCOS", logVal: R.logCosArdhBaladKiblat.toFixed(5), buruj: "", deg: R.latDeg, min: R.latMin, sec: "00", label: "لوج جيب تمام عَرْض البَلَد", title: "LogCos 'Ardh Balad", desc: "LogCos Lintang Kota." },
-        { kat: "KIBLAT", op: "+", logType: "LOGCOS", logVal: "9.96868", buruj: "", deg: 21, min: 30, sec: "00", label: "لوج جيب تمام عَرْض مَكَّة", title: "LogCos 'Ardh Makkah (9.96868)", desc: "LogCos Lintang Makkah." },
-        { kat: "KIBLAT", op: "=", logType: "LOGSIN", logVal: R.logSinAslMutlaqKiblat.toFixed(5), buruj: "", deg: R.aslMutlaqKiblatDeg, min: R.aslMutlaqKiblatMin, sec: "00", label: "الأصْل المُطْلَق قِبْلَة", title: "Al-Asl Al-Mutlaq Kiblat", desc: "LogCos Lintang Kota + LogCos Lintang Makkah." },
-        { kat: "KIBLAT", op: "=", logType: "LOGSIN", logVal: R.logSinNishfFadhlahKiblat.toFixed(5), buruj: "", deg: R.nishfFadhlahKiblatDeg, min: R.nishfFadhlahKiblatMin, sec: "00", label: "نِصْف الفَضْلَة قِبْلَة", title: "Nishf Al-Fadhlah Kiblat", desc: "LogSin Bu'd Qutr Kiblat dikurangi LogSin Asl Mutlaq Kiblat." },
-        { kat: "KIBLAT", op: "=", logType: "-", logVal: "-", buruj: "", deg: R.qausNaharKiblatDeg, min: R.qausNaharKiblatMin, sec: "00", label: "قَوْس النَهار قِبْلَة", title: "Qaus An-Nahar Kiblat", desc: "Busur siang kiblat (90° - Nishf Fadhlah Kiblat)." },
-        { kat: "KIBLAT", op: "", logType: "LOGCOS", logVal: R.logCosFadhlThul.toFixed(5), buruj: "", deg: R.fadhlThulDeg, min: R.fadhlThulMin, sec: "00", label: "لوج جيب تمام فَضْل الطُّوْل", title: "LogCos Fadhl Ath-Thul", desc: "LogCos selisih bujur Makkah & kota." },
-        { kat: "KIBLAT", op: "+", logType: "LOGSIN", logVal: R.logSinAslMutlaqKiblat.toFixed(5), buruj: "", deg: R.aslMutlaqKiblatDeg, min: R.aslMutlaqKiblatMin, sec: "00", label: "الأصْل المُطْلَق قِبْلَة", title: "Penambahan Asl Mutlaq Kiblat", desc: "LogCos Fadhl Thul + LogSin Asl Mutlaq Kiblat." },
-        { kat: "KIBLAT", op: "=", logType: "LOGSIN", logVal: R.logSinMajmu1Kiblat.toFixed(5), buruj: "", deg: R.majmu1KiblatDeg, min: R.majmu1KiblatMin, sec: "00", label: "مَجْمُوْع ١ قِبْلَة", title: "Majmu' 1 Kiblat", desc: "Inverse LogSin hasil penjumlahan di atas." },
-        { kat: "KIBLAT", op: "", logType: "SIN", logVal: R.sinMajmu1Kiblat.toFixed(5), buruj: "", deg: R.majmu1KiblatDeg, min: R.majmu1KiblatMin, sec: "00", label: "جيب مَجْمُوْع ١ قِبْلَة", title: "Sin Majmu' 1 Kiblat", desc: "Sinus murni Majmu 1 Kiblat." },
-        { kat: "KIBLAT", op: "-", logType: "SIN", logVal: R.sinBudQutrKiblat.toFixed(5), buruj: "", deg: R.budQutrKiblatDeg, min: R.budQutrKiblatMin, sec: "00", label: "جيب بُعْد القُطْر قِبْلَة", title: "Sin Bu'd Qutr Kiblat", desc: "Pengurangan dengan Sinus Bu'd Qutr Kiblat." },
-        { kat: "KIBLAT", op: "=", logType: "SIN", logVal: R.sinIrtifaKiblat.toFixed(5), buruj: "", deg: R.irtifaKiblatDeg, min: R.irtifaKiblatMin, sec: "00", label: "إِرْتِفَاع قِبْلَة", title: "Irtifa' Kiblat", desc: "Ketinggian busur azimuth sudut Kiblat." },
-        { kat: "KIBLAT", op: "", logType: "LOGSIN", logVal: R.logSinFadhlThul.toFixed(5), buruj: "", deg: R.fadhlThulDeg, min: R.fadhlThulMin, sec: "00", label: "لوج جيب فَضْل الطُّوْل", title: "LogSin Fadhl Ath-Thul", desc: "LogSin selisih bujur Makkah." },
-        { kat: "KIBLAT", op: "+", logType: "LOGCOS", logVal: "9.96868", buruj: "", deg: 21, min: 30, sec: "00", label: "لوج جيب تمام عَرْض مَكَّة", title: "LogCos 'Ardh Makkah", desc: "Penambahan LogCos Lintang Makkah (9.96868)." },
-        { kat: "KIBLAT", op: "=", logType: "LOGSIN", logVal: R.logSinMajmu2Kiblat.toFixed(5), buruj: "", deg: R.majmu2KiblatDeg, min: R.majmu2KiblatMin, sec: "00", label: "مَجْمُوْع ٢ قِبْلَة", title: "Majmu' 2 Kiblat", desc: "LogCos Lintang Makkah + LogSin Fadhl Thul." },
-        { kat: "KIBLAT", op: "-", logType: "LOGCOS", logVal: R.logCosIrtifaKiblat.toFixed(5), buruj: "", deg: R.irtifaKiblatDeg, min: R.irtifaKiblatMin, sec: "00", label: "لوج جيب تمام إِرْتِفَاع قِبْلَة", title: "LogCos Irtifa' Kiblat", desc: "Pengurangan LogCos Irtifa Kiblat." },
-        { kat: "KIBLAT", op: "=", logType: "LOGSIN", logVal: R.logSinSamtQiblah.toFixed(5), buruj: "", deg: R.samtQiblahDeg, min: R.samtQiblahMin, sec: "00", label: "سَمْتُ القِبْلَة", title: "Samt Al-Qiblah (Arah Kiblat)", desc: `Hasil akhir azimuth Kiblat: ${R.samtQiblahDeg}° ${R.samtQiblahMin}' diukur dari titik Utara ke Barat (Utara-Barat).` }
+        { kat: "KIBLAT", op: "+", logType: "LOGCOS", logVal: R.logCosArdhMakkah.toFixed(5), buruj: "", deg: R.ardhMakkahDeg, min: R.ardhMakkahMin, sec: "00", label: "لوج جيب تمام عَرْض مَكَّة", title: "LogCos 'Ardh Makkah", desc: "LogCos Lintang Makkah (9.96868)." },
+        { kat: "KIBLAT", op: "=", logType: "LOGSIN", logVal: R.logSinAslMutlaqKiblat.toFixed(5), buruj: "", deg: R.aslMutlaqKiblatDeg, min: R.aslMutlaqKiblatMin, sec: "00", label: "الأصْل المُطْلَق قِبْلَة", title: "Asl Mutlaq Kiblat", desc: "Penjumlahan LogCos Lintang Kota + LogCos Lintang Makkah." },
+        { kat: "KIBLAT", op: "=", logType: "LOGSIN", logVal: R.logSinNishfFadhlahKiblat.toFixed(5), buruj: "", deg: R.nishfFadhlahKiblatDeg, min: R.nishfFadhlahKiblatMin, sec: "00", label: "نِصْف الفَضْلَة قِبْلَة", title: "Nishf Fadhlah Kiblat", desc: "LogSin Bu'd Qutr Kiblat dikurangi LogSin Asl Mutlaq Kiblat." },
+        { kat: "KIBLAT", op: "=", logType: "-", logVal: "-", buruj: "", deg: R.qausNaharKiblatDeg, min: R.qausNaharKiblatMin, sec: "00", label: "قَوْس النَّهَار قِبْلَة", title: "Qaus Nahar Kiblat", desc: "90° dikurangi Nishf Fadhlah Kiblat." },
+        { kat: "KIBLAT", op: "", logType: "LOGCOS", logVal: R.logCosFadhlThul.toFixed(5), buruj: "", deg: R.fadhlThulDeg, min: R.fadhlThulMin, sec: "00", label: "لوج جيب تمام فَضْل الطُّوْل", title: "LogCos Fadhl Ath-Thul", desc: "LogCos dari selisih bujur kota dan Makkah." },
+        { kat: "KIBLAT", op: "=", logType: "LOGSIN", logVal: R.logSinMajmu1Kiblat.toFixed(5), buruj: "", deg: R.majmu1KiblatDeg, min: R.majmu1KiblatMin, sec: "00", label: "مُجْتَمَع ١ قِبْلَة", title: "Majmu' 1 Kiblat", desc: "LogCos Fadhl Thul + LogSin Asl Mutlaq Kiblat." },
+        { kat: "KIBLAT", op: "=", logType: "SIN", logVal: R.sinIrtifaKiblat.toFixed(5), buruj: "", deg: R.irtifaKiblatDeg, min: R.irtifaKiblatMin, sec: "00", label: "إِرْتِفَاع قِبْلَة", title: "Irtifa' Kiblat", desc: "Ketinggian sudut busur kiblat di atas horizon." },
+        { kat: "KIBLAT", op: "", logType: "LOGSIN", logVal: R.logSinFadhlThul.toFixed(5), buruj: "", deg: R.fadhlThulDeg, min: R.fadhlThulMin, sec: "00", label: "لوج جيب فَضْل الطُّوْل", title: "LogSin Fadhl Ath-Thul", desc: "LogSin dari selisih bujur kota dan Makkah." },
+        { kat: "KIBLAT", op: "=", logType: "LOGSIN", logVal: R.logSinMajmu2Kiblat.toFixed(5), buruj: "", deg: R.majmu2KiblatDeg, min: R.majmu2KiblatMin, sec: "00", label: "مُجْتَمَع ٢ قِبْلَة", title: "Majmu' 2 Kiblat", desc: "LogCos Lintang Makkah + LogSin Fadhl Thul." },
+        { kat: "KIBLAT", op: "", logType: "LOGCOS", logVal: R.logCosIrtifaKiblat.toFixed(5), buruj: "", deg: R.irtifaKiblatDeg, min: R.irtifaKiblatMin, sec: "00", label: "لوج جيب تمام إِرْتِفَاع", title: "LogCos Irtifa' Kiblat", desc: "Logaritma Kosinus dari Ketinggian Kiblat." },
+        // REVISI CATATAN: LogCos Samt Al-Qiblah dan pencarian derajat/menitnya dari LogCos (invLogCos)
+        { kat: "KIBLAT", op: "=", logType: "LOGCOS", logVal: R.logCosSamtQiblah.toFixed(5), buruj: "", deg: R.samtQiblahDeg, min: R.samtQiblahMin, sec: "00", label: "سَمْتُ القِبْلَة (لوج جيب تمام)", title: "Samt Al-Qiblah (Metode LogCos Terrevisi)", desc: "Hasil LogCos Samt Qiblah (LogSin Majmu 2 - LogCos Irtifa Kiblat), lalu dicari derajat dan menitnya menggunakan Inverse LogCos (invLogCos)." }
       ];
 
-      renderTabelRows();
+      renderTabel();
     }
 
-    // FILTER DAN RENDER ROW TABEL UNTUK TEMA TERANG
-    function filterTabel() {
-      renderTabelRows();
-    }
-
-    function renderTabelRows() {
-      const kat = document.getElementById('filterKategori')?.value || 'ALL';
-      const query = (document.getElementById('searchTabel')?.value || '').toLowerCase();
-      
+    function renderTabel() {
       const tbody = document.getElementById('falakBody');
-      tbody.innerHTML = '';
+      const searchVal = document.getElementById('searchTabel')?.value?.toLowerCase() || "";
+      const katVal = document.getElementById('filterKategori')?.value || "ALL";
 
-      let filtered = globalRows.filter(row => {
-        const matchKat = (kat === 'ALL') || (row.kat === kat);
-        const matchSearch = row.title.toLowerCase().includes(query) || 
-                            row.label.toLowerCase().includes(query) || 
-                            row.desc.toLowerCase().includes(query);
-        return matchKat && matchSearch;
-      });
+      tbody.innerHTML = "";
+      let count = 0;
 
-      document.getElementById('rowCount').innerText = filtered.length;
+      globalRows.forEach((r, idx) => {
+        if (katVal !== "ALL" && r.kat !== katVal) return;
 
-      filtered.forEach((row, idx) => {
+        const combinedSearch = `${r.title} ${r.desc} ${r.label} ${r.logType}`.toLowerCase();
+        if (searchVal && !combinedSearch.includes(searchVal)) return;
+
+        count++;
+
         const tr = document.createElement('tr');
-        tr.className = "hover:bg-indigo-50/70 transition-colors cursor-pointer border-b border-slate-200/80";
-        tr.onclick = () => showDetailModal(row.title, row.desc, row.label, row.logType, row.logVal);
+        tr.className = "hover:bg-indigo-50/50 transition-colors border-b border-slate-200 cursor-pointer";
+        tr.onclick = () => openModal(r);
 
-        const badgeBg = row.logType === 'MIKYAL' ? 'bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold' :
-                        row.logType === 'LOGSIN' ? 'bg-blue-100 text-blue-800 border border-blue-300 font-bold' :
-                        row.logType === 'LOGCOS' ? 'bg-purple-100 text-purple-800 border border-purple-300 font-bold' :
-                        row.logType === 'COT' ? 'bg-amber-100 text-amber-800 border border-amber-300 font-bold' :
-                        row.logType === 'SIN' ? 'bg-sky-100 text-sky-800 border border-sky-300 font-bold' :
-                        'bg-slate-100 text-slate-700 border border-slate-200';
+        const opBg = r.op === "=" ? "bg-emerald-100 text-emerald-800 font-extrabold" : r.op === "+" ? "bg-amber-100 text-amber-800 font-extrabold" : r.op === "-" ? "bg-rose-100 text-rose-800 font-extrabold" : "bg-slate-100 text-slate-700";
+
+        let widgetCol = "-";
+        if (r.customWidget) {
+          widgetCol = r.customWidget;
+        } else if (r.logType === "MIKYAL") {
+          widgetCol = `<span class="bg-indigo-100 text-indigo-900 px-2 py-0.5 rounded font-mono font-bold">${String(r.deg).padStart(2,'0')}:${String(r.min).padStart(2,'0')}:${String(r.sec).padStart(2,'0')}</span>`;
+        }
 
         tr.innerHTML = `
-          <td class="p-2.5 text-center font-bold text-indigo-700 font-mono-code border-r border-slate-200">${row.op || '-'}</td>
-          <td class="p-2.5 border-r border-slate-200">
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${badgeBg}">
-              ${row.logType} ${row.logVal !== '-' ? `(${row.logVal})` : ''}
-            </span>
+          <td class="p-2 text-center border-r border-slate-200"><span class="px-1.5 py-0.5 rounded text-[11px] ${opBg}">${r.op || '-'}</span></td>
+          <td class="p-2 border-r border-slate-200 font-semibold text-indigo-900">
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] bg-indigo-50 text-indigo-700 px-1.5 py-0.5 rounded border border-indigo-200 font-mono">${r.logType}</span>
+              <span class="font-mono text-slate-800">${r.logVal}</span>
+            </div>
           </td>
-          <td class="p-2.5 text-center font-arabic text-base text-amber-800 font-bold border-r border-slate-200">${row.buruj !== '-' && row.buruj !== '' ? row.buruj : '-'}</td>
-          <td class="p-2.5 text-center font-mono-code font-bold text-slate-900 border-r border-slate-200">${row.deg !== '' ? row.deg : '0'}°</td>
-          <td class="p-2.5 text-center font-mono-code text-slate-700 border-r border-slate-200">${row.min !== '-' ? row.min + "'" : '-'}</td>
-          <td class="p-2.5 text-center font-mono-code text-slate-500 border-r border-slate-200">${row.sec !== '-' ? row.sec + '"' : '-'}</td>
-          <td class="p-2.5 text-center border-r border-slate-200">${row.customWidget || '-'}</td>
-          <td class="p-2.5 text-right font-semibold text-slate-800">
-            <span class="font-arabic text-sm text-indigo-900 mr-2 font-bold">${row.label}</span>
-            <div class="text-[11px] text-slate-500 font-medium">${row.title}</div>
+          <td class="p-2 text-center border-r border-slate-200 font-arabic text-sm text-amber-800 font-bold">${r.buruj || '-'}</td>
+          <td class="p-2 text-center border-r border-slate-200 font-extrabold text-slate-900 font-mono">${r.deg}</td>
+          <td class="p-2 text-center border-r border-slate-200 font-extrabold text-slate-900 font-mono">${r.min}</td>
+          <td class="p-2 text-center border-r border-slate-200 font-extrabold text-slate-900 font-mono">${r.sec}</td>
+          <td class="p-2 text-center border-r border-slate-200">${widgetCol}</td>
+          <td class="p-2 text-right">
+            <div class="font-arabic text-slate-900 font-bold text-sm leading-tight">${r.label}</div>
+            <div class="text-[10px] text-slate-500 font-medium">${r.title}</div>
           </td>
         `;
         tbody.appendChild(tr);
       });
+
+      document.getElementById('rowCount').innerText = count;
     }
 
-    // MODAL CONTROL & DETAIL PENJELASAN (TEMA TERANG)
-    function showDetailModal(title, desc, label, logType, logVal) {
-      document.getElementById('modalTitle').innerText = title;
+    function filterTabel() {
+      renderTabel();
+    }
+
+    function openModal(row) {
+      document.getElementById('modalTitle').innerText = `${row.title} (${row.label})`;
       document.getElementById('modalBody').innerHTML = `
         <div class="space-y-3">
-          <div class="flex items-center justify-between bg-slate-50 p-3 rounded-xl border border-slate-200 shadow-2xs">
-            <div>
-              <span class="text-xs text-slate-500 font-semibold">Istilah Kitab (بيان)</span>
-              <div class="font-arabic text-xl text-amber-800 font-bold">${label}</div>
-            </div>
-            <div class="text-right">
-              <span class="text-xs text-slate-500 font-semibold">Tipe Operasi</span>
-              <div class="text-xs font-mono-code font-bold text-indigo-700">${logType} ${logVal !== '-' ? `[${logVal}]` : ''}</div>
-            </div>
+          <div class="bg-indigo-50/70 border border-indigo-200 p-3 rounded-xl">
+            <div class="text-xs font-bold text-indigo-900">Keterangan Langkah (بيان):</div>
+            <p class="text-slate-700 font-medium mt-1">${row.desc}</p>
           </div>
-          <p class="text-xs text-slate-700 leading-relaxed font-medium">${desc}</p>
-          <div class="bg-indigo-50/80 p-3 rounded-xl border border-indigo-200 text-[11px] text-indigo-900">
-            💡 <strong>Kaidah Falak Klasik:</strong> Setiap baris perhitungan ini direpresentasikan menggunakan alat rubu' mujayyab dan kalkulasi logaritma trigonometri bola <em>(spherical trigonometry)</em> untuk mendapatkan akurasi jam, menit, dan detik secara rinci tanpa ada langkah yang dilewati.
+
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+              <span class="text-slate-500 block text-[10px]">Tipe Rumus / Log:</span>
+              <span class="font-bold text-indigo-700 font-mono">${row.logType}</span>
+            </div>
+            <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+              <span class="text-slate-500 block text-[10px]">Nilai Logaritma:</span>
+              <span class="font-bold text-slate-900 font-mono">${row.logVal}</span>
+            </div>
+            <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+              <span class="text-slate-500 block text-[10px]">Sudut Derajah (°):</span>
+              <span class="font-bold text-slate-900 font-mono">${row.deg}°</span>
+            </div>
+            <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+              <span class="text-slate-500 block text-[10px]">Menit Daqaiq ('):</span>
+              <span class="font-bold text-slate-900 font-mono">${row.min}'</span>
+            </div>
           </div>
         </div>
       `;
       document.getElementById('infoModal').classList.remove('hidden');
     }
 
+    function closeModal(e) {
+      if (e.target.id === 'infoModal') {
+        document.getElementById('infoModal').classList.add('hidden');
+      }
+    }
+
     function closeModalDirect() {
       document.getElementById('infoModal').classList.add('hidden');
     }
 
-    function closeModal(e) {
-      if (e.target.id === 'infoModal') {
-        closeModalDirect();
-      }
-    }
-
-    // INITIAL EXECUTION ON LOAD
-    window.onload = function() {
+    // Inisialisasi awal saat aplikasi dimuat
+    window.onload = () => {
       hitungFalak();
     };
   </script>
