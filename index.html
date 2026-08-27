@@ -1233,80 +1233,81 @@
 <!-- MODAL POPUP & TOMBOL ALAT LOOKUP LOGARITMA / TRIGONOMETRI FALAK -->
 <!-- ================================================================= -->
 
-<!-- Tombol Melayang Akses Cepat (Floating Button) -->
-<button onclick="openLookupModal()" title="Buka Alat Lookup Log/Trigo" 
-        class="fixed bottom-6 right-6 z-40 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold py-3 px-5 rounded-full shadow-2xl hover:shadow-indigo-500/50 transition-all duration-300 transform hover:scale-105 flex items-center gap-2 border-2 border-white/30">
-  <svg class="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-  </svg>
-  <span>Lookup Log / Trigo</span>
-</button>
+<!-- Tombol Floating Ringkas & Bisa Digeser (Draggable) -->
+<div id="dragBtnContainer" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; touch-action: none;">
+  <button id="floatingLookupBtn" title="Buka Alat Lookup Log/Trigo (Tekan & Geser untuk memindahkan)" 
+          class="w-12 h-12 bg-gradient-to-tr from-indigo-600 to-indigo-500 hover:from-indigo-700 hover:to-indigo-600 text-white rounded-full shadow-lg hover:shadow-indigo-500/40 border-2 border-white/80 flex items-center justify-center transition-transform active:scale-95 cursor-grab">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+    </svg>
+  </button>
+</div>
 
 <!-- Container Modal Pop-up -->
-<div id="modalLookup" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 transition-all duration-300 opacity-0 pointer-events-none">
-  <div id="modalCard" class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300 scale-90 translate-y-4 border border-slate-100">
+<div id="modalLookup" class="fixed inset-0 z-[10000] hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-3 transition-all duration-200 opacity-0 pointer-events-none">
+  <div id="modalCard" class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-5 transform transition-all duration-200 scale-95 translate-y-2 border border-slate-100 max-h-[90vh] overflow-y-auto">
     
     <!-- Header Modal -->
-    <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+    <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
       <div class="flex items-center gap-2">
-        <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold">🔍</div>
-        <h3 class="text-base font-bold text-slate-800">Alat Lookup Log/Trigo Falak</h3>
+        <div class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-sm">🔍</div>
+        <h3 class="text-sm font-bold text-slate-800">Alat Lookup Log/Trigo Falak</h3>
       </div>
-      <button onclick="closeLookupModal()" class="w-8 h-8 rounded-full hover:bg-slate-100 text-slate-400 hover:text-rose-500 flex items-center justify-center text-xl font-bold transition">&times;</button>
+      <button onclick="closeLookupModal()" class="w-7 h-7 rounded-full hover:bg-slate-100 text-slate-400 hover:text-rose-500 flex items-center justify-center text-lg font-bold transition">&times;</button>
     </div>
 
     <!-- Navigasi Tab -->
-    <div class="flex bg-slate-100 p-1 rounded-xl mb-4 text-xs font-semibold">
-      <button id="tabFwdBtn" onclick="switchLookupTab('fwd')" class="flex-1 py-2 rounded-lg bg-white text-indigo-600 shadow-sm transition-all">
-        ° ' ➔ Nilai (Log/Trigo)
+    <div class="flex bg-slate-100 p-1 rounded-xl mb-3 text-xs font-semibold">
+      <button id="tabFwdBtn" onclick="switchLookupTab('fwd')" class="flex-1 py-1.5 rounded-lg bg-white text-indigo-600 shadow-sm transition-all text-center">
+        ° ' ➔ Nilai
       </button>
-      <button id="tabInvBtn" onclick="switchLookupTab('inv')" class="flex-1 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition-all">
-        Nilai Target ➔ ° '
+      <button id="tabInvBtn" onclick="switchLookupTab('inv')" class="flex-1 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all text-center">
+        Nilai ➔ ° '
       </button>
     </div>
 
     <!-- TAB 1: DERAJAT & MENIT SEBAGAI INPUT -->
-    <div id="tabFwdContent" class="space-y-4">
-      <div class="grid grid-cols-2 gap-3">
+    <div id="tabFwdContent" class="space-y-3">
+      <div class="grid grid-cols-2 gap-2">
         <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Derajat (°)</label>
+          <label class="block text-[11px] font-bold text-slate-600 mb-1">Derajat (°)</label>
           <input type="number" id="fwdDeg" min="0" max="89" value="10" oninput="doFwdCalc()" 
-                 class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none">
+                 class="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none">
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Menit (')</label>
+          <label class="block text-[11px] font-bold text-slate-600 mb-1">Menit (')</label>
           <input type="number" id="fwdMin" min="0" max="59" value="12" oninput="doFwdCalc()" 
-                 class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none">
+                 class="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none">
         </div>
       </div>
       
       <!-- Box Hasil Tampilan 4 Fungsi -->
-      <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-2.5 text-xs font-mono">
-        <div class="flex justify-between items-center border-b border-slate-200/60 pb-1.5">
-          <span class="text-slate-500 font-sans font-semibold">LogSin:</span> 
-          <span id="resLogSin" class="font-bold text-indigo-600 text-sm">9.24818</span>
+      <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/80 space-y-2 text-xs font-mono">
+        <div class="flex justify-between items-center border-b border-slate-200/60 pb-1">
+          <span class="text-slate-500 font-sans font-semibold text-[11px]">LogSin:</span> 
+          <span id="resLogSin" class="font-bold text-indigo-600 text-xs">9.24818</span>
         </div>
-        <div class="flex justify-between items-center border-b border-slate-200/60 pb-1.5">
-          <span class="text-slate-500 font-sans font-semibold">LogCos:</span> 
-          <span id="resLogCos" class="font-bold text-indigo-600 text-sm">9.99308</span>
+        <div class="flex justify-between items-center border-b border-slate-200/60 pb-1">
+          <span class="text-slate-500 font-sans font-semibold text-[11px]">LogCos:</span> 
+          <span id="resLogCos" class="font-bold text-indigo-600 text-xs">9.99308</span>
         </div>
-        <div class="flex justify-between items-center border-b border-slate-200/60 pb-1.5">
-          <span class="text-slate-500 font-sans font-semibold">Sin:</span> 
-          <span id="resSin" class="font-bold text-emerald-600 text-sm">0.17708</span>
+        <div class="flex justify-between items-center border-b border-slate-200/60 pb-1">
+          <span class="text-slate-500 font-sans font-semibold text-[11px]">Sin:</span> 
+          <span id="resSin" class="font-bold text-emerald-600 text-xs">0.17708</span>
         </div>
         <div class="flex justify-between items-center">
-          <span class="text-slate-500 font-sans font-semibold">Cot:</span> 
-          <span id="resCot" class="font-bold text-amber-600 text-sm">5.55782</span>
+          <span class="text-slate-500 font-sans font-semibold text-[11px]">Cot:</span> 
+          <span id="resCot" class="font-bold text-amber-600 text-xs">5.55782</span>
         </div>
       </div>
     </div>
 
     <!-- TAB 2: NILAI TARGET SEBAGAI INPUT -->
-    <div id="tabInvContent" class="space-y-4 hidden">
+    <div id="tabInvContent" class="space-y-3 hidden">
       <div>
-        <label class="block text-xs font-bold text-slate-600 mb-1">Pilih Jenis Tabel</label>
+        <label class="block text-[11px] font-bold text-slate-600 mb-1">Pilih Jenis Tabel</label>
         <select id="invType" onchange="doInvCalc()" 
-                class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+                class="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
           <option value="logcos">LogCos (Prinsip Hasil ≤ Target)</option>
           <option value="logsin">LogSin (Prinsip Hasil ≤ Target)</option>
           <option value="sin">Sin (Prinsip Hasil ≤ Target)</option>
@@ -1314,16 +1315,16 @@
         </select>
       </div>
       <div>
-        <label class="block text-xs font-bold text-slate-600 mb-1">Masukkan Nilai Angka / Log</label>
+        <label class="block text-[11px] font-bold text-slate-600 mb-1">Masukkan Nilai Target</label>
         <input type="number" step="0.00001" id="invVal" placeholder="misal: 9.99310" value="9.99310" oninput="doInvCalc()" 
-               class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm font-mono font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none">
+               class="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none">
       </div>
       
       <!-- Box Hasil Derajat & Menit -->
-      <div class="bg-gradient-to-br from-indigo-50 to-blue-50 p-4 rounded-2xl border border-indigo-100 text-center">
-        <span class="text-[10px] text-indigo-600 font-bold uppercase tracking-wider block mb-0.5">Sudut Hasil Lookup</span>
-        <div id="resInvDM" class="text-3xl font-black text-indigo-950 font-mono tracking-wide">10° 12'</div>
-        <div id="resInvDetail" class="text-[11px] text-indigo-600 mt-1 font-mono font-medium">Nilai Tabel: 9.99308 (≤ 9.99310)</div>
+      <div class="bg-gradient-to-br from-indigo-50 to-blue-50 p-3 rounded-xl border border-indigo-100 text-center">
+        <span class="text-[9px] text-indigo-600 font-bold uppercase tracking-wider block mb-0.5">Sudut Hasil Lookup</span>
+        <div id="resInvDM" class="text-2xl font-black text-indigo-950 font-mono tracking-wide">10° 12'</div>
+        <div id="resInvDetail" class="text-[10px] text-indigo-600 mt-1 font-mono font-medium">Nilai Tabel: 9.99308 (≤ 9.99310)</div>
       </div>
     </div>
 
@@ -1331,13 +1332,87 @@
 </div>
 
 <script>
+  // Global drag handler untuk Tombol Floating (HP Touch & Mouse PC)
+  (function initDraggableBtn() {
+    const el = document.getElementById('dragBtnContainer');
+    const btn = document.getElementById('floatingLookupBtn');
+    if (!el || !btn) return;
+
+    let isDragging = false;
+    let startX = 0, startY = 0;
+    let initialLeft = 0, initialTop = 0;
+    let hasMoved = false;
+
+    function onPointerDown(e) {
+      isDragging = true;
+      hasMoved = false;
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      
+      startX = clientX;
+      startY = clientY;
+
+      const rect = el.getBoundingClientRect();
+      initialLeft = rect.left;
+      initialTop = rect.top;
+
+      el.style.bottom = 'auto';
+      el.style.right = 'auto';
+      el.style.left = initialLeft + 'px';
+      el.style.top = initialTop + 'px';
+
+      btn.classList.add('scale-105', 'shadow-2xl');
+    }
+
+    function onPointerMove(e) {
+      if (!isDragging) return;
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+      const dx = clientX - startX;
+      const dy = clientY - startY;
+
+      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) {
+        hasMoved = true;
+      }
+
+      let newLeft = initialLeft + dx;
+      let newTop = initialTop + dy;
+
+      const maxLeft = window.innerWidth - 55;
+      const maxTop = window.innerHeight - 55;
+      newLeft = Math.max(10, Math.min(maxLeft, newLeft));
+      newTop = Math.max(10, Math.min(maxTop, newTop));
+
+      el.style.left = newLeft + 'px';
+      el.style.top = newTop + 'px';
+    }
+
+    function onPointerUp() {
+      if (!isDragging) return;
+      isDragging = false;
+      btn.classList.remove('scale-105', 'shadow-2xl');
+      if (!hasMoved) {
+        openLookupModal();
+      }
+    }
+
+    btn.addEventListener('mousedown', onPointerDown);
+    window.addEventListener('mousemove', onPointerMove);
+    window.addEventListener('mouseup', onPointerUp);
+
+    btn.addEventListener('touchstart', onPointerDown, { passive: true });
+    window.addEventListener('touchmove', onPointerMove, { passive: true });
+    window.addEventListener('touchend', onPointerUp);
+  })();
+
   function openLookupModal() {
     const m = document.getElementById('modalLookup');
     const c = document.getElementById('modalCard');
     m.classList.remove('hidden', 'pointer-events-none');
     setTimeout(() => {
       m.classList.remove('opacity-0');
-      c.classList.remove('scale-90', 'translate-y-4');
+      c.classList.remove('scale-95', 'translate-y-2');
       c.classList.add('scale-100', 'translate-y-0');
     }, 10);
     doFwdCalc();
@@ -1348,7 +1423,7 @@
     const m = document.getElementById('modalLookup');
     const c = document.getElementById('modalCard');
     c.classList.remove('scale-100', 'translate-y-0');
-    c.classList.add('scale-90', 'translate-y-4');
+    c.classList.add('scale-95', 'translate-y-2');
     m.classList.add('opacity-0');
     setTimeout(() => {
       m.classList.add('hidden', 'pointer-events-none');
@@ -1364,14 +1439,14 @@
     if (tab === 'fwd') {
       fwdContent.classList.remove('hidden');
       invContent.classList.add('hidden');
-      fwdBtn.className = "flex-1 py-2 rounded-lg bg-white text-indigo-600 shadow-sm transition-all";
-      invBtn.className = "flex-1 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition-all";
+      fwdBtn.className = "flex-1 py-1.5 rounded-lg bg-white text-indigo-600 shadow-sm transition-all text-center";
+      invBtn.className = "flex-1 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all text-center";
       doFwdCalc();
     } else {
       fwdContent.classList.add('hidden');
       invContent.classList.remove('hidden');
-      invBtn.className = "flex-1 py-2 rounded-lg bg-white text-indigo-600 shadow-sm transition-all";
-      fwdBtn.className = "flex-1 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition-all";
+      invBtn.className = "flex-1 py-1.5 rounded-lg bg-white text-indigo-600 shadow-sm transition-all text-center";
+      fwdBtn.className = "flex-1 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all text-center";
       doInvCalc();
     }
   }
