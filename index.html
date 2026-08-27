@@ -441,13 +441,13 @@
       return 1 / Math.tan(rad);
     }
 
-    function invLogSin(logVal) {
-      let target = parseFloat(logVal.toFixed(5));
+        function invLogSin(logVal) {
+      let target = Math.round(logVal * 1e5) / 1e5;
       let bestD = 0, bestM = 0;
       for (let d = 0; d < 90; d++) {
         for (let m = 0; m < 60; m++) {
-          let currentLog = calcLogSin(d + m / 60);
-          if (currentLog <= target + 1e-7) {
+          let currentLog = Math.round(calcLogSin(d + m / 60) * 1e5) / 1e5;
+          if (currentLog <= target) {
             bestD = d;
             bestM = m;
           }
@@ -457,11 +457,11 @@
     }
 
     function invLogCos(logVal) {
-      let target = parseFloat(logVal.toFixed(5));
+      let target = Math.round(logVal * 1e5) / 1e5;
       for (let d = 0; d < 90; d++) {
         for (let m = 0; m < 60; m++) {
-          let currentLog = calcLogCos(d + m / 60);
-          if (currentLog <= target + 1e-7) {
+          let currentLog = Math.round(calcLogCos(d + m / 60) * 1e5) / 1e5;
+          if (currentLog <= target) {
             return { deg: d, min: m };
           }
         }
@@ -470,12 +470,12 @@
     }
 
     function invSin(sinVal) {
-      let target = parseFloat(sinVal.toFixed(5));
+      let target = Math.round(sinVal * 1e5) / 1e5;
       let bestD = 0, bestM = 0;
       for (let d = 0; d < 90; d++) {
         for (let m = 0; m < 60; m++) {
-          let currentSin = calcSin(d + m / 60);
-          if (currentSin <= target + 1e-7) {
+          let currentSin = Math.round(calcSin(d + m / 60) * 1e5) / 1e5;
+          if (currentSin <= target) {
             bestD = d;
             bestM = m;
           }
@@ -485,11 +485,11 @@
     }
 
     function invCot(cotVal) {
-      let target = parseFloat(cotVal.toFixed(5));
+      let target = Math.round(cotVal * 1e5) / 1e5;
       for (let d = 1; d < 90; d++) {
         for (let m = 0; m < 60; m++) {
-          let currentCot = calcCot(d + m / 60);
-          if (currentCot <= target + 1e-7) {
+          let currentCot = Math.round(calcCot(d + m / 60) * 1e5) / 1e5;
+          if (currentCot <= target) {
             return { deg: d, min: m };
           }
         }
@@ -1228,5 +1228,208 @@
       hitungFalak();
     });
   </script>
+
+<!-- ================================================================= -->
+<!-- MODAL POPUP & TOMBOL ALAT LOOKUP LOGARITMA / TRIGONOMETRI FALAK -->
+<!-- ================================================================= -->
+
+<!-- Tombol Melayang Akses Cepat (Floating Button) -->
+<button onclick="openLookupModal()" title="Buka Alat Lookup Log/Trigo" 
+        class="fixed bottom-6 right-6 z-40 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold py-3 px-5 rounded-full shadow-2xl hover:shadow-indigo-500/50 transition-all duration-300 transform hover:scale-105 flex items-center gap-2 border-2 border-white/30">
+  <svg class="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+  </svg>
+  <span>Lookup Log / Trigo</span>
+</button>
+
+<!-- Container Modal Pop-up -->
+<div id="modalLookup" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 transition-all duration-300 opacity-0 pointer-events-none">
+  <div id="modalCard" class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300 scale-90 translate-y-4 border border-slate-100">
+    
+    <!-- Header Modal -->
+    <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold">🔍</div>
+        <h3 class="text-base font-bold text-slate-800">Alat Lookup Log/Trigo Falak</h3>
+      </div>
+      <button onclick="closeLookupModal()" class="w-8 h-8 rounded-full hover:bg-slate-100 text-slate-400 hover:text-rose-500 flex items-center justify-center text-xl font-bold transition">&times;</button>
+    </div>
+
+    <!-- Navigasi Tab -->
+    <div class="flex bg-slate-100 p-1 rounded-xl mb-4 text-xs font-semibold">
+      <button id="tabFwdBtn" onclick="switchLookupTab('fwd')" class="flex-1 py-2 rounded-lg bg-white text-indigo-600 shadow-sm transition-all">
+        ° ' ➔ Nilai (Log/Trigo)
+      </button>
+      <button id="tabInvBtn" onclick="switchLookupTab('inv')" class="flex-1 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition-all">
+        Nilai Target ➔ ° '
+      </button>
+    </div>
+
+    <!-- TAB 1: DERAJAT & MENIT SEBAGAI INPUT -->
+    <div id="tabFwdContent" class="space-y-4">
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Derajat (°)</label>
+          <input type="number" id="fwdDeg" min="0" max="89" value="10" oninput="doFwdCalc()" 
+                 class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Menit (')</label>
+          <input type="number" id="fwdMin" min="0" max="59" value="12" oninput="doFwdCalc()" 
+                 class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-indigo-500 outline-none">
+        </div>
+      </div>
+      
+      <!-- Box Hasil Tampilan 4 Fungsi -->
+      <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-2.5 text-xs font-mono">
+        <div class="flex justify-between items-center border-b border-slate-200/60 pb-1.5">
+          <span class="text-slate-500 font-sans font-semibold">LogSin:</span> 
+          <span id="resLogSin" class="font-bold text-indigo-600 text-sm">9.24818</span>
+        </div>
+        <div class="flex justify-between items-center border-b border-slate-200/60 pb-1.5">
+          <span class="text-slate-500 font-sans font-semibold">LogCos:</span> 
+          <span id="resLogCos" class="font-bold text-indigo-600 text-sm">9.99308</span>
+        </div>
+        <div class="flex justify-between items-center border-b border-slate-200/60 pb-1.5">
+          <span class="text-slate-500 font-sans font-semibold">Sin:</span> 
+          <span id="resSin" class="font-bold text-emerald-600 text-sm">0.17708</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-slate-500 font-sans font-semibold">Cot:</span> 
+          <span id="resCot" class="font-bold text-amber-600 text-sm">5.55782</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: NILAI TARGET SEBAGAI INPUT -->
+    <div id="tabInvContent" class="space-y-4 hidden">
+      <div>
+        <label class="block text-xs font-bold text-slate-600 mb-1">Pilih Jenis Tabel</label>
+        <select id="invType" onchange="doInvCalc()" 
+                class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+          <option value="logcos">LogCos (Prinsip Hasil ≤ Target)</option>
+          <option value="logsin">LogSin (Prinsip Hasil ≤ Target)</option>
+          <option value="sin">Sin (Prinsip Hasil ≤ Target)</option>
+          <option value="cot">Cot (Prinsip Hasil ≤ Target)</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-slate-600 mb-1">Masukkan Nilai Angka / Log</label>
+        <input type="number" step="0.00001" id="invVal" placeholder="misal: 9.99310" value="9.99310" oninput="doInvCalc()" 
+               class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm font-mono font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none">
+      </div>
+      
+      <!-- Box Hasil Derajat & Menit -->
+      <div class="bg-gradient-to-br from-indigo-50 to-blue-50 p-4 rounded-2xl border border-indigo-100 text-center">
+        <span class="text-[10px] text-indigo-600 font-bold uppercase tracking-wider block mb-0.5">Sudut Hasil Lookup</span>
+        <div id="resInvDM" class="text-3xl font-black text-indigo-950 font-mono tracking-wide">10° 12'</div>
+        <div id="resInvDetail" class="text-[11px] text-indigo-600 mt-1 font-mono font-medium">Nilai Tabel: 9.99308 (≤ 9.99310)</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function openLookupModal() {
+    const m = document.getElementById('modalLookup');
+    const c = document.getElementById('modalCard');
+    m.classList.remove('hidden', 'pointer-events-none');
+    setTimeout(() => {
+      m.classList.remove('opacity-0');
+      c.classList.remove('scale-90', 'translate-y-4');
+      c.classList.add('scale-100', 'translate-y-0');
+    }, 10);
+    doFwdCalc();
+    doInvCalc();
+  }
+
+  function closeLookupModal() {
+    const m = document.getElementById('modalLookup');
+    const c = document.getElementById('modalCard');
+    c.classList.remove('scale-100', 'translate-y-0');
+    c.classList.add('scale-90', 'translate-y-4');
+    m.classList.add('opacity-0');
+    setTimeout(() => {
+      m.classList.add('hidden', 'pointer-events-none');
+    }, 200);
+  }
+
+  function switchLookupTab(tab) {
+    const fwdBtn = document.getElementById('tabFwdBtn');
+    const invBtn = document.getElementById('tabInvBtn');
+    const fwdContent = document.getElementById('tabFwdContent');
+    const invContent = document.getElementById('tabInvContent');
+
+    if (tab === 'fwd') {
+      fwdContent.classList.remove('hidden');
+      invContent.classList.add('hidden');
+      fwdBtn.className = "flex-1 py-2 rounded-lg bg-white text-indigo-600 shadow-sm transition-all";
+      invBtn.className = "flex-1 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition-all";
+      doFwdCalc();
+    } else {
+      fwdContent.classList.add('hidden');
+      invContent.classList.remove('hidden');
+      invBtn.className = "flex-1 py-2 rounded-lg bg-white text-indigo-600 shadow-sm transition-all";
+      fwdBtn.className = "flex-1 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition-all";
+      doInvCalc();
+    }
+  }
+
+  function doFwdCalc() {
+    let d = parseInt(document.getElementById('fwdDeg').value) || 0;
+    let m = parseInt(document.getElementById('fwdMin').value) || 0;
+    d = Math.max(0, Math.min(89, d));
+    m = Math.max(0, Math.min(59, m));
+    let degFloat = d + m / 60;
+
+    let logSin = (degFloat > 0) ? (Math.round(calcLogSin(degFloat) * 1e5) / 1e5).toFixed(5) : "-";
+    let logCos = (degFloat < 90) ? (Math.round(calcLogCos(degFloat) * 1e5) / 1e5).toFixed(5) : "-";
+    let sinVal = (Math.round(calcSin(degFloat) * 1e5) / 1e5).toFixed(5);
+    let cotVal = (degFloat > 0 && degFloat < 90) ? (Math.round(calcCot(degFloat) * 1e5) / 1e5).toFixed(5) : "-";
+
+    document.getElementById('resLogSin').innerText = logSin;
+    document.getElementById('resLogCos').innerText = logCos;
+    document.getElementById('resSin').innerText = sinVal;
+    document.getElementById('resCot').innerText = cotVal;
+  }
+
+  function doInvCalc() {
+    let type = document.getElementById('invType').value;
+    let valInput = parseFloat(document.getElementById('invVal').value);
+    
+    if (isNaN(valInput)) {
+      document.getElementById('resInvDM').innerText = "-° -'";
+      document.getElementById('resInvDetail').innerText = "Masukkan angka yang valid";
+      return;
+    }
+
+    let res = { deg: 0, min: 0 };
+    let actualVal = 0;
+    let typeLabel = "";
+
+    if (type === 'logcos') {
+      res = invLogCos(valInput);
+      actualVal = Math.round(calcLogCos(res.deg + res.min / 60) * 1e5) / 1e5;
+      typeLabel = "LogCos";
+    } else if (type === 'logsin') {
+      res = invLogSin(valInput);
+      actualVal = Math.round(calcLogSin(res.deg + res.min / 60) * 1e5) / 1e5;
+      typeLabel = "LogSin";
+    } else if (type === 'sin') {
+      res = invSin(valInput);
+      actualVal = Math.round(calcSin(res.deg + res.min / 60) * 1e5) / 1e5;
+      typeLabel = "Sin";
+    } else if (type === 'cot') {
+      res = invCot(valInput);
+      actualVal = Math.round(calcCot(res.deg + res.min / 60) * 1e5) / 1e5;
+      typeLabel = "Cot";
+    }
+
+    document.getElementById('resInvDM').innerText = `${res.deg}° ${res.min}'`;
+    document.getElementById('resInvDetail').innerText = `${typeLabel} (${res.deg}° ${res.min}') = ${actualVal.toFixed(5)} (≤ ${valInput.toFixed(5)})`;
+  }
+</script>
+
 </body>
 </html>
