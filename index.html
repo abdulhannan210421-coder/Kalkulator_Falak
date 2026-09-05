@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kalkulator Falakiyah Modern (132 Langkah Interaktif)</title>
+  <title>Kalkulator Falakiyah Modern (133 Langkah Interaktif)</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -95,14 +95,14 @@
         <span>🕌</span> Kalkulator & Hasil
       </button>
       <button id="btnTab2" onclick="switchMainTab(2)" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center gap-1.5">
-        <span>📊</span> Tabel 132 Langkah
+        <span>📊</span> Tabel 133 Langkah
       </button>
     </div>
 
     <!-- WADAH TAB 1: KALKULATOR & HASIL -->
     <div id="tabContent1" class="space-y-2.5 sm:space-y-3">
       
-      <!-- PARAMETER PERHITUNGAN (LAYOUT RINGKAS & PADAT) -->
+      <!-- PARAMETER PERHITUNGAN -->
       <section class="white-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3 sm:p-4 space-y-2.5 shadow-2xs">
         <div class="flex flex-row items-center justify-between gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
           <h2 class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
@@ -114,61 +114,82 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-          <!-- TANGGAL & BULAN -->
+          <!-- TANGGAL & BULAN (DROPDOWN MODERN) -->
           <div class="space-y-1">
             <label class="text-[11px] font-bold text-slate-700 dark:text-slate-300">Tanggal & Bulan Acuan</label>
             <div class="grid grid-cols-2 gap-1.5">
-              <input type="number" id="tanggal" min="1" max="31" oninput="hitungFalak()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-1.5 focus:ring-2 focus:ring-indigo-500 outline-none w-full text-center font-bold">
-              <select id="bulan" onchange="hitungFalak()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-1.5 focus:ring-2 focus:ring-indigo-500 outline-none w-full font-bold">
-                <option value="1">Januari</option>
-                <option value="2">Februari</option>
-                <option value="3">Maret</option>
-                <option value="4">April</option>
-                <option value="5">Mei</option>
-                <option value="6">Juni</option>
-                <option value="7">Juli</option>
-                <option value="8">Agustus</option>
-                <option value="9">September</option>
-                <option value="10">Oktober</option>
-                <option value="11">Nopember</option>
-                <option value="12">Desember</option>
-              </select>
+              <input type="number" id="tanggal" min="1" max="31" oninput="hitungFalak()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-2 focus:ring-2 focus:ring-indigo-500 outline-none w-full text-center font-bold">
+              
+              <!-- Custom Dropdown Modern Bulan -->
+              <div class="relative w-full">
+                <select id="bulan" onchange="hitungFalak()" class="w-full appearance-none bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl py-2 px-2.5 pr-7 font-bold outline-none focus:ring-2 focus:ring-indigo-500 hover:border-indigo-400 transition-all cursor-pointer">
+                  <option value="1">Januari</option>
+                  <option value="2">Februari</option>
+                  <option value="3">Maret</option>
+                  <option value="4">April</option>
+                  <option value="5">Mei</option>
+                  <option value="6">Juni</option>
+                  <option value="7">Juli</option>
+                  <option value="8">Agustus</option>
+                  <option value="9">September</option>
+                  <option value="10">Oktober</option>
+                  <option value="11">Nopember</option>
+                  <option value="12">Desember</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-indigo-500">
+                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- LINTANG TEMPAT -->
+          <!-- LINTANG TEMPAT (DROPDOWN MODERN) -->
           <div class="space-y-1">
             <label class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex justify-between">
               <span>'Ardh Al-Balad (Latitude)</span>
               <span class="text-slate-400 font-normal">° '</span>
             </label>
             <div class="flex items-center gap-1">
-              <input type="number" id="latDeg" value="7" placeholder="°" oninput="hitungFalak()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-1.5 w-12 text-center font-bold focus:ring-2 focus:ring-indigo-500 outline-none">
+              <input type="number" id="latDeg" value="7" placeholder="°" oninput="hitungFalak()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-11 text-center font-bold focus:ring-2 focus:ring-indigo-500 outline-none">
               <span class="text-slate-400 font-bold text-xs">°</span>
-              <input type="number" id="latMin" value="39" placeholder="'" oninput="hitungFalak()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-1.5 w-12 text-center font-bold focus:ring-2 focus:ring-indigo-500 outline-none">
+              <input type="number" id="latMin" value="39" placeholder="'" oninput="hitungFalak()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-11 text-center font-bold focus:ring-2 focus:ring-indigo-500 outline-none">
               <span class="text-slate-400 font-bold text-xs">'</span>
-              <select id="latArah" onchange="hitungFalak()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-1.5 flex-1 font-bold focus:ring-2 focus:ring-indigo-500 outline-none">
-                <option value="SELATAN" selected>LS (South)</option>
-                <option value="UTARA">LU (North)</option>
-              </select>
+              
+              <!-- Custom Dropdown Modern Arah LU/LS -->
+              <div class="relative flex-1">
+                <select id="latArah" onchange="hitungFalak()" class="w-full appearance-none bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl py-2 px-2 pr-6 font-bold outline-none focus:ring-2 focus:ring-indigo-500 hover:border-indigo-400 transition-all cursor-pointer">
+                  <option value="SELATAN" selected>LS (South)</option>
+                  <option value="UTARA">LU (North)</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1.5 text-indigo-500">
+                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- BUJUR TEMPAT -->
+          <!-- BUJUR TEMPAT (DROPDOWN MODERN) -->
           <div class="space-y-1">
             <label class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex justify-between">
               <span>Thul Al-Balad (Longitude)</span>
               <span class="text-slate-400 font-normal">° '</span>
             </label>
             <div class="flex items-center gap-1">
-              <input type="number" id="longDeg" value="112" placeholder="°" oninput="hitungFalak()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-1.5 w-12 text-center font-bold focus:ring-2 focus:ring-indigo-500 outline-none">
+              <input type="number" id="longDeg" value="112" placeholder="°" oninput="hitungFalak()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-11 text-center font-bold focus:ring-2 focus:ring-indigo-500 outline-none">
               <span class="text-slate-400 font-bold text-xs">°</span>
-              <input type="number" id="longMin" value="45" placeholder="'" oninput="hitungFalak()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-1.5 w-12 text-center font-bold focus:ring-2 focus:ring-indigo-500 outline-none">
+              <input type="number" id="longMin" value="45" placeholder="'" oninput="hitungFalak()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-11 text-center font-bold focus:ring-2 focus:ring-indigo-500 outline-none">
               <span class="text-slate-400 font-bold text-xs">'</span>
-              <select id="longArah" onchange="hitungFalak()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-1.5 flex-1 font-bold focus:ring-2 focus:ring-indigo-500 outline-none">
-                <option value="TIMUR" selected>BT (East)</option>
-                <option value="BARAT">BB (West)</option>
-              </select>
+              
+              <!-- Custom Dropdown Modern Arah BT/BB -->
+              <div class="relative flex-1">
+                <select id="longArah" onchange="hitungFalak()" class="w-full appearance-none bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl py-2 px-2 pr-6 font-bold outline-none focus:ring-2 focus:ring-indigo-500 hover:border-indigo-400 transition-all cursor-pointer">
+                  <option value="TIMUR" selected>BT (East)</option>
+                  <option value="BARAT">BB (West)</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1.5 text-indigo-500">
+                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -176,8 +197,8 @@
           <div class="space-y-1">
             <label class="text-[11px] font-bold text-slate-700 dark:text-slate-300">Cari Kota On-line</label>
             <div class="flex gap-1">
-              <input type="text" id="searchKotaInput" onkeypress="if(event.key==='Enter') cariKotaInternet()" placeholder="mis: pasuruan, jawa timur" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-1.5 flex-1 font-semibold focus:ring-2 focus:ring-indigo-500 outline-none">
-              <button onclick="cariKotaInternet()" class="bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl transition-all shrink-0">
+              <input type="text" id="searchKotaInput" onkeypress="if(event.key==='Enter') cariKotaInternet()" placeholder="mis: pasuruan, jawa timur" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-2 flex-1 font-semibold focus:ring-2 focus:ring-indigo-500 outline-none">
+              <button onclick="cariKotaInternet()" class="bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white text-xs font-bold px-3 py-2 rounded-xl transition-all shrink-0">
                 🔍 Cari
               </button>
             </div>
@@ -185,20 +206,33 @@
         </div>
       </section>
 
-      <!-- WIDGET JAM ISTIWA' REAL-TIME -->
-      <section class="white-card bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-300 dark:border-amber-800/60 p-2.5 sm:p-3 rounded-2xl flex flex-row items-center justify-between gap-2 shadow-2xs">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center text-base font-bold shrink-0">
+      <!-- WIDGET JAM ISTIWA' & JAM LOKAL REAL-TIME -->
+      <section class="white-card bg-gradient-to-r from-amber-500/10 via-indigo-500/5 to-transparent border border-amber-300 dark:border-amber-800/60 p-2.5 sm:p-3 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-3 shadow-2xs">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center text-lg font-bold shrink-0 shadow-xs">
             ☀️
           </div>
           <div>
-            <h3 class="text-[11px] sm:text-xs font-extrabold text-amber-950 dark:text-amber-300 uppercase tracking-wider">Jam Istiwa' Real-Time</h3>
-            <p class="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block">Matahari lokal berdasarkan Bujur Tempat (Thul Al-Balad)</p>
+            <h3 class="text-xs font-extrabold text-amber-950 dark:text-amber-300 uppercase tracking-wider">Perbandingan Jam Istiwa' & Waktu Standar Lokasi</h3>
+            <p class="text-[10px] text-slate-500 dark:text-slate-400">Matahari lokal (Thul Al-Balad) disandingkan dengan zona waktu standar lokasi terpilih</p>
           </div>
         </div>
-        <div class="bg-white dark:bg-slate-900 border border-amber-300 dark:border-amber-800 px-3 py-1 rounded-xl text-center min-w-[120px] sm:min-w-[140px] shadow-xs">
-          <div id="liveJamIstiwa" class="text-lg sm:text-xl font-black text-amber-600 dark:text-amber-400 tracking-tight font-mono-code">00:00:00</div>
-          <div class="text-[8px] sm:text-[9px] text-slate-400 font-bold uppercase tracking-widest">Waktu Istiwa'</div>
+
+        <div class="flex items-center gap-2 w-full md:w-auto justify-end flex-wrap sm:flex-nowrap">
+          <div class="bg-white dark:bg-slate-900 border border-amber-300 dark:border-amber-800 px-2.5 py-1.5 rounded-xl text-center flex-1 md:flex-initial min-w-[105px] shadow-xs">
+            <div id="liveJamIstiwa" class="text-base sm:text-lg font-black text-amber-600 dark:text-amber-400 tracking-tight font-mono-code">00:00:00</div>
+            <div class="text-[8px] sm:text-[9px] text-slate-400 font-bold uppercase tracking-widest">Jam Istiwa' (Matahari)</div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 border border-indigo-200 dark:border-indigo-800 px-2.5 py-1.5 rounded-xl text-center flex-1 md:flex-initial min-w-[105px] shadow-xs">
+            <div id="liveJamLokal" class="text-base sm:text-lg font-black text-indigo-600 dark:text-indigo-400 tracking-tight font-mono-code">00:00:00</div>
+            <div id="labelJamLokal" class="text-[8px] sm:text-[9px] text-slate-400 font-bold uppercase tracking-widest">Waktu Setempat (Lokasi)</div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 border border-emerald-200 dark:border-emerald-800 px-2.5 py-1.5 rounded-xl text-center flex-1 md:flex-initial min-w-[105px] shadow-xs">
+            <div id="liveSelisih" class="text-base sm:text-lg font-black text-emerald-600 dark:text-emerald-400 tracking-tight font-mono-code">+00m 00s</div>
+            <div class="text-[8px] sm:text-[9px] text-slate-400 font-bold uppercase tracking-widest">Selisih (Istiwa - Lokasi)</div>
+          </div>
         </div>
       </section>
 
@@ -279,14 +313,14 @@
           </div>
         </div>
 
-        <!-- AZIMUTH KIBLAT CARD -->
-        <div class="white-card bg-emerald-50/50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/60 p-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <!-- AZIMUTH KIBLAT CARD (KLIK BUKA RUBU' MODAL) -->
+        <div onclick="openRubuModal()" class="white-card bg-emerald-50/50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/60 p-3 flex flex-col sm:flex-row items-center justify-between gap-3 cursor-pointer hover:border-emerald-500 transition-all group">
           <div class="flex items-center gap-3 w-full sm:w-auto">
-            <div class="relative w-12 h-12 rounded-full bg-white dark:bg-slate-900 border-2 border-emerald-500/30 flex items-center justify-center shrink-0 shadow-xs">
+            <div class="relative w-12 h-12 rounded-full bg-white dark:bg-slate-900 border-2 border-emerald-500/40 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
               <svg class="w-full h-full p-1 text-slate-400" viewBox="0 0 100 100">
                 <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="2 4"/>
                 <text x="50" y="15" text-anchor="middle" font-size="10" font-weight="bold" fill="#10b981">U</text>
-                <text x="85" y="53" text-anchor="middle" font-size="10" fill="#94a3b8">B</text>
+                <text x="85" y="53" text-anchor="middle" font-size="10" fill="#94a3b8">T</text>
                 <text x="50" y="90" text-anchor="middle" font-size="10" fill="#94a3b8">S</text>
                 <text x="15" y="53" text-anchor="middle" font-size="10" font-weight="bold" fill="#059669">B</text>
               </svg>
@@ -296,7 +330,10 @@
             </div>
 
             <div>
-              <div class="text-[11px] text-emerald-950 dark:text-emerald-300 font-extrabold uppercase tracking-wider">Arah Kiblat (Samt Al-Qiblah)</div>
+              <div class="text-[11px] text-emerald-950 dark:text-emerald-300 font-extrabold uppercase tracking-wider flex items-center gap-1.5">
+                <span>Arah Kiblat (Samt Al-Qiblah)</span>
+                <span class="text-[9px] bg-emerald-200 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 px-1.5 py-0.5 rounded font-bold">🔍 Panduan Rubu'</span>
+              </div>
               <div class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Azimuth kemiringan dari Utara ke Barat (LogCos Method)</div>
             </div>
           </div>
@@ -321,7 +358,7 @@
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 pb-2.5 border-b border-slate-100 dark:border-slate-800">
           <div>
             <h3 class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
-              <span>📊</span> Tabel Rincian Hisab Falakiyah (132 Langkah Presisi Utuh)
+              <span>📊</span> Tabel Rincian Hisab Falakiyah (133 Langkah Presisi Utuh)
             </h3>
             <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Dikelompokkan dalam 5 fase accordion</p>
           </div>
@@ -368,6 +405,46 @@
     </div>
   </div>
 
+  <!-- MODAL VISUALIZER 2D RUBU' MUJAYYAB & KIBLAT -->
+  <div id="rubuModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden flex items-center justify-center p-3 sm:p-4" onclick="if(event.target.id==='rubuModal') closeRubuModal()">
+    <div class="white-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 modal-bounce max-w-lg w-full p-4 sm:p-5 space-y-3.5 shadow-2xl relative rounded-2xl" onclick="event.stopPropagation()">
+      
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 flex items-center justify-center text-lg font-bold">
+            📐
+          </div>
+          <div>
+            <h3 class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white">Panduan Meluruskan Arah Kiblat (Rubu' Mujayyab)</h3>
+            <p class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">Ilustrasi 2D Pengukuran Samtul Qiblah dari Utara ke Barat</p>
+          </div>
+        </div>
+        <button onclick="closeRubuModal()" class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-800 dark:hover:text-white flex items-center justify-center font-bold text-base transition-colors">&times;</button>
+      </div>
+
+      <div id="rubuSvgContainer" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-2 flex justify-center items-center">
+        <!-- SVG Di-render secara dinamis via JS -->
+      </div>
+
+      <div class="p-3 bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/60 rounded-xl text-xs space-y-1.5 text-slate-700 dark:text-slate-300">
+        <div class="font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1">
+          💡 Cara Penggunaan Rubu' Mujayyab di Lapangan:
+        </div>
+        <ol class="list-decimal list-inside space-y-1 text-[11px] leading-relaxed">
+          <li>Posisikan sisi lurus Rubu' sejajar arah <b>Utara Sejati</b>.</li>
+          <li>Tarik benang (*Khayt*) dari titik pusat (*Markaz*) ke angka busur derajat <b><span id="rubuDegreeText">0°</span></b> pada lengkungan (*Qaus*).</li>
+          <li>Garis bidik benang tersebut menunjukkan arah presisi menuju <b>Ka'bah Al-Musyarrafah</b>.</li>
+        </ol>
+      </div>
+
+      <div class="pt-1 text-right">
+        <button onclick="closeRubuModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-1.5 rounded-xl shadow-xs">
+          Paham & Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- TOMBOL FLOATING DRAGGABLE -->
   <div id="dragBtnContainer" class="fixed bottom-5 right-5 z-40 touch-none select-none">
     <button id="dragBtn" onclick="openLookupModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold p-3 sm:px-3.5 sm:py-2.5 rounded-full sm:rounded-xl shadow-2xl flex items-center gap-1.5 transition-transform active:scale-95 text-xs border border-indigo-400/30">
@@ -376,9 +453,9 @@
     </button>
   </div>
 
-  <!-- MODAL LOOKUP LOGARITMA & TRIGONOMETRI (RAPI & LIVE INPUT) -->
+  <!-- MODAL LOOKUP LOGARITMA & TRIGONOMETRI (SANGAT LENGKAP & DROPDOWN MODERN) -->
   <div id="lookupModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden flex items-center justify-center p-3 sm:p-4" onclick="if(event.target.id==='lookupModal') closeLookupModal()">
-    <div class="white-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 modal-bounce max-w-md w-full p-4 sm:p-5 space-y-3 shadow-2xl relative rounded-2xl" onclick="event.stopPropagation()">
+    <div class="white-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 modal-bounce max-w-lg w-full p-4 sm:p-5 space-y-3.5 shadow-2xl relative rounded-2xl" onclick="event.stopPropagation()">
       
       <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
         <div class="flex items-center gap-2.5">
@@ -386,18 +463,19 @@
             🧮
           </div>
           <div>
-            <h3 class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white">Lookup Log/Trigo Falak</h3>
-            <p class="text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold">Hasil langsung berubah saat diketik</p>
+            <h3 class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white">Lookup Logaritma & Trigonometri Falak</h3>
+            <p class="text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold">Lengkap: LogSin, LogCos, LogTan, LogCot, Sin, Cos, Tan, Cot</p>
           </div>
         </div>
         <button onclick="closeLookupModal()" class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-800 dark:hover:text-white flex items-center justify-center font-bold text-base transition-colors">&times;</button>
       </div>
 
       <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs font-bold">
-        <button id="tabBtn1" onclick="switchLookupTab(1)" class="flex-1 py-1.5 rounded-lg bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs transition-all">° ' ➔ Nilai</button>
-        <button id="tabBtn2" onclick="switchLookupTab(2)" class="flex-1 py-1.5 rounded-lg text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-all">Nilai ➔ ° '</button>
+        <button id="tabBtn1" onclick="switchLookupTab(1)" class="flex-1 py-1.5 rounded-lg bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs transition-all">° ' ➔ Nilai Lengkap</button>
+        <button id="tabBtn2" onclick="switchLookupTab(2)" class="flex-1 py-1.5 rounded-lg text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-all">Nilai ➔ ° ' (Klasik vs Eksak)</button>
       </div>
 
+      <!-- TAB 1: SUDUT KE NILAI LENGKAP -->
       <div id="lookupTab1" class="space-y-2.5">
         <div class="space-y-1">
           <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400">Masukkan Sudut (Derajat & Menit):</label>
@@ -413,7 +491,7 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-2 text-xs font-mono">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
           <div class="p-2 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700/60">
             <span class="text-[9px] text-slate-400 block font-sans font-semibold">LogSin</span>
             <span id="resLogSin" class="font-bold text-indigo-600 dark:text-indigo-400 text-xs sm:text-sm">-</span>
@@ -423,8 +501,25 @@
             <span id="resLogCos" class="font-bold text-purple-600 dark:text-purple-400 text-xs sm:text-sm">-</span>
           </div>
           <div class="p-2 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700/60">
+            <span class="text-[9px] text-slate-400 block font-sans font-semibold">LogTan</span>
+            <span id="resLogTan" class="font-bold text-cyan-600 dark:text-cyan-400 text-xs sm:text-sm">-</span>
+          </div>
+          <div class="p-2 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700/60">
+            <span class="text-[9px] text-slate-400 block font-sans font-semibold">LogCot</span>
+            <span id="resLogCot" class="font-bold text-teal-600 dark:text-teal-400 text-xs sm:text-sm">-</span>
+          </div>
+
+          <div class="p-2 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700/60">
             <span class="text-[9px] text-slate-400 block font-sans font-semibold">Sin</span>
             <span id="resSin" class="font-bold text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm">-</span>
+          </div>
+          <div class="p-2 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700/60">
+            <span class="text-[9px] text-slate-400 block font-sans font-semibold">Cos</span>
+            <span id="resCos" class="font-bold text-rose-600 dark:text-rose-400 text-xs sm:text-sm">-</span>
+          </div>
+          <div class="p-2 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700/60">
+            <span class="text-[9px] text-slate-400 block font-sans font-semibold">Tan</span>
+            <span id="resTan" class="font-bold text-blue-600 dark:text-blue-400 text-xs sm:text-sm">-</span>
           </div>
           <div class="p-2 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700/60">
             <span class="text-[9px] text-slate-400 block font-sans font-semibold">Cot</span>
@@ -433,23 +528,47 @@
         </div>
       </div>
 
+      <!-- TAB 2: NILAI KE SUDUT (DROPDOWN MODERN) -->
       <div id="lookupTab2" class="space-y-2.5 hidden">
         <div class="space-y-1">
           <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400">Pilih Fungsi & Masukkan Nilai Target:</label>
           <div class="flex gap-2">
-            <select id="invType" onchange="doInvCalc()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-2 font-bold outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="LOGSIN">LogSin</option>
-              <option value="LOGCOS">LogCos</option>
-              <option value="SIN">Sin</option>
-              <option value="COT">Cot</option>
-            </select>
+            
+            <!-- Custom Dropdown Modern Pilih Fungsi Inverse -->
+            <div class="relative w-36">
+              <select id="invType" onchange="doInvCalc()" class="w-full appearance-none bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl py-2 px-2.5 pr-7 font-bold outline-none focus:ring-2 focus:ring-indigo-500 hover:border-indigo-400 transition-all cursor-pointer">
+                <option value="LOGSIN">LogSin</option>
+                <option value="LOGCOS">LogCos</option>
+                <option value="LOGTAN">LogTan</option>
+                <option value="LOGCOT">LogCot</option>
+                <option value="SIN">Sin</option>
+                <option value="COS">Cos</option>
+                <option value="TAN">Tan</option>
+                <option value="COT">Cot</option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-indigo-500">
+                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+              </div>
+            </div>
+
             <input type="number" step="0.00001" id="invVal" oninput="doInvCalc()" placeholder="mis: 9.51264" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-2 flex-1 font-bold outline-none focus:ring-2 focus:ring-indigo-500">
           </div>
         </div>
 
-        <div class="p-2.5 bg-indigo-50/60 dark:bg-indigo-950/40 rounded-xl border border-indigo-100 dark:border-indigo-900/60 text-center space-y-0.5">
-          <span class="text-[9px] text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-bold block">Hasil Sudut Terdekat</span>
-          <span id="resInvDegMin" class="text-lg font-mono font-black text-indigo-700 dark:text-indigo-300">-° -'</span>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <!-- KLASIK LOGIC LOOP -->
+          <div class="p-2.5 bg-indigo-50/60 dark:bg-indigo-950/40 rounded-xl border border-indigo-100 dark:border-indigo-900/60 text-center space-y-0.5">
+            <span class="text-[9px] text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-bold block">Hasil Tabel Klasik (Terkait)</span>
+            <span id="resInvDegMin" class="text-base sm:text-lg font-mono font-black text-indigo-700 dark:text-indigo-300">-° -'</span>
+            <span class="text-[8px] text-slate-400 block">Metode Iterasi Menit Rubu'</span>
+          </div>
+
+          <!-- MATEMATIKA DIREK PRESISE -->
+          <div class="p-2.5 bg-emerald-50/60 dark:bg-emerald-950/40 rounded-xl border border-emerald-100 dark:border-emerald-900/60 text-center space-y-0.5">
+            <span class="text-[9px] text-emerald-600 dark:text-emerald-400 uppercase tracking-wider font-bold block">Hasil Eksak (Trigonometri Math)</span>
+            <span id="resInvExact" class="text-base sm:text-lg font-mono font-black text-emerald-700 dark:text-emerald-300">-° -' -''</span>
+            <span class="text-[8px] text-slate-400 block">Fungsi Inverse Math Direct Arc</span>
+          </div>
         </div>
       </div>
 
@@ -498,9 +617,29 @@
       return 10 + Math.log10(Math.cos(rad));
     }
 
+    function calcLogTan(degFloat) {
+      const rad = (degFloat * Math.PI) / 180;
+      return 10 + Math.log10(Math.tan(rad));
+    }
+
+    function calcLogCot(degFloat) {
+      const rad = (degFloat * Math.PI) / 180;
+      return 10 + Math.log10(1 / Math.tan(rad));
+    }
+
     function calcSin(degFloat) {
       const rad = (degFloat * Math.PI) / 180;
       return Math.sin(rad);
+    }
+
+    function calcCos(degFloat) {
+      const rad = (degFloat * Math.PI) / 180;
+      return Math.cos(rad);
+    }
+
+    function calcTan(degFloat) {
+      const rad = (degFloat * Math.PI) / 180;
+      return Math.tan(rad);
     }
 
     function calcCot(degFloat) {
@@ -536,6 +675,33 @@
       return { deg: 89, min: 59 };
     }
 
+    function invLogTan(logVal) {
+      let target = Math.round(logVal * 1e5) / 1e5;
+      let bestD = 0, bestM = 0;
+      for (let d = 0; d < 90; d++) {
+        for (let m = 0; m < 60; m++) {
+          let currentLog = Math.round(calcLogTan(d + m / 60) * 1e5) / 1e5;
+          if (currentLog <= target) {
+            bestD = d; bestM = m;
+          }
+        }
+      }
+      return { deg: bestD, min: bestM };
+    }
+
+    function invLogCot(logVal) {
+      let target = Math.round(logVal * 1e5) / 1e5;
+      for (let d = 0; d < 90; d++) {
+        for (let m = 0; m < 60; m++) {
+          let currentLog = Math.round(calcLogCot(d + m / 60) * 1e5) / 1e5;
+          if (currentLog <= target) {
+            return { deg: d, min: m };
+          }
+        }
+      }
+      return { deg: 89, min: 59 };
+    }
+
     function invSin(sinVal) {
       let target = Math.round(sinVal * 1e5) / 1e5;
       let bestD = 0, bestM = 0;
@@ -545,6 +711,33 @@
           if (currentSin <= target) {
             bestD = d;
             bestM = m;
+          }
+        }
+      }
+      return { deg: bestD, min: bestM };
+    }
+
+    function invCos(cosVal) {
+      let target = Math.round(cosVal * 1e5) / 1e5;
+      for (let d = 0; d < 90; d++) {
+        for (let m = 0; m < 60; m++) {
+          let currentCos = Math.round(calcCos(d + m / 60) * 1e5) / 1e5;
+          if (currentCos <= target) {
+            return { deg: d, min: m };
+          }
+        }
+      }
+      return { deg: 89, min: 59 };
+    }
+
+    function invTan(tanVal) {
+      let target = Math.round(tanVal * 1e5) / 1e5;
+      let bestD = 0, bestM = 0;
+      for (let d = 0; d < 90; d++) {
+        for (let m = 0; m < 60; m++) {
+          let currentTan = Math.round(calcTan(d + m / 60) * 1e5) / 1e5;
+          if (currentTan <= target) {
+            bestD = d; bestM = m;
           }
         }
       }
@@ -562,6 +755,27 @@
         }
       }
       return { deg: 89, min: 59 };
+    }
+
+    // FUNGSI INVERSE MATEMATIKA DIREK (ARCSIN / ARCCOS / ARCTAN / ARCCOT)
+    function invDirectMath(type, val) {
+      let degFloat = 0;
+      if (type === 'LOGSIN') degFloat = Math.asin(Math.pow(10, val - 10)) * 180 / Math.PI;
+      else if (type === 'LOGCOS') degFloat = Math.acos(Math.pow(10, val - 10)) * 180 / Math.PI;
+      else if (type === 'LOGTAN') degFloat = Math.atan(Math.pow(10, val - 10)) * 180 / Math.PI;
+      else if (type === 'LOGCOT') degFloat = Math.atan(1 / Math.pow(10, val - 10)) * 180 / Math.PI;
+      else if (type === 'SIN') degFloat = Math.asin(val) * 180 / Math.PI;
+      else if (type === 'COS') degFloat = Math.acos(val) * 180 / Math.PI;
+      else if (type === 'TAN') degFloat = Math.atan(val) * 180 / Math.PI;
+      else if (type === 'COT') degFloat = Math.atan(1 / val) * 180 / Math.PI;
+
+      if (isNaN(degFloat) || degFloat < 0) return { deg: 0, min: 0, sec: 0 };
+
+      const d = Math.floor(degFloat);
+      const remM = (degFloat - d) * 60;
+      const m = Math.floor(remM);
+      const s = Math.round((remM - m) * 60);
+      return { deg: d, min: m, sec: s };
     }
 
     function addDms(d1, m1, d2, m2) {
@@ -736,8 +950,10 @@
     }
 
     let globalRows = [];
+    let currentSamtQiblahDeg = 24; // Default fallback
 
     function hitungFalak() {
+      updateLocationTimezone();
       const tglInput = parseInt(document.getElementById('tanggal')?.value) || 1;
       const blnInput = parseInt(document.getElementById('bulan')?.value) || 1;
       const latDegInput = parseInt(document.getElementById('latDeg')?.value) || 7;
@@ -962,11 +1178,17 @@
 
       R.logSinMuaddalAsr = calcLogSin(R.muaddalAsrDeg + R.muaddalAsrMin / 60);
       R.logSinTamamFadhlAsr = (R.logSinMuaddalAsr + 10) - R.logSinAslMutlaq;
-      const tamamFadhlAsrDms = invLogSin(R.logSinTamamFadhlAsr);
+      const tamamFadhlAsrDms = invLogSin(R.logSinTamamFadhlAsr); 
       R.tamamFadhlAsrDeg = tamamFadhlAsrDms.deg; R.tamamFadhlAsrMin = tamamFadhlAsrDms.min;
 
-      let fadhlDairAsrRes = subDms(90, 0, R.tamamFadhlAsrDeg, R.tamamFadhlAsrMin);
-      R.fadhlDairAsrDeg = fadhlDairAsrRes.deg; R.fadhlDairAsrMin = fadhlDairAsrRes.min;
+      
+      let rawAsrDeg = tamamFadhlAsrDms.deg + tamamFadhlAsrDms.min / 60;
+      let finalAsrDegFloat = (rawAsrDeg < 45) ? (90 - rawAsrDeg) : rawAsrDeg;
+      let fAsrDeg = Math.floor(finalAsrDegFloat);
+      let fAsrMin = Math.round((finalAsrDegFloat - fAsrDeg) * 60);
+      if (fAsrMin === 60) { fAsrDeg += 1; fAsrMin = 0; }
+      R.fadhlDairAsrDeg = fAsrDeg;
+      R.fadhlDairAsrMin = fAsrMin;
       R.asrBox = convertLattice4(R.fadhlDairAsrDeg, R.fadhlDairAsrMin);
 
       let dairBainAsrMaghribRes = subDms(R.qausMaraiDeg, R.qausMaraiMin, R.fadhlDairAsrDeg, R.fadhlDairAsrMin);
@@ -976,8 +1198,20 @@
       R.thulBaladKotaDeg = longDegInput; R.thulBaladKotaMin = longMinInput;
       R.thulBaladMakkahDeg = 39; R.thulBaladMakkahMin = 57;
 
-      let fadhlThulRes = subDms(R.thulBaladKotaDeg, R.thulBaladKotaMin, R.thulBaladMakkahDeg, R.thulBaladMakkahMin);
-      R.fadhlThulDeg = fadhlThulRes.deg; R.fadhlThulMin = fadhlThulRes.min;
+      let longArahInput = document.getElementById('longArah')?.value || "TIMUR";
+      let lonCity = R.thulBaladKotaDeg + R.thulBaladKotaMin / 60;
+      if (longArahInput === "BARAT") lonCity = -lonCity;
+      let lonMakkah = 39 + 57 / 60;
+
+      let diffLon = Math.abs(lonCity - lonMakkah);
+      if (diffLon > 180) diffLon = 360 - diffLon;
+
+      let fDeg = Math.floor(diffLon);
+      let fMin = Math.round((diffLon - fDeg) * 60);
+      if (fMin === 60) { fDeg += 1; fMin = 0; }
+
+      R.fadhlThulDeg = fDeg;
+      R.fadhlThulMin = fMin;
 
       R.logSinArdhBaladKiblat = calcLogSin(R.latDeg + R.latMin / 60);
       R.ardhMakkahDeg = 21; R.ardhMakkahMin = 30; R.logSinArdhMakkah = 9.56408;
@@ -1034,22 +1268,64 @@
       R.logCosIrtifaKiblat = calcLogCos(R.irtifaKiblatDeg + R.irtifaKiblatMin / 60);
 
       R.logCosSamtQiblah = (R.logSinMajmu2Kiblat + 10) - R.logCosIrtifaKiblat;
-      const samtQiblahDms = invLogCos(R.logCosSamtQiblah);
-      R.samtQiblahDeg = samtQiblahDms.deg; 
-      R.samtQiblahMin = samtQiblahDms.min;
+      const samtQiblahCosDms = invLogCos(R.logCosSamtQiblah);
+      const samtQiblahSinDms = invLogSin(R.logCosSamtQiblah);
+
+      R.samtQiblahCosDeg = samtQiblahCosDms.deg;
+      R.samtQiblahCosMin = samtQiblahCosDms.min;
+      R.samtQiblahSinDeg = samtQiblahSinDms.deg;
+      R.samtQiblahSinMin = samtQiblahSinDms.min;
+
+      // KALKULASI EKSAT AZIMUTH KIBLAT GLOBAL (UT / UB)
+      let latVal = R.latDeg + R.latMin / 60;
+      if (R.latArah === "SELATAN") latVal = -latVal;
+
+      longArahInput = document.getElementById('longArah')?.value || "TIMUR";
+      let lonVal = R.thulBaladKotaDeg + R.thulBaladKotaMin / 60;
+      if (longArahInput === "BARAT") lonVal = -lonVal;
+
+      let phiRad = (latVal * Math.PI) / 180;
+      let phiMRad = (21.5 * Math.PI) / 180; // Makkah 21° 30' N
+      let dLonRad = ((39.95 - lonVal) * Math.PI) / 180; // Makkah 39° 57' E
+
+      let y = Math.sin(dLonRad);
+      let x = Math.cos(phiRad) * Math.tan(phiMRad) - Math.sin(phiRad) * Math.cos(dLonRad);
+      let qiblaAzimuthDeg = (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+
+      let isEastOfMakkah = lonVal < 39.95; // Lokasi di sebelah Barat Makkah (mis: Maroko, Eropa)
+      let qiblaLabel = isEastOfMakkah ? "UT" : "UB";
+      let qiblaAngleDisp = isEastOfMakkah ? qiblaAzimuthDeg : (360 - qiblaAzimuthDeg);
+
+      let qDeg = Math.floor(qiblaAngleDisp);
+      let qMin = Math.round((qiblaAngleDisp - qDeg) * 60);
+      if (qMin === 60) { qDeg += 1; qMin = 0; }
+
+      R.samtQiblahDeg = qDeg;
+      R.samtQiblahMin = qMin;
+      R.qiblaLabel = qiblaLabel;
+      R.isEastOfMakkah = isEastOfMakkah;
+      R.qiblaAzimuthDeg = qiblaAzimuthDeg;
+
+      currentSamtQiblahDeg = qiblaAngleDisp;
 
       const pad = (n) => String(n).padStart(2, '0');
       document.getElementById('resSubuh').innerText = `${pad(R.subhBox.jam)}:${pad(R.subhBox.menit)}:${pad(R.subhBox.detik)}`;
       document.getElementById('resDhuha').innerText = `${pad(R.jamDhuha)}:${pad(R.menitDhuha)}:${pad(R.detikDhuha)}`;
       document.getElementById('resThulu').innerText = `${pad(R.thuluBox.jam)}:${pad(R.thuluBox.menit)}:${pad(R.thuluBox.detik)}`;
-      document.getElementById('resAsr').innerText = `${pad(R.asrBox.jam)}:${pad(R.asrBox.menit)}:${pad(R.asrBox.detik)}`;
-      document.getElementById('resMaghrib').innerText = `${pad(R.maghribBox.jam)}:${pad(R.maghribBox.menit)}:${pad(R.maghribBox.detik)}`;
-      document.getElementById('resIsya').innerText = `${pad(R.isyaBox.jam)}:${pad(R.isyaBox.menit)}:${pad(R.isyaBox.detik)}`;
-      document.getElementById('resQiblah').innerText = `${R.samtQiblahDeg}° ${R.samtQiblahMin}' UB`;
+      
+      // FORMAT WAKTU SHOLAT SORE & MALAM DENGAN STANDAR 24 JAM (+12 JAM)
+      document.getElementById('resAsr').innerText = `${pad((R.asrBox.jam + 12) % 24)}:${pad(R.asrBox.menit)}:${pad(R.asrBox.detik)}`;
+      document.getElementById('resMaghrib').innerText = `${pad((R.maghribBox.jam + 12) % 24)}:${pad(R.maghribBox.menit)}:${pad(R.maghribBox.detik)}`;
+      document.getElementById('resIsya').innerText = `${pad((R.isyaBox.jam + 12) % 24)}:${pad(R.isyaBox.menit)}:${pad(R.isyaBox.detik)}`;
+      document.getElementById('resQiblah').innerText = `${R.samtQiblahDeg}° ${R.samtQiblahMin}' ${R.qiblaLabel}`;
 
       const needle = document.getElementById('compassNeedle');
       if (needle) {
-        needle.style.transform = `rotate(-${R.samtQiblahDeg}deg)`;
+        if (R.isEastOfMakkah) {
+          needle.style.transform = `rotate(${R.qiblaAzimuthDeg}deg)`;
+        } else {
+          needle.style.transform = `rotate(-${R.samtQiblahDeg}deg)`;
+        }
       }
 
       globalRows = [
@@ -1159,11 +1435,10 @@
         { stepNum: 95, kat: "SHOLAT", op: "=", logType: "SIN", logVal: R.sinMuaddalAsr.toFixed(5), buruj: "", deg: R.muaddalAsrDeg, min: R.muaddalAsrMin, sec: "", label: "المعدل", title: "Al-Mu'addal 'Asr", desc: "Hasil Sinus Muaddal Asr." },
         { stepNum: 96, kat: "SHOLAT", op: "", logType: "LOGSIN", logVal: R.logSinMuaddalAsr.toFixed(5), buruj: "", deg: R.muaddalAsrDeg, min: R.muaddalAsrMin, sec: "", label: "المعدل", title: "LogSin Mu'addal 'Asr", desc: "LogSin Muaddal Asr." },
         { stepNum: 97, kat: "SHOLAT", op: "-", logType: "LOGSIN", logVal: R.logSinAslMutlaq.toFixed(5), buruj: "", deg: R.aslMutlaqDeg, min: R.aslMutlaqMin, sec: "", label: "الاصل المطلق", title: "Al-Asl Al-Mutlaq", desc: "Pengurang Asl Mutlaq." },
-        { stepNum: 98, kat: "SHOLAT", op: "=", logType: "LOGSIN", logVal: R.logSinTamamFadhlAsr.toFixed(5), buruj: "", deg: R.tamamFadhlAsrDeg, min: R.tamamFadhlAsrMin, sec: "", label: "تمام فضل الدائر", title: "Tamam Fadhl Ad-Dair 'Asr", desc: "Tamam Fadhl Asr." },
-        { stepNum: 99, kat: "SHOLAT", op: "", logType: "", logVal: "", buruj: "", deg: 90, min: "", sec: "", label: "90درجة", title: "90 Derajat", desc: "Konstanta kuadran 90°." },
-        { stepNum: 100, kat: "SHOLAT", op: "-", logType: "", logVal: "", buruj: "", deg: R.tamamFadhlAsrDeg, min: R.tamamFadhlAsrMin, sec: "", label: "تمام فضل الدائر", title: "Tamam Fadhl Ad-Dair 'Asr", desc: "Pengurang Tamam Fadhl." },
-        { stepNum: 101, kat: "SHOLAT", op: "=", logType: "", logVal: "", buruj: "", deg: R.fadhlDairAsrDeg, min: R.fadhlDairAsrMin, sec: "", label: "فضل الدائر", title: "Fadhl Ad-Dair 'Asr", desc: "Busur sudut putaran Asar." },
-        { stepNum: 102, kat: "SHOLAT", op: "=", logType: "MIKYAL", logVal: "X4", buruj: "", deg: R.asrBox.jam, min: R.asrBox.menit, sec: R.asrBox.detik, customWidget: R.asrBox.svgHtml, label: "جام عصر", title: "Jam 'Asr", desc: `Waktu Asar: ${pad(R.asrBox.jam)}:${pad(R.asrBox.menit)}:${pad(R.asrBox.detik)}` },
+        { stepNum: 98, kat: "SHOLAT", op: "=", logType: "LOGSIN", logVal: R.logSinTamamFadhlAsr.toFixed(5), buruj: "", deg: R.tamamFadhlAsrDeg, min: R.tamamFadhlAsrMin, sec: "", label: "تمام فضل الدائر", title: "Tamam Fadhl Ad-Dair 'Asr", desc: "Tamam Fadhl Asr hasil pembagian LogSin." },
+        { stepNum: 99, kat: "SHOLAT", op: "=", logType: "", logVal: "", buruj: "", deg: R.fadhlDairAsrDeg, min: R.fadhlDairAsrMin, sec: "", label: "فضل الدائر", title: "Fadhl Ad-Dair 'Asr", desc: "Busur sudut putaran matahari sejati dari Istiwa ke Asar." },
+        { stepNum: 100, kat: "SHOLAT", op: "X4", logType: "", logVal: "", buruj: "", deg: "", min: "", sec: "", label: "قاعدة", title: "Qaidah Perkalian 4", desc: "Mikyal perkalian 4." },
+        { stepNum: 101, kat: "SHOLAT", op: "=", logType: "MIKYAL", logVal: "X4", buruj: "", deg: R.asrBox.jam, min: R.asrBox.menit, sec: R.asrBox.detik, customWidget: R.asrBox.svgHtml, label: "جام عصر", title: "Jam 'Asr", desc: `Durasi Asar dari Zuhur: ${pad(R.asrBox.jam)}:${pad(R.asrBox.menit)}:${pad(R.asrBox.detik)}` },
         { stepNum: 103, kat: "SHOLAT", op: "", logType: "", logVal: "", buruj: "", deg: R.qausMaraiDeg, min: R.qausMaraiMin, sec: "", label: "نصف قوس النهار المرئي/مغرب", title: "Nishf Qaus An-Nahar Al-Mar'i", desc: "Busur Maghrib." },
         { stepNum: 104, kat: "SHOLAT", op: "-", logType: "", logVal: "", buruj: "", deg: R.fadhlDairAsrDeg, min: R.fadhlDairAsrMin, sec: "", label: "فضل الدائر", title: "Fadhl Ad-Dair 'Asr", desc: "Pengurang Fadhl Dair." },
         { stepNum: 105, kat: "SHOLAT", op: "=", logType: "", logVal: "", buruj: "", deg: R.dairBainAsrMaghribDeg, min: R.dairBainAsrMaghribMin, sec: "", label: "الدائر بين العصر و المغرب", title: "Ad-Dair Bainal 'Asri Wal Maghrib", desc: "Busur jeda Asar ke Maghrib." },
@@ -1194,7 +1469,8 @@
         { stepNum: 129, kat: "KIBLAT", op: "+", logType: "LOGSIN", logVal: R.logSinFadhlThul.toFixed(5), buruj: "", deg: R.fadhlThulDeg, min: R.fadhlThulMin, sec: "", label: "فضل طول / فضل الدائر", title: "LogSin Fadhl Thul", desc: "LogSin selisih bujur." },
         { stepNum: 130, kat: "KIBLAT", op: "=", logType: "LOGSIN", logVal: R.logSinMajmu2Kiblat.toFixed(5), buruj: "", deg: R.majmu2KiblatDeg, min: R.majmu2KiblatMin, sec: "", label: "المجموع", title: "Al-Majmu' 2 Kiblat", desc: "Hasil Majmu' 2 Kiblat." },
         { stepNum: 131, kat: "KIBLAT", op: "-", logType: "LOGCOS", logVal: R.logCosIrtifaKiblat.toFixed(5), buruj: "", deg: R.irtifaKiblatDeg, min: R.irtifaKiblatMin, sec: "", label: "إرتفاع", title: "LogCos Irtifa' Kiblat", desc: "Pengurang LogCos Irtifa Kiblat." },
-        { stepNum: 132, kat: "KIBLAT", op: "=", logType: "LOGCOS", logVal: R.logCosSamtQiblah.toFixed(5), buruj: "", deg: R.samtQiblahDeg, min: R.samtQiblahMin, sec: "", label: "سمت القبلة", title: "Samt Al-Qiblah (Azimuth Kiblat)", desc: `Sudut Kemiringan Arah Kiblat dari Utara ke Barat: ${R.samtQiblahDeg}° ${R.samtQiblahMin}' UB` }
+        { stepNum: 132, kat: "KIBLAT", op: "=", logType: "LOGCOS", logVal: R.logCosSamtQiblah.toFixed(5), buruj: "", deg: R.samtQiblahCosDeg, min: R.samtQiblahCosMin, sec: "", label: "سمت القبلة", title: "Samt Al-Qiblah (LogCos)", desc: `Sudut Samt Al-Qiblah versi LogCos: ${R.samtQiblahCosDeg}° ${R.samtQiblahCosMin}'` },
+        { stepNum: 133, kat: "KIBLAT", op: "=", logType: "LOGSIN", logVal: R.logCosSamtQiblah.toFixed(5), buruj: "", deg: R.samtQiblahSinDeg, min: R.samtQiblahSinMin, sec: "", label: "تمام سمت القبلة", title: "Tamam Samt Al-Qiblah (LogSin)", desc: `Sudut Tamam Samt Al-Qiblah versi LogSin: ${R.samtQiblahSinDeg}° ${R.samtQiblahSinMin}'` }
       ];
 
       renderAccordionTabel(globalRows);
@@ -1209,7 +1485,7 @@
         { id: "MUTLAQ", title: "Fase 2: Logaritma & Asl Mutlaq (Langkah 16 - 24)" },
         { id: "QAUS", title: "Fase 3: Putaran Al-Qaus & Ikhtilaf (Langkah 25 - 47)" },
         { id: "SHOLAT", title: "Fase 4: Waktu Sholat & Mikyal (Langkah 48 - 106)" },
-        { id: "KIBLAT", title: "Fase 5: Detail Arah Kiblat (Langkah 107 - 132)" }
+        { id: "KIBLAT", title: "Fase 5: Detail Arah Kiblat (Langkah 107 - 133)" }
       ];
 
       let htmlAcc = FASES.map((fase) => {
@@ -1363,6 +1639,59 @@
       document.getElementById('infoModal').classList.add('hidden');
     }
 
+    // RUBU' MUJAYYAB MODAL LOGIC & VISUALIZER SVG GENERATOR
+    function openRubuModal() {
+      const rubuDegText = document.getElementById('rubuDegreeText');
+      if (rubuDegText) rubuDegText.innerText = `${currentSamtQiblahDeg.toFixed(2)}° (UB)`;
+
+      renderRubuSvg(currentSamtQiblahDeg);
+      document.getElementById('rubuModal').classList.remove('hidden');
+    }
+
+    function closeRubuModal() {
+      document.getElementById('rubuModal').classList.add('hidden');
+    }
+
+    function renderRubuSvg(samtDeg) {
+      const container = document.getElementById('rubuSvgContainer');
+      if (!container) return;
+
+      const rad = (samtDeg * Math.PI) / 180;
+      const lineX = 260 - 200 * Math.sin(rad);
+      const lineY = 50 + 200 * Math.cos(rad);
+
+      container.innerHTML = `
+        <svg class="w-full max-w-[320px] h-auto" viewBox="0 0 300 280">
+          <path d="M 260 50 L 60 50 A 200 200 0 0 0 260 250 Z" fill="#ecfdf5" stroke="#059669" stroke-width="2.5" class="dark:fill-emerald-950/40"/>
+          
+          <line x1="260" y1="100" x2="110" y2="100" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
+          <line x1="260" y1="150" x2="160" y2="150" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
+          <line x1="260" y1="200" x2="220" y2="200" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
+          
+          <line x1="210" y1="50" x2="210" y2="200" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
+          <line x1="160" y1="50" x2="160" y2="150" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
+          <line x1="110" y1="50" x2="110" y2="100" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
+
+          <text x="260" y="38" text-anchor="middle" font-size="11" font-weight="extrabold" fill="#059669">UTARA (0°)</text>
+          <text x="40" y="54" text-anchor="end" font-size="11" font-weight="extrabold" fill="#0284c7">BARAT (90°)</text>
+          
+          <circle cx="260" cy="50" r="5" fill="#059669"/>
+          <text x="272" y="54" font-size="9" font-weight="bold" fill="#64748b">Markaz</text>
+
+          <line x1="260" y1="50" x2="${lineX}" y2="${lineY}" stroke="#dc2626" stroke-width="2.5"/>
+          <circle cx="${lineX}" cy="${lineY}" r="4" fill="#dc2626"/>
+
+          <g transform="translate(${lineX - 10}, ${lineY - 10}) scale(0.8)">
+            <rect x="0" y="0" width="20" height="20" fill="#09090b" rx="2"/>
+            <rect x="0" y="4" width="20" height="3" fill="#eab308"/>
+          </g>
+
+          <text x="${lineX - 15}" y="${lineY + 22}" font-size="10" font-weight="black" fill="#dc2626">Arah Ka'bah (${samtDeg.toFixed(1)}° UB)</text>
+          <text x="170" y="240" font-size="9" font-weight="bold" fill="#059669" class="dark:fill-emerald-400">Qaus As-Samt (Busur 0°-90°)</text>
+        </svg>
+      `;
+    }
+
     function openLookupModal() {
       document.getElementById('lookupModal').classList.remove('hidden');
       doFwdCalc();
@@ -1400,7 +1729,12 @@
 
       document.getElementById('resLogSin').innerText = calcLogSin(degFloat).toFixed(5);
       document.getElementById('resLogCos').innerText = calcLogCos(degFloat).toFixed(5);
+      document.getElementById('resLogTan').innerText = calcLogTan(degFloat).toFixed(5);
+      document.getElementById('resLogCot').innerText = calcLogCot(degFloat).toFixed(5);
+
       document.getElementById('resSin').innerText = calcSin(degFloat).toFixed(5);
+      document.getElementById('resCos').innerText = calcCos(degFloat).toFixed(5);
+      document.getElementById('resTan').innerText = calcTan(degFloat).toFixed(5);
       document.getElementById('resCot').innerText = calcCot(degFloat).toFixed(5);
     }
 
@@ -1409,13 +1743,20 @@
       const val = parseFloat(document.getElementById('invVal').value);
       if (isNaN(val)) return;
 
-      let res = { deg: 0, min: 0 };
-      if (type === 'LOGSIN') res = invLogSin(val);
-      else if (type === 'LOGCOS') res = invLogCos(val);
-      else if (type === 'SIN') res = invSin(val);
-      else if (type === 'COT') res = invCot(val);
+      let resClassic = { deg: 0, min: 0 };
+      if (type === 'LOGSIN') resClassic = invLogSin(val);
+      else if (type === 'LOGCOS') resClassic = invLogCos(val);
+      else if (type === 'LOGTAN') resClassic = invLogTan(val);
+      else if (type === 'LOGCOT') resClassic = invLogCot(val);
+      else if (type === 'SIN') resClassic = invSin(val);
+      else if (type === 'COS') resClassic = invCos(val);
+      else if (type === 'TAN') resClassic = invTan(val);
+      else if (type === 'COT') resClassic = invCot(val);
 
-      document.getElementById('resInvDegMin').innerText = `${res.deg}° ${res.min}'`;
+      document.getElementById('resInvDegMin').innerText = `${resClassic.deg}° ${resClassic.min}'`;
+
+      let resExact = invDirectMath(type, val);
+      document.getElementById('resInvExact').innerText = `${resExact.deg}° ${resExact.min}' ${resExact.sec}"`;
     }
 
     function initDraggableBtn() {
@@ -1460,10 +1801,78 @@
       }
     }
 
+    let currentUtcOffset = 7; // Default WIB (UTC+7)
+
+    // Estimasi Cepat Offline Zona Waktu dari Bujur/Lintang
+    function getApproxTimezoneOffset(lat, lon) {
+      if (lat >= -11 && lat <= 6 && lon >= 95 && lon <= 141) {
+        if (lon < 110.0) return 7;      // WIB (UTC+7)
+        else if (lon < 125.0) return 8; // WITA (UTC+8)
+        else return 9;                  // WIT (UTC+9)
+      }
+      return Math.round(lon / 15);
+    }
+
+    // Mencari Zona Waktu Presisi via API Internet (Open-Meteo Timezone API)
+    async function updateLocationTimezone() {
+      let latDeg = parseFloat(document.getElementById('latDeg')?.value) || 0;
+      let latMin = parseFloat(document.getElementById('latMin')?.value) || 0;
+      let latArah = document.getElementById('latArah')?.value || "SELATAN";
+      let lat = latDeg + latMin / 60;
+      if (latArah === "SELATAN") lat = -lat;
+
+      let longDeg = parseFloat(document.getElementById('longDeg')?.value) || 0;
+      let longMin = parseFloat(document.getElementById('longMin')?.value) || 0;
+      let longArah = document.getElementById('longArah')?.value || "TIMUR";
+      let lon = longDeg + longMin / 60;
+      if (longArah === "BARAT") lon = -lon;
+
+      // 1. Set perkiraan zona waktu langsung (Instan tanpa delay)
+      currentUtcOffset = getApproxTimezoneOffset(lat, lon);
+
+      // 2. Query presisi zona waktu online dari Open-Meteo
+      try {
+        const resp = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&timezone=auto`);
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data && typeof data.utc_offset_seconds === 'number') {
+            currentUtcOffset = data.utc_offset_seconds / 3600;
+          }
+        }
+      } catch (err) {
+        // Jika offline, tetap menggunakan estimasi cepat offline
+      }
+    }
+
     function updateJamIstiwa() {
       const now = new Date();
+
+      // Mengambil Waktu UTC Murni Sistem
       const utcHours = now.getUTCHours() + now.getUTCMinutes() / 60 + now.getUTCSeconds() / 3600;
 
+      // 1. Waktu Standar Setempat Berdasarkan Lokasi Terpilih
+      let targetLocalHours = (utcHours + currentUtcOffset) % 24;
+      if (targetLocalHours < 0) targetLocalHours += 24;
+
+      const pad = n => String(n).padStart(2, '0');
+
+      const locHrs = Math.floor(targetLocalHours);
+      const locRemMin = (targetLocalHours - locHrs) * 60;
+      const locMins = Math.floor(locRemMin);
+      const locSecs = Math.floor((locRemMin - locMins) * 60);
+
+      const elLokal = document.getElementById('liveJamLokal');
+      if (elLokal) {
+        elLokal.innerText = `${pad(locHrs)}:${pad(locMins)}:${pad(locSecs)}`;
+      }
+
+      const labelLokal = document.getElementById('labelJamLokal');
+      if (labelLokal) {
+        const sign = currentUtcOffset >= 0 ? '+' : '';
+        labelLokal.innerText = `Waktu Setempat (UTC${sign}${currentUtcOffset})`;
+      }
+
+      // 2. Jam Istiwa' (Waktu Matahari Lokal Berdasarkan Bujur Terpilih)
       let longDeg = parseFloat(document.getElementById('longDeg')?.value) || 112;
       let longMin = parseFloat(document.getElementById('longMin')?.value) || 45;
       let longArah = document.getElementById('longArah')?.value || "TIMUR";
@@ -1485,14 +1894,30 @@
       const mins = Math.floor(remMin);
       const secs = Math.floor((remMin - mins) * 60);
 
-      const pad = n => String(n).padStart(2, '0');
-      const el = document.getElementById('liveJamIstiwa');
-      if (el) {
-        el.innerText = `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+      const elIstiwa = document.getElementById('liveJamIstiwa');
+      if (elIstiwa) {
+        elIstiwa.innerText = `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+      }
+
+      // 3. Selisih Waktu (Jam Istiwa - Waktu Standar Lokasi)
+      let diffHours = solarTimeHours - targetLocalHours;
+      if (diffHours > 12) diffHours -= 24;
+      if (diffHours < -12) diffHours += 24;
+
+      let totalDiffSeconds = Math.round(diffHours * 3600);
+      let diffSign = totalDiffSeconds >= 0 ? "+" : "-";
+      let absDiffSecs = Math.abs(totalDiffSeconds);
+      let diffMinsPart = Math.floor(absDiffSecs / 60);
+      let diffSecsPart = absDiffSecs % 60;
+
+      const elSelisih = document.getElementById('liveSelisih');
+      if (elSelisih) {
+        elSelisih.innerText = `${diffSign}${pad(diffMinsPart)}m ${pad(diffSecsPart)}s`;
       }
     }
     setInterval(updateJamIstiwa, 1000);
 
+    // FUNGSI INI SUDAH DIPERBAIKI SINTAKS NANYA (setTanggalOtomatisHariIni)
     function setTanggalOtomatisHariIni() {
       const today = new Date();
       const tglElem = document.getElementById('tanggal');
@@ -1503,6 +1928,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      updateLocationTimezone();
       initDraggableBtn();
       setTanggalOtomatisHariIni();
       hitungFalak();
