@@ -705,19 +705,27 @@ function renderKalenderHijriGrid() {
     `;
   }
 
-  // 2. Sel Tanggal Aktif Kalender Hijriyah
+// 2. Sel Tanggal Aktif Kalender Hijriyah
   for (let d = 1; d <= totalDaysInMonth; d++) {
+    // Tanggal Masehi siang hari tanggal d Hijriyah
     let currDate = new Date(dateAwalBulan.getFullYear(), dateAwalBulan.getMonth(), dateAwalBulan.getDate() + (d - 1));
     let gYear = currDate.getFullYear();
     let gMonth = currDate.getMonth() + 1;
     let gDay = currDate.getDate();
+
+    // Waktu Sunset untuk penentuan awal malam d Hijriyah (Sunset H-1 Masehi)
+    let sunsetDate = new Date(dateAwalBulan.getFullYear(), dateAwalBulan.getMonth(), dateAwalBulan.getDate() + (d - 2));
+    let sYear = sunsetDate.getFullYear();
+    let sMonth = sunsetDate.getMonth() + 1;
+    let sDay = sunsetDate.getDate();
 
     let jdCurr = gregorianToJD(gYear, gMonth, gDay);
     let jdInt = Math.floor(jdCurr + 0.5);
     let hariIdx = (jdInt + 1) % 7;
     let pasaranIdx = jdInt % 5;
 
-    let mData = getMoonDataAtSunset(gYear, gMonth, gDay);
+    // Hitung posisi bulan saat sunset penentuan (H-1 Masehi)
+    let mData = getMoonDataAtSunset(sYear, sMonth, sDay);
 
     let isSunday = hariIdx === 0;
     let isFriday = hariIdx === 5;
@@ -727,28 +735,24 @@ function renderKalenderHijriGrid() {
       ? "bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-200" 
       : "bg-slate-100 dark:bg-slate-800 text-slate-500 border-slate-200";
 
-    // Singkatan nama bulan Masehi 3 huruf agar rapi di HP
     let masehiMonthShort = typeof DATABASE_BULAN !== 'undefined' && DATABASE_BULAN[gMonth]?.nama 
       ? DATABASE_BULAN[gMonth].nama.substring(0, 3) 
       : '';
 
     htmlGrid += `
-      <div onclick="openDetailBulanModal(${gYear}, ${gMonth}, ${gDay}, ${d}, '${namaBulanHijri}', ${yHijri})" 
+      <div onclick="openDetailBulanModal(${sYear}, ${sMonth}, ${sDay}, ${d}, '${namaBulanHijri}', ${yHijri})" 
            class="p-1 sm:p-2 rounded-lg sm:rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-indigo-500 dark:hover:border-indigo-500 transition-all cursor-pointer shadow-2xs hover:shadow-md group flex flex-col justify-between min-h-[75px] sm:min-h-[105px]">
         
-        <!-- Pasaran & Hari -->
         <div class="flex justify-between items-center leading-none">
           <span class="text-[8px] sm:text-[10px] font-bold text-slate-400 tracking-tight">${NAMA_PASARAN[pasaranIdx]}</span>
           <span class="text-[8px] sm:text-[9.5px] font-semibold text-slate-400 hidden sm:inline">${NAMA_HARI[hariIdx]}</span>
         </div>
 
-        <!-- Tanggal Hijriyah UTAMA (Besar di Tengah) & Tanggal Masehi (Kecil di Bawahnya) -->
         <div class="my-0.5 text-center leading-tight">
           <div class="text-base sm:text-2xl font-black ${dayColorClass} group-hover:scale-110 transition-transform font-mono">${d}</div>
           <div class="text-[8.5px] sm:text-[11px] font-bold text-slate-600 dark:text-slate-300 tracking-tight">${gDay} ${masehiMonthShort}</div>
         </div>
 
-        <!-- Badge Tinggi Hilal -->
         <div class="flex items-center justify-center pt-0.5 border-t border-slate-100 dark:border-slate-800/80">
           <span class="px-1 py-0.5 rounded border ${badgeColor} font-mono font-bold text-[7.5px] sm:text-[9.5px] leading-none truncate max-w-full">${fmtDMS(mData.altHilalMarai)}</span>
         </div>
