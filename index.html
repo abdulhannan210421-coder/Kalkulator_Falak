@@ -51,10 +51,10 @@
 
   <div class="max-w-[1600px] w-full mx-auto space-y-2.5 sm:space-y-3.5 flex-1 flex flex-col justify-between">
     
-    <!-- HEADER RINGKAS DENGAN TOMBOL TEMA BERGAYA LOGO DI KIRI -->
-    <header class="white-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3 sm:p-4 flex items-center justify-between gap-3 shadow-2xs">
+    <!-- HEADER MODERN REVISED -->
+    <header class="white-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3 sm:p-4 flex items-center justify-between gap-3 shadow-xs">
       <div class="flex items-center gap-3">
-        <!-- Tombol Dark/Light Mode (Berfungsi sebagai Logo Interaktif) -->
+        <!-- Logo Interaktif Tema -->
         <button onclick="toggleTheme()" class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl border border-indigo-100 dark:border-indigo-900/60 bg-indigo-50/80 dark:bg-indigo-950/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/80 transition-all flex items-center justify-center text-xl sm:text-2xl shadow-2xs shrink-0 cursor-pointer" title="Ubah Tema Cerah/Gelap">
           <span class="dark:hidden">🌙</span>
           <span class="hidden dark:inline">☀️</span>
@@ -62,10 +62,10 @@
 
         <div>
           <div class="flex flex-wrap items-center gap-2">
-            <h1 class="text-base sm:text-lg font-black tracking-tight text-slate-900 dark:text-white">Kalkulator Falakiyah</h1>
-            <span class="text-[10px] bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 px-2 py-0.5 rounded-md font-bold">Abdul Hannan Achmad Ismail as-Shufy</span>
+            <h1 id="headerTitleText" class="text-base sm:text-lg font-black tracking-tight text-slate-900 dark:text-white">Kalkulator Falakiyah</h1>
+            <span class="text-[10px] bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 px-2 py-0.5 rounded-md font-bold">Abdul Hannan Achmad Ismail as-Shufy</span>
           </div>
-          <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">Kalkulasi Waktu Sholat Mikyal & Azimuth Kiblat Presisi</p>
+          <p id="headerDescText" class="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">Kalkulasi Waktu Sholat Mikyal & Azimuth Kiblat Presisi</p>
         </div>
       </div>
     </header>
@@ -456,6 +456,7 @@
           <span id="calMonthTitle" class="text-xs sm:text-sm font-black text-emerald-800 dark:text-emerald-300 font-mono px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 text-center"></span>
         </div>
 
+        <!-- NAVIGASI BULANAN KALENDER HIJRIYAH -->
         <div class="p-3 bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 rounded-xl flex flex-wrap items-center justify-between gap-3">
           <div class="flex items-center gap-2 flex-1 min-w-[240px]">
             <label class="text-xs font-bold text-emerald-950 dark:text-emerald-300 shrink-0">Bulan Hijriah:</label>
@@ -479,46 +480,63 @@
             <label class="text-xs font-bold text-emerald-950 dark:text-emerald-300 shrink-0">Tahun H:</label>
             <input type="number" id="inputTahunHijriCal" value="1448" oninput="renderKalenderHijriGrid()" class="bg-white dark:bg-slate-800 border border-emerald-300 dark:border-emerald-800 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-full text-center font-bold outline-none">
           </div>
+
+          <!-- TOMBOL NAVIGASI CEPAT -->
+          <div class="flex items-center gap-1.5">
+            <button onclick="prevHijriMonth()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-3 py-2 rounded-xl transition-all shadow-xs" title="Bulan Sebelum">
+              ◀ Prev
+            </button>
+            <button onclick="todayHijriMonth()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-2 rounded-xl transition-all shadow-xs" title="Bulan Ini">
+              📍 Hari Ini
+            </button>
+            <button onclick="nextHijriMonth()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-3 py-2 rounded-xl transition-all shadow-xs" title="Bulan Sesudah">
+              Next ▶
+            </button>
+          </div>
         </div>
 
-		<!-- HEADER NAMA HARI KALENDER STANDAR (7 KOLOM) -->
-		<div class="grid grid-cols-7 gap-1 sm:gap-2 text-center font-bold text-[10px] sm:text-xs uppercase tracking-tight sm:tracking-wider py-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700/60">
-		  <div class="text-rose-600 dark:text-rose-400">Ahad</div>
-		  <div class="text-slate-700 dark:text-slate-300">Senin</div>
-		  <div class="text-slate-700 dark:text-slate-300">Selasa</div>
-		  <div class="text-slate-700 dark:text-slate-300">Rabu</div>
-		  <div class="text-slate-700 dark:text-slate-300">Kamis</div>
-		  <div class="text-emerald-600 dark:text-emerald-400">Jum'at</div>
-		  <div class="text-slate-700 dark:text-slate-300">Sabtu</div>
-		</div>
+        <!-- HEADER NAMA HARI KALENDER STANDAR (7 KOLOM) -->
+        <div class="grid grid-cols-7 gap-1 sm:gap-2 text-center font-bold text-[10px] sm:text-xs uppercase tracking-tight sm:tracking-wider py-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700/60">
+          <div class="text-rose-600 dark:text-rose-400">Ahad</div>
+          <div class="text-slate-700 dark:text-slate-300">Senin</div>
+          <div class="text-slate-700 dark:text-slate-300">Selasa</div>
+          <div class="text-slate-700 dark:text-slate-300">Rabu</div>
+          <div class="text-slate-700 dark:text-slate-300">Kamis</div>
+          <div class="text-emerald-600 dark:text-emerald-400">Jum'at</div>
+          <div class="text-slate-700 dark:text-slate-300">Sabtu</div>
+        </div>
 
-		<!-- GRID TANGGAL KALENDER STANDAR -->
-		<div id="kalenderHijriGrid" class="grid grid-cols-7 gap-1 sm:gap-2"></div>
+        <!-- GRID TANGGAL KALENDER STANDAR -->
+        <div id="kalenderHijriGrid" class="grid grid-cols-7 gap-1 sm:gap-2"></div>
       </main>
     </div>
 
   </div>
 
-  <!-- FIXED BOTTOM NAVIGATION BAR -->
+  <!-- FIXED BOTTOM NAVIGATION BAR DENGAN ICON VEKTOR PROFESSIONAL SVG -->
   <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 px-2 py-1.5 shadow-lg flex items-center justify-around">
     <button onclick="switchMainTab(1)" id="bottomNav1" class="flex flex-col items-center justify-center py-1 px-2.5 rounded-xl text-indigo-600 dark:text-indigo-400 font-bold transition-all active:scale-95">
-      <span class="text-lg">🕌</span>
+      <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8m0 0l-3 3m3-3l3 3M3 12h18M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/></svg>
       <span class="text-[9.5px] tracking-tight">Kalkulator</span>
     </button>
+
     <button onclick="switchMainTab(2)" id="bottomNav2" class="flex flex-col items-center justify-center py-1 px-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium transition-all active:scale-95">
-      <span class="text-lg">📊</span>
+      <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18M9 4v16M15 4v16"/></svg>
       <span class="text-[9.5px] tracking-tight">Tabel 133</span>
     </button>
+
     <button onclick="switchMainTab(3)" id="bottomNav3" class="flex flex-col items-center justify-center py-1 px-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 font-medium transition-all active:scale-95">
-      <span class="text-lg">🌙</span>
+      <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
       <span class="text-[9.5px] tracking-tight">Hisab Hilal</span>
     </button>
+
     <button onclick="switchMainTab(4)" id="bottomNav4" class="flex flex-col items-center justify-center py-1 px-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 font-medium transition-all active:scale-95">
-      <span class="text-lg">📅</span>
+      <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
       <span class="text-[9.5px] tracking-tight">Kalender H.</span>
     </button>
+
     <button onclick="openMenuModal()" id="bottomNav5" class="flex flex-col items-center justify-center py-1 px-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium transition-all active:scale-95">
-      <span class="text-lg">☰</span>
+      <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
       <span class="text-[9.5px] tracking-tight">Menu</span>
     </button>
   </nav>
@@ -749,8 +767,20 @@
     function openMenuModal() { document.getElementById('mainMenuModal').classList.remove('hidden'); }
     function closeMenuModal() { document.getElementById('mainMenuModal').classList.add('hidden'); }
 
-    // DYNAMIC PAGE TAB SWITCHER (4 TAB UTAMA)
+    // DYNAMIC PAGE TAB SWITCHER DENGAN HEADER TITLE & DESC DINAMIS
     window.switchMainTab = function(tabIndex) {
+      const tabInfo = {
+        1: { title: "Kalkulator Falakiyah", desc: "Kalkulasi Waktu Sholat Mikyal & Azimuth Kiblat Presisi" },
+        2: { title: "Tabel 133 Langkah", desc: "Rincian Langkah Hisab Falakiyah Klasik & Modern Presisi Utuh" },
+        3: { title: "Hisab Hilal & Ephemeris", desc: "Analisis Tinggi Hilal, Visibilitas MABIMS & Ephemeris Hakiki/Mar'i" },
+        4: { title: "Data Kalender Hijriyah", desc: "Kalender Bulanan Presisi & Informasi Posisi Hilal Setiap Hari" }
+      };
+
+      if (tabInfo[tabIndex]) {
+        document.getElementById('headerTitleText').innerText = tabInfo[tabIndex].title;
+        document.getElementById('headerDescText').innerText = tabInfo[tabIndex].desc;
+      }
+
       for (let i = 1; i <= 4; i++) {
         const content = document.getElementById(`tabContent${i}`);
         const btnBottom = document.getElementById(`bottomNav${i}`);
@@ -778,6 +808,18 @@
         renderKalenderHijriGrid();
       }
     };
+
+    // Tombol ESC Listener untuk menutup modal
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeMenuModal();
+        closeDetailBulanModal();
+        closeMapModal();
+        closeModalDirect();
+        closeRubuModal();
+        closeLookupModal();
+      }
+    });
 
     // Leaflet Map Logic
     let leafletMap = null;
