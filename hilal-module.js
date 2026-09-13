@@ -771,8 +771,9 @@ function renderKalenderHijriGrid() {
 
     let todayContainerBg = isToday ? "bg-rose-50/50 dark:bg-rose-950/20 border-rose-300 dark:border-rose-800/60 shadow-md scale-[1.02]" : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800";
 
+    // PERBAIKAN: Mengirim mHijri (angka 0-11) ke openDetailBulanModal untuk menghindari error tanda petik tunggal
     htmlGrid += `
-      <div onclick="openDetailBulanModal(${sYear}, ${sMonth}, ${sDay}, ${d}, '${namaBulanHijri}', ${yHijri})" 
+      <div onclick="openDetailBulanModal(${sYear}, ${sMonth}, ${sDay}, ${d}, ${mHijri}, ${yHijri})" 
            class="relative p-1 sm:p-2 rounded-lg sm:rounded-xl border ${todayContainerBg} hover:border-indigo-500 dark:hover:border-indigo-500 transition-all cursor-pointer shadow-2xs hover:shadow-md group flex flex-col justify-between min-h-[75px] sm:min-h-[105px]">
         
         ${handDrawnCircleSvg}
@@ -845,11 +846,14 @@ function todayHijriMonth() {
 // POP-UP BOUNCE: DETAIL DATA ASTRONOMIS BULAN SAAT TANGGAL DIKLIK
 // -------------------------------------------------------------------------
 
-function openDetailBulanModal(year, month, day, hDay, hMonthName, hYear) {
+function openDetailBulanModal(year, month, day, hDay, hMonth, hYear) {
   const modal = document.getElementById('detailBulanModal');
   const modalTitle = document.getElementById('detailBulanModalTitle');
   const modalBody = document.getElementById('detailBulanModalBody');
   if (!modal || !modalTitle || !modalBody) return;
+
+  // PERBAIKAN: Jika hMonth berupa angka indeks, ambil nama bulan dari array HIJRI_MONTHS_LIST
+  let hMonthName = (typeof hMonth === 'number' && HIJRI_MONTHS_LIST[hMonth]) ? HIJRI_MONTHS_LIST[hMonth] : hMonth;
 
   let m = getMoonDataAtSunset(year, month, day);
   let namaHariValid = NAMA_HARI[new Date(year, month - 1, day).getDay()];
