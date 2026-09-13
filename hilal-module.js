@@ -19,7 +19,16 @@ const fix360 = v => (v % 360 + 360) % 360;
 const fix24 = v => (v % 24 + 24) % 24;
 
 // -------------------------------------------------------------------------
-// DETEKSI OTOMATIS BULAN & TAHUN HIJRIAH DARI MASAHI SAAT WEB DIBUKA
+// HELPER: KONVERSI ANGKA LATIN KE ANGKA ARAB
+// -------------------------------------------------------------------------
+function toArabicDigits(num) {
+  if (num === undefined || num === null) return "";
+  const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+  return String(num).replace(/[0-9]/g, d => arabicDigits[d]);
+}
+
+// -------------------------------------------------------------------------
+// DETEKSI OTOMATIS BULAN & TAHUN HIJRIAH DARI MASEHI SAAT WEB DIBUKA
 // -------------------------------------------------------------------------
 function getCurrentHijriDate() {
   const today = new Date();
@@ -27,8 +36,8 @@ function getCurrentHijriDate() {
   
   let k = Math.round((jd - 2451549.50724) / 29.530588861);
   let totalMonths = k + 17037;
-  let yHijri = Math.floor((totalMonths - 1) / 12) + 1;
-  let mHijri = (totalMonths - 1) % 12;
+  let yHijri = Math.floor(totalMonths / 12) + 1;
+  let mHijri = totalMonths % 12;
   
   if (mHijri < 0) { 
     mHijri += 12; 
@@ -77,13 +86,13 @@ function switchHilalTab(tab) {
   if (tab === 1) {
     t1.classList.remove('hidden');
     t2.classList.add('hidden');
-    if (b1) b1.className = "px-3 py-1.5 text-[11px] sm:text-xs font-bold rounded-lg bg-indigo-600 text-white shadow-xs transition-all";
-    if (b2) b2.className = "px-3 py-1.5 text-[11px] sm:text-xs font-bold rounded-lg text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-all";
+    if (b1) b1.className = "px-3.5 py-2 text-xs font-bold rounded-xl bg-indigo-600 text-white shadow-xs transition-all";
+    if (b2) b2.className = "px-3.5 py-2 text-xs font-bold rounded-xl text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-all";
   } else {
     t1.classList.add('hidden');
     t2.classList.remove('hidden');
-    if (b2) b2.className = "px-3 py-1.5 text-[11px] sm:text-xs font-bold rounded-lg bg-indigo-600 text-white shadow-xs transition-all";
-    if (b1) b1.className = "px-3 py-1.5 text-[11px] sm:text-xs font-bold rounded-lg text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-all";
+    if (b2) b2.className = "px-3.5 py-2 text-xs font-bold rounded-xl bg-indigo-600 text-white shadow-xs transition-all";
+    if (b1) b1.className = "px-3.5 py-2 text-xs font-bold rounded-xl text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-all";
   }
 }
 
@@ -279,10 +288,9 @@ function getMoonDataAtSunset(yearMasehi, monthMasehi, dayInt) {
 
   let elevasi = parseFloat(document.getElementById('elevasi')?.value) || 10;
 
-  let tzInput = document.getElementById('timezone')?.value || document.getElementById('selTimezone')?.value;
   let tzHours;
-  if (tzInput !== undefined && tzInput !== "" && !isNaN(parseFloat(tzInput))) {
-    tzHours = parseFloat(tzInput);
+  if (typeof window.currentUtcOffset === 'number') {
+    tzHours = window.currentUtcOffset;
   } else {
     if (phi >= -11 && phi <= 6 && lambda >= 95 && lambda <= 141) {
       if (lambda < 114.5) tzHours = 7.0;
@@ -293,7 +301,7 @@ function getMoonDataAtSunset(yearMasehi, monthMasehi, dayInt) {
     }
   }
 
-  let tzLabel = tzHours === 7 ? "WIB" : (tzHours === 8 ? "WITA" : (tzHours === 9 ? "WIT" : `UTC${tzHours>=0?'+':''}${tzHours}`));
+  let tzLabel = tzHours === 7 ? "WIB" : (tzHours === 8 ? "WITA" : (tzHours === 9 ? "WIT" : `UTC${tzHours >= 0 ? '+' : ''}${tzHours}`));
 
   let JD_0h_UT = gregorianToJD(yearMasehi, monthMasehi, dayInt);
   let Dip = (1.76 / 60.0) * Math.sqrt(elevasi);
@@ -392,10 +400,9 @@ function hitungHisabAstronomiPresisiUtuh() {
 
   let elevasi = parseFloat(document.getElementById('elevasi')?.value) || 10;
 
-  let tzInput = document.getElementById('timezone')?.value || document.getElementById('selTimezone')?.value;
   let tzHours;
-  if (tzInput !== undefined && tzInput !== "" && !isNaN(parseFloat(tzInput))) {
-    tzHours = parseFloat(tzInput);
+  if (typeof window.currentUtcOffset === 'number') {
+    tzHours = window.currentUtcOffset;
   } else {
     if (phi >= -11 && phi <= 6 && lambda >= 95 && lambda <= 141) {
       if (lambda < 114.5) tzHours = 7.0;
@@ -406,7 +413,7 @@ function hitungHisabAstronomiPresisiUtuh() {
     }
   }
 
-  let tzLabel = tzHours === 7 ? "WIB" : (tzHours === 8 ? "WITA" : (tzHours === 9 ? "WIT" : `UTC${tzHours>=0?'+':''}${tzHours}`));
+  let tzLabel = tzHours === 7 ? "WIB" : (tzHours === 8 ? "WITA" : (tzHours === 9 ? "WIT" : `UTC${tzHours >= 0 ? '+' : ''}${tzHours}`));
 
   const rawSelVal = document.getElementById('selBulanHijri')?.value;
   let mHijri = (rawSelVal !== undefined && rawSelVal !== "") ? parseInt(rawSelVal, 10) : 0;
@@ -461,8 +468,10 @@ function hitungHisabAstronomiPresisiUtuh() {
   if (containerSummary) {
     containerSummary.innerHTML = `
       <div class="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden bg-white dark:bg-slate-900 shadow-xs">
-        <div class="bg-indigo-600 text-white text-center py-2.5 px-3 font-bold text-xs sm:text-sm uppercase tracking-wider">
-          HISAB ASTRONOMI PRESISI AWAL BULAN ${namaBulanHijri.toUpperCase()} ${yHijri} H.
+        <div class="bg-indigo-600 text-white text-center py-2.5 px-3 font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center justify-between">
+          <span class="w-8"></span>
+          <span>HISAB ASTRONOMI PRESISI AWAL BULAN ${namaBulanHijri.toUpperCase()} ${yHijri} H.</span>
+          <button onclick="copyHisabSummary()" class="bg-indigo-700 hover:bg-indigo-800 text-white px-2 py-1 rounded text-[10px] font-bold transition-all" title="Salin Ringkasan Teks">📋 Salin</button>
         </div>
         <div class="p-3 sm:p-4 space-y-2.5 text-xs sm:text-sm font-medium">
           <div class="flex flex-col sm:flex-row justify-between p-3 rounded-xl bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/60 gap-1">
@@ -548,6 +557,17 @@ function hitungHisabAstronomiPresisiUtuh() {
     azimSyamsDisp: moonDataSunset.azimSyamsDisp, azimQomarDisp: moonDataSunset.azimQomarDisp,
     muktuFormatted: moonDataSunset.muktuFormatted, nurulHilalUsbu: moonDataSunset.nurulHilalUsbu,
     isImkanRukyatMABIMS, statusVisibilitas
+  });
+}
+
+function copyHisabSummary() {
+  const container = document.getElementById('hilalSummaryContainer');
+  if (!container) return;
+  const text = container.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    if (typeof showToast === 'function') showToast("📋 Hasil Hisab Hilal berhasil disalin!", "success");
+  }).catch(() => {
+    if (typeof showToast === 'function') showToast("⚠️ Gagal menyalin teks.", "error");
   });
 }
 
@@ -656,7 +676,7 @@ function renderHilalMatrix(data) {
 
 // -------------------------------------------------------------------------
 // MODUL KALENDER HIJRIYAH TAMPILAN STANDAR (7 KOLOM AHAD-SABTU)
-// RESPONSIF HP & TANGGAL HIJRIYAH UTAMA (ANGKA BESAR)
+// NAVIGASI BULANAN INTERAKTIF, ANGKA ARAB, & HAND-DRAWN CIRCLE TODAY
 // -------------------------------------------------------------------------
 
 function renderKalenderHijriGrid() {
@@ -698,6 +718,9 @@ function renderKalenderHijriGrid() {
   let firstDayOfWeek = dateAwalBulan.getDay();
   let htmlGrid = "";
 
+  const today = new Date();
+  const todayDateStr = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+
   // 1. Sel Kosong Sebelum Tanggal 1 (Padding Offset Hari)
   for (let pad = 0; pad < firstDayOfWeek; pad++) {
     htmlGrid += `
@@ -705,15 +728,16 @@ function renderKalenderHijriGrid() {
     `;
   }
 
-// 2. Sel Tanggal Aktif Kalender Hijriyah
+  // 2. Sel Tanggal Aktif Kalender Hijriyah
   for (let d = 1; d <= totalDaysInMonth; d++) {
-    // Tanggal Masehi siang hari tanggal d Hijriyah
     let currDate = new Date(dateAwalBulan.getFullYear(), dateAwalBulan.getMonth(), dateAwalBulan.getDate() + (d - 1));
     let gYear = currDate.getFullYear();
     let gMonth = currDate.getMonth() + 1;
     let gDay = currDate.getDate();
 
-    // Waktu Sunset untuk penentuan awal malam d Hijriyah (Sunset H-1 Masehi)
+    let currDateStr = `${gYear}-${gMonth}-${gDay}`;
+    let isToday = (currDateStr === todayDateStr);
+
     let sunsetDate = new Date(dateAwalBulan.getFullYear(), dateAwalBulan.getMonth(), dateAwalBulan.getDate() + (d - 2));
     let sYear = sunsetDate.getFullYear();
     let sMonth = sunsetDate.getMonth() + 1;
@@ -724,7 +748,6 @@ function renderKalenderHijriGrid() {
     let hariIdx = (jdInt + 1) % 7;
     let pasaranIdx = jdInt % 5;
 
-    // Hitung posisi bulan saat sunset penentuan (H-1 Masehi)
     let mData = getMoonDataAtSunset(sYear, sMonth, sDay);
 
     let isSunday = hariIdx === 0;
@@ -739,17 +762,28 @@ function renderKalenderHijriGrid() {
       ? DATABASE_BULAN[gMonth].nama.substring(0, 3) 
       : '';
 
+    // Hand-drawn Circle SVG Overlay jika HARI INI
+    let handDrawnCircleSvg = isToday ? `
+      <svg class="absolute inset-0 w-full h-full pointer-events-none text-rose-500 dark:text-rose-400 z-10 overflow-visible" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+        <path d="M 18,50 C 12,18 82,12 86,46 C 90,78 22,86 18,52 C 16,30 72,16 84,36" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" class="opacity-90"/>
+      </svg>
+    ` : '';
+
+    let todayContainerBg = isToday ? "bg-rose-50/50 dark:bg-rose-950/20 border-rose-300 dark:border-rose-800/60 shadow-md scale-[1.02]" : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800";
+
     htmlGrid += `
       <div onclick="openDetailBulanModal(${sYear}, ${sMonth}, ${sDay}, ${d}, '${namaBulanHijri}', ${yHijri})" 
-           class="p-1 sm:p-2 rounded-lg sm:rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-indigo-500 dark:hover:border-indigo-500 transition-all cursor-pointer shadow-2xs hover:shadow-md group flex flex-col justify-between min-h-[75px] sm:min-h-[105px]">
+           class="relative p-1 sm:p-2 rounded-lg sm:rounded-xl border ${todayContainerBg} hover:border-indigo-500 dark:hover:border-indigo-500 transition-all cursor-pointer shadow-2xs hover:shadow-md group flex flex-col justify-between min-h-[75px] sm:min-h-[105px]">
         
+        ${handDrawnCircleSvg}
+
         <div class="flex justify-between items-center leading-none">
           <span class="text-[8px] sm:text-[10px] font-bold text-slate-400 tracking-tight">${NAMA_PASARAN[pasaranIdx]}</span>
           <span class="text-[8px] sm:text-[9.5px] font-semibold text-slate-400 hidden sm:inline">${NAMA_HARI[hariIdx]}</span>
         </div>
 
         <div class="my-0.5 text-center leading-tight">
-          <div class="text-base sm:text-2xl font-black ${dayColorClass} group-hover:scale-110 transition-transform font-mono">${d}</div>
+          <div class="text-lg sm:text-3xl font-black ${dayColorClass} group-hover:scale-110 transition-transform font-arabic leading-none mb-0.5">${toArabicDigits(d)}</div>
           <div class="text-[8.5px] sm:text-[11px] font-bold text-slate-600 dark:text-slate-300 tracking-tight">${gDay} ${masehiMonthShort}</div>
         </div>
 
@@ -764,6 +798,50 @@ function renderKalenderHijriGrid() {
 }
 
 // -------------------------------------------------------------------------
+// NAVIGASI BULANAN KALENDER HIJRIYAH
+// -------------------------------------------------------------------------
+
+function prevHijriMonth() {
+  const sel = document.getElementById('selBulanHijriCal');
+  const inp = document.getElementById('inputTahunHijriCal');
+  if (!sel || !inp) return;
+  let m = parseInt(sel.value, 10) - 1;
+  let y = parseInt(inp.value, 10);
+  if (m < 0) {
+    m = 11;
+    y -= 1;
+  }
+  sel.value = String(m);
+  inp.value = y;
+  renderKalenderHijriGrid();
+}
+
+function nextHijriMonth() {
+  const sel = document.getElementById('selBulanHijriCal');
+  const inp = document.getElementById('inputTahunHijriCal');
+  if (!sel || !inp) return;
+  let m = parseInt(sel.value, 10) + 1;
+  let y = parseInt(inp.value, 10);
+  if (m > 11) {
+    m = 0;
+    y += 1;
+  }
+  sel.value = String(m);
+  inp.value = y;
+  renderKalenderHijriGrid();
+}
+
+function todayHijriMonth() {
+  const sel = document.getElementById('selBulanHijriCal');
+  const inp = document.getElementById('inputTahunHijriCal');
+  if (!sel || !inp) return;
+  const current = getCurrentHijriDate();
+  sel.value = String(current.mHijri);
+  inp.value = current.yHijri;
+  renderKalenderHijriGrid();
+}
+
+// -------------------------------------------------------------------------
 // POP-UP BOUNCE: DETAIL DATA ASTRONOMIS BULAN SAAT TANGGAL DIKLIK
 // -------------------------------------------------------------------------
 
@@ -774,13 +852,14 @@ function openDetailBulanModal(year, month, day, hDay, hMonthName, hYear) {
   if (!modal || !modalTitle || !modalBody) return;
 
   let m = getMoonDataAtSunset(year, month, day);
+  let namaHariValid = NAMA_HARI[new Date(year, month - 1, day).getDay()];
 
   modalTitle.innerHTML = `
     <div class="flex items-center gap-2">
       <span class="text-lg">🌙</span>
       <div>
         <div class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white">Data Posisi Bulan & Ufuk (${hDay} ${hMonthName} ${hYear} H)</div>
-        <div class="text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold">${NAMA_HARI[gregorianToJD(year, month, day) % 7]}, ${day} ${DATABASE_BULAN[month]?.nama || ''} ${year} M (Sunset: ${fmtTime(m.ghurubLokal)} ${m.tzLabel})</div>
+        <div class="text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold">${namaHariValid}, ${day} ${typeof DATABASE_BULAN !== 'undefined' ? (DATABASE_BULAN[month]?.nama || '') : ''} ${year} M (Sunset: ${fmtTime(m.ghurubLokal)} ${m.tzLabel})</div>
       </div>
     </div>
   `;
@@ -791,7 +870,7 @@ function openDetailBulanModal(year, month, day, hDay, hMonthName, hYear) {
     <div class="p-2 bg-slate-950 rounded-xl border border-slate-800 text-center space-y-1">
       <div class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">SKEMA POSISI BULAN DI UFUK BARAT SAAT SUNSET</div>
       ${svgSky}
-      <div class="text-[9.5px] text-slate-400 flex justify-around font-mono">
+      <div class="text-[9.5px] text-slate-400 flex justify-around font-mono pt-1">
         <span>Azimuth Sunset: ${m.azimSyamsDisp.toFixed(2)}° U</span>
         <span>Azimuth Bulan: ${m.azimQomarDisp.toFixed(2)}° U</span>
       </div>
@@ -847,48 +926,81 @@ function closeDetailBulanModal() {
 }
 
 // -------------------------------------------------------------------------
-// DIAGRAM VISUAL 2D SKEMA UFUK & BULAN
+// DIAGRAM VISUAL 2D SKEMA UFUK & BULAN (HIGH-QUALITY SVG)
 // -------------------------------------------------------------------------
 
 function renderMoonSkyDiagram(m) {
   let alt = m.altHilalMarai;
   let diffAz = m.diffAzimuth;
 
-  let sunX = 150;
-  let sunY = 120;
+  let sunX = 160;
+  let sunY = 130;
 
-  let moonY = sunY - (alt * 3.5);
-  moonY = Math.max(20, Math.min(150, moonY));
+  let moonY = sunY - (alt * 9);
+  moonY = Math.max(25, Math.min(155, moonY));
 
-  let moonX = sunX + (diffAz * 8);
-  moonX = Math.max(30, Math.min(270, moonX));
+  let moonX = sunX + (diffAz * 10);
+  moonX = Math.max(30, Math.min(290, moonX));
 
   let isAbove = alt > 0;
-  let moonColor = isAbove ? "#f59e0b" : "#94a3b8";
+  let moonColor = isAbove ? "#f59e0b" : "#64748b";
+  let skyTopColor = isAbove ? "#030712" : "#020617";
+  let skyBottomColor = isAbove ? "#1e1b4b" : "#0f172a";
+
+  let phaseRadius = 8;
+  let crescentDx = diffAz >= 0 ? 3 : -3;
 
   return `
-    <svg class="w-full h-40 max-w-[340px] mx-auto" viewBox="0 0 300 160">
-      <rect x="0" y="0" width="300" height="120" fill="url(#skyGradient)"/>
+    <svg class="w-full h-44 max-w-[360px] mx-auto rounded-xl shadow-inner border border-slate-800" viewBox="0 0 320 170">
       <defs>
-        <linearGradient id="skyGradient" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#020617"/>
-          <stop offset="100%" stop-color="#1e1b4b"/>
+        <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${skyTopColor}"/>
+          <stop offset="70%" stop-color="${skyBottomColor}"/>
+          <stop offset="100%" stop-color="#451a03"/>
         </linearGradient>
+        <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#f97316" stop-opacity="0.8"/>
+          <stop offset="50%" stop-color="#ea580c" stop-opacity="0.3"/>
+          <stop offset="100%" stop-color="#c2410c" stop-opacity="0"/>
+        </radialGradient>
       </defs>
 
-      <line x1="0" y1="120" x2="300" y2="120" stroke="#059669" stroke-width="2.5"/>
-      <rect x="0" y="120" width="300" height="40" fill="#064e3b" opacity="0.4"/>
-      <text x="15" y="135" font-size="9" font-weight="extrabold" fill="#10b981">UFUK BARAT (0°)</text>
-
-      <circle cx="${sunX}" cy="${sunY}" r="7" fill="#ef4444" opacity="0.8"/>
-      <circle cx="${sunX}" cy="${sunY}" r="12" fill="#f97316" opacity="0.3"/>
-      <text x="${sunX}" y="${sunY + 18}" text-anchor="middle" font-size="8" font-weight="bold" fill="#f97316">Matahari (Sunset)</text>
-
-      <line x1="${sunX}" y1="${sunY}" x2="${moonX}" y2="${moonY}" stroke="#6366f1" stroke-width="1" stroke-dasharray="3 3"/>
+      <!-- Sky Background -->
+      <rect x="0" y="0" width="320" height="130" fill="url(#skyGrad)"/>
       
-      <circle cx="${moonX}" cy="${moonY}" r="6" fill="${moonColor}"/>
-      <circle cx="${moonX + 1.5}" cy="${moonY - 1.5}" r="5" fill="#020617"/>
-      <text x="${moonX}" y="${moonY - 10}" text-anchor="middle" font-size="9" font-weight="black" fill="${moonColor}">
+      <!-- Stars -->
+      <circle cx="40" cy="25" r="1" fill="#ffffff" opacity="0.6"/>
+      <circle cx="90" cy="18" r="1.2" fill="#ffffff" opacity="0.8"/>
+      <circle cx="140" cy="35" r="0.8" fill="#ffffff" opacity="0.5"/>
+      <circle cx="220" cy="20" r="1" fill="#ffffff" opacity="0.7"/>
+      <circle cx="280" cy="30" r="1.5" fill="#ffffff" opacity="0.9"/>
+
+      <!-- Altitude Reference Lines -->
+      <line x1="0" y1="85" x2="320" y2="85" stroke="#334155" stroke-width="0.8" stroke-dasharray="3 3"/>
+      <text x="315" y="82" text-anchor="end" font-size="8" fill="#64748b" font-family="monospace">+5°</text>
+      
+      <line x1="0" y1="40" x2="320" y2="40" stroke="#334155" stroke-width="0.8" stroke-dasharray="3 3"/>
+      <text x="315" y="37" text-anchor="end" font-size="8" fill="#64748b" font-family="monospace">+10°</text>
+
+      <!-- Horizon Line -->
+      <line x1="0" y1="130" x2="320" y2="130" stroke="#10b981" stroke-width="2"/>
+      <rect x="0" y="130" width="320" height="40" fill="#064e3b" opacity="0.6"/>
+      <text x="12" y="145" font-size="9" font-weight="900" fill="#34d399" font-family="sans-serif">UFUK BARAT (0°)</text>
+
+      <!-- Sun at Sunset -->
+      <circle cx="${sunX}" cy="${sunY}" r="18" fill="url(#sunGlow)"/>
+      <circle cx="${sunX}" cy="${sunY}" r="7" fill="#f97316"/>
+      <text x="${sunX}" y="${sunY + 16}" text-anchor="middle" font-size="8" font-weight="bold" fill="#fdba74">Matahari</text>
+
+      <!-- Connecting Guide Line -->
+      <line x1="${sunX}" y1="${sunY}" x2="${moonX}" y2="${moonY}" stroke="#818cf8" stroke-width="1" stroke-dasharray="3 3"/>
+
+      <!-- Moon Disk & Crescent -->
+      <circle cx="${moonX}" cy="${moonY}" r="${phaseRadius}" fill="${moonColor}"/>
+      <circle cx="${moonX + crescentDx}" cy="${moonY - 1}" r="${phaseRadius - 0.5}" fill="${skyTopColor}"/>
+
+      <!-- Label Hilal -->
+      <text x="${moonX}" y="${Math.max(14, moonY - 12)}" text-anchor="middle" font-size="9" font-weight="900" fill="${moonColor}" font-family="sans-serif">
         Bulan (${fmtDMS(alt)})
       </text>
     </svg>
