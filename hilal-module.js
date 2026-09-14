@@ -28,6 +28,17 @@ function toArabicDigits(num) {
 }
 
 // -------------------------------------------------------------------------
+// HELPER: KONVERSI TANGGAL MASEHI KE HARI & PASARAN JAWA PRESISI
+// -------------------------------------------------------------------------
+function getHariPasaran(year, month, day) {
+  let jd = gregorianToJD(year, month, day);
+  let jdInt = Math.floor(jd + 0.5);
+  let hariIdx = (jdInt + 1) % 7;
+  let pasaranIdx = jdInt % 5;
+  return { hariIdx, pasaranIdx, jdInt };
+}
+
+// -------------------------------------------------------------------------
 // DETEKSI OTOMATIS BULAN & TAHUN HIJRIAH DARI MASEHI SAAT WEB DIBUKA
 // -------------------------------------------------------------------------
 function getCurrentHijriDate() {
@@ -344,7 +355,6 @@ function getMoonDataAtSunset(yearMasehi, monthMasehi, dayInt) {
     refraction = (1.02 / Math.tan(rad(altHilalHaqiqi + 10.3 / (altHilalHaqiqi + 5.11)))) / 60.0;
   }
   
-  // PERBAIKAN: Menambahkan Dip ke Tinggi Mar'i sesuai Standar Ephemeris Kemenag
   let altHilalMarai = altHilalHaqiqi - (moonAtSunset.pi * Math.cos(rad(altHilalHaqiqi))) + refraction + Dip;
 
   let cos_psi = Math.sin(rad(moonAtSunset.decl)) * Math.sin(rad(sunAtSunset.decl)) +
@@ -357,7 +367,6 @@ function getMoonDataAtSunset(yearMasehi, monthMasehi, dayInt) {
   let azimSyamsDisp = Math.abs(270 - azimSyamsUtara);
   let azimQomarDisp = Math.abs(270 - azimQomarUtara);
 
-  // PERBAIKAN: Koreksi perhitungan Muktu terhadap Lintang Tempat (phi)
   let muktuTotalDetik = altHilalMarai > 0 ? Math.round((altHilalMarai * 240) / Math.cos(rad(phi))) : 0;
   let muktuM = Math.floor(muktuTotalDetik / 60);
   let muktuS = muktuTotalDetik % 60;
@@ -441,22 +450,18 @@ function hitungHisabAstronomiPresisiUtuh() {
   let jamIjtimakLokal = fix24(utHours + tzHours);
   let jamIjtimakWIS = fix24(12.0 + (jamIjtimakLokal - tzHours - 12.0) + (lambda / 15.0) + sunIjtimak.e);
 
-  let jdIntLokal = Math.floor(JDE_Lokal + 0.5);
-  let hariIdx = (jdIntLokal + 1) % 7;
-  // PERBAIKAN: Rumus Pasaran Jawa Presisi (Kliwon/Legi)
-  let pasaranIdx = (jdIntLokal + 1) % 5;
+  // PERBAIKAN TOTAL PASARAN: Diambil dari tanggal masehi sipil presisi
+  let ijtHP = getHariPasaran(yearMasehi, monthMasehi, dayInt);
+  let hariIdx = ijtHP.hariIdx;
+  let pasaranIdx = ijtHP.pasaranIdx;
 
   let moonDataSunset = getMoonDataAtSunset(yearMasehi, monthMasehi, dayInt);
 
-  // PERBAIKAN LOGIKA: Ijtimak harus terjadi SEBELUM Terbenam Matahari (Qoblal Ghurub)
   let isIjtimakQoblalGhurub = jamIjtimakLokal < moonDataSunset.ghurubLokal;
   let isWujudulHilal = isIjtimakQoblalGhurub && (moonDataSunset.altHilalHaqiqi > 0);
   let isImkanRukyatMABIMS = isWujudulHilal && (moonDataSunset.altHilalMarai >= 3.0 && moonDataSunset.elongasi >= 6.4);
 
   let statusVisibilitas = "";
-  // PERBAIKAN PENENTUAN AWAL BULAN EPHEMERIS & KITAB SALAF:
-  // Jika Wujudul Hilal / Alt > 0°, maka Awal Bulan = Besok (H+1).
-  // Jika Qoblal Ghurub tidak terpenuhi / Alt <= 0°, wajib Istikmal 30 hari = Lusa (H+2).
   let tambahanHari = isWujudulHilal ? 1 : 2;
 
   if (isImkanRukyatMABIMS) {
@@ -468,8 +473,9 @@ function hitungHisabAstronomiPresisiUtuh() {
   }
 
   let dateAwalBulan = new Date(yearMasehi, monthMasehi - 1, dayInt + tambahanHari);
-  let awalHariIdx = dateAwalBulan.getDay();
-  let awalPasaranIdx = (pasaranIdx + tambahanHari) % 5;
+  let awalHP = getHariPasaran(dateAwalBulan.getFullYear(), dateAwalBulan.getMonth() + 1, dateAwalBulan.getDate());
+  let awalHariIdx = awalHP.hariIdx;
+  let awalPasaranIdx = awalHP.pasaranIdx;
 
   const containerSummary = document.getElementById('hilalSummaryContainer');
   if (containerSummary) {
@@ -579,7 +585,7 @@ function copyHisabSummary() {
 }
 
 // -------------------------------------------------------------------------
-// RENDER TAB 2: MATRIKS STEPS ASTRONOMI PRESISI (CHALKBOARD MATH)
+// RENDER TAB 2: MATRIKS STEPS ASTRONOMI PRESISI (DILENGKAPI PENJELASAN AWAM)
 // -------------------------------------------------------------------------
 function renderHilalMatrix(data) {
   const containerMatrix = document.getElementById('hilalMatrixContainer');
@@ -601,48 +607,48 @@ function renderHilalMatrix(data) {
       </div>
 
       <div class="space-y-1.5 border-b border-slate-800 pb-3">
-        <div class="text-cyan-400 font-bold">[ FASE 1: MENENTUKAN NILAI SYNODIS (k) & JULIAN DAY awal ]</div>
-        <div class="pl-2 text-slate-300">
-          <div><span class="text-yellow-300">k</span> = (TahunHijri - 1) × 12 + BulanHijri - 17037</div>
-          <div class="text-emerald-400 pl-4">= (${data.yHijri} - 1) × 12 + ${data.mHijri} - 17037 = <b class="text-yellow-300">${k}</b></div>
-          <div class="mt-1"><span class="text-yellow-300">JD₀</span> = 2451549.50724 + (29.530588861 × k)</div>
-          <div class="text-emerald-400 pl-4">= 2451549.50724 + (29.530588861 × ${k}) = <b class="text-white">${JD_0.toFixed(5)}</b></div>
+        <div class="text-cyan-400 font-bold">[ FASE 1: MENENTUKAN KONTANTA SYNODIS (k) & JULIAN DAY AWAL ]</div>
+        <div class="pl-2 text-slate-300 space-y-1">
+          <div class="text-slate-400 text-[10px]">💡 k = Jumlah bulan sinodis sejak Epoch 2000 M (17037 adalah offset bulan Hijriyah ke th 622 M).</div>
+          <div><span class="text-yellow-300">k</span> = (${data.yHijri} - 1) × 12 + ${data.mHijri} - 17037 = <b class="text-yellow-300">${k}</b></div>
+          <div class="text-slate-400 text-[10px] mt-1">💡 JD₀ = Rumus estimasi kasar hari Julian (2451549.50724 = Epoch JDE; 29.530588861 = Periode Sinodis Bulan).</div>
+          <div><span class="text-yellow-300">JD₀</span> = 2451549.50724 + (29.530588861 × ${k}) = <b class="text-white">${JD_0.toFixed(5)}</b></div>
         </div>
       </div>
 
       <div class="space-y-1.5 border-b border-slate-800 pb-3">
-        <div class="text-cyan-400 font-bold">[ FASE 2: ITERASI KONVERGENSI EPHEMERIS HAKIKI (Meeus) ]</div>
+        <div class="text-cyan-400 font-bold">[ FASE 2: ITERASI KONVERGENSI EPHEMERIS HAKIKI (JEAN MEEUS) ]</div>
         <div class="pl-2 text-slate-300 space-y-1">
+          <div class="text-slate-400 text-[10px]">💡 T = Abad Julian sejak 2000 M (36525 = Jumlah hari dalam 1 abad astronomi).</div>
           <div>T (Abad Julian) = (JDE - 2451545.0) / 36525.0</div>
-          <div>λ_Matahari (λ☉) = ${data.sunIjtimak.lambda.toFixed(5)}°</div>
-          <!-- PERBAIKAN: Menampilkan lambda milik Bulan, bukan Matahari -->
-          <div>λ_Bulan (λ☽)    = ${data.moonIjtimak ? data.moonIjtimak.lambda.toFixed(5) : data.sunIjtimak.lambda.toFixed(5)}° (Eksak Selisih Δλ = 0.00000°)</div>
+          <div>Bujur Matahari (λ☉) = ${data.sunIjtimak.lambda.toFixed(5)}°</div>
+          <div>Bujur Bulan (λ☽)    = ${data.moonIjtimak ? data.moonIjtimak.lambda.toFixed(5) : data.sunIjtimak.lambda.toFixed(5)}° (Eksak Selisih Δλ = 0.00000°)</div>
           <div class="p-2 bg-slate-900/80 rounded border border-emerald-800/50 mt-1">
-            <span class="text-yellow-300">JDE Hakiki Converged</span> = <b class="text-white">${data.JDE_Hakiki.toFixed(6)}</b>
+            <span class="text-yellow-300">JDE Hakiki Converged</span> = <b class="text-white">${data.JDE_Hakiki.toFixed(6)}</b> (Saat Matahari & Bulan Sejajar)
             <br><span class="text-yellow-300">JDE Waktu Lokal (UTC+${data.tzHours})</span> = ${data.JDE_Lokal.toFixed(6)}
           </div>
         </div>
       </div>
 
       <div class="space-y-1.5 border-b border-slate-800 pb-3">
-        <div class="text-cyan-400 font-bold">[ FASE 3: KONVERSI WAKTU IJTIMAK KE STANDAR WILAYAH & WIS ]</div>
+        <div class="text-cyan-400 font-bold">[ FASE 3: KONVERSI WAKTU IJTIMAK KE WIB & WIS ]</div>
         <div class="pl-2 text-slate-300 space-y-1">
           <div>Waktu UT = (JDE + 0.5 - ⌊JDE + 0.5⌋) × 24 = <span class="text-white">${fmtTime(data.utHours)} UT</span></div>
           <div>Jam Lokal = UT + ${data.tzHours} = <b class="text-yellow-300">${fmtTime(data.jamIjtimakLokal)} ${data.tzLabel}</b></div>
+          <div class="text-slate-400 text-[10px]">💡 Perata Waktu (e) = Koreksi akibat kemiringan & elipsnya orbit bumi.</div>
           <div>Perata Waktu (e) = ${data.sunIjtimak.e.toFixed(5)} Jam</div>
-          <div>Jam Hakiki (WIS) = 12 + (JamLokal - TZ - 12) + (λ_Tempat / 15) + e</div>
-          <div class="text-emerald-400 pl-4">= <b class="text-yellow-300">${fmtTime(data.jamIjtimakWIS)} WIS</b></div>
+          <div>Jam Hakiki (WIS) = 12 + (JamLokal - TZ - 12) + (λ_Tempat / 15) + e = <b class="text-yellow-300">${fmtTime(data.jamIjtimakWIS)} WIS</b></div>
         </div>
       </div>
 
       <div class="space-y-1.5 border-b border-slate-800 pb-3">
-        <div class="text-cyan-400 font-bold">[ FASE 4: HISAB SUNSET (GHURUB MATAHARI SAAT HARI IJTIMAK) ]</div>
+        <div class="text-cyan-400 font-bold">[ FASE 4: HISAB TERBENAM MATAHARI (GHURUB) ]</div>
         <div class="pl-2 text-slate-300 space-y-1">
-          <div>Kerendahan Ufuk (Dip) = (1.76 / 60) × √Elevasi (${data.elevasi}m) = <span class="text-white">${(data.Dip*60).toFixed(2)}'</span></div>
+          <div class="text-slate-400 text-[10px]">💡 Dip = Turunnya ufuk karena pengamat berada ${data.elevasi}m di atas laut (1.76 / 60 * √elevasi).</div>
+          <div>Kerendahan Ufuk (Dip) = <span class="text-white">${(data.Dip*60).toFixed(2)}'</span></div>
+          <div class="text-slate-400 text-[10px]">💡 h☉ = Tinggi semu terbenam matahari (-0.8333° = Refraksi 34' + Semidiameter 16').</div>
           <div>Sudut Tinggi Sunset h☉ = -(0°50'00" + Dip) = <span class="text-white">${fmtDMS(data.h_sun_sunset)}</span></div>
-          <div>cos(H₀) = [sin(h☉) - sin(φ)·sin(δ☉)] / [cos(φ)·cos(δ☉)]</div>
-          <div class="pl-4 text-emerald-400">cos(H₀) = ${data.cosH0 ? data.cosH0.toFixed(6) : "0.000000"} ➔ H₀ = <b class="text-white">${data.H0.toFixed(4)}°</b></div>
-          <div>Sunset (UT) = 12 + (H₀ / 15) - (λ_Tempat / 15) - e = <span class="text-white">${fmtTime(data.ghurubUT)} UT</span></div>
+          <div>Sudut Jam Terbenam (H₀) = <b class="text-white">${data.H0.toFixed(4)}°</b></div>
           <div class="p-2 bg-slate-900/80 rounded border border-emerald-800/50 mt-1">
             <span class="text-yellow-300">Waktu Ghurub Sunset</span> = <b class="text-yellow-300">${fmtTime(data.ghurubWIS)} WIS</b> | <b class="text-white">${fmtTime(data.ghurubLokal)} ${data.tzLabel}</b>
           </div>
@@ -650,25 +656,23 @@ function renderHilalMatrix(data) {
       </div>
 
       <div class="space-y-1.5 border-b border-slate-800 pb-3">
-        <div class="text-cyan-400 font-bold">[ FASE 5: EPHEMERIS TOPOSENTRIK HILAL SAAT GHURUB (MAR'I) ]</div>
+        <div class="text-cyan-400 font-bold">[ FASE 5: TINGGI HILAL MAR'I (EPHEMERIS KEMENAG) ]</div>
         <div class="pl-2 text-slate-300 space-y-1">
           <div>Δα (Selisih Asensiorekta) = α_Bulan - α_Matahari = ${data.d_alpha.toFixed(4)}°</div>
-          <div>H_Bulan (H_m) = H₀ - Δα = ${data.H_m.toFixed(4)}°</div>
-          <div>sin(h_haqiqi) = sin(φ)·sin(δ_m) + cos(φ)·cos(δ_m)·cos(H_m)</div>
-          <div class="pl-4 text-emerald-400">➔ Tinggi Hilal Hakiki (h_haqiqi) = <b class="text-white">${fmtDMS(data.altHilalHaqiqi)}</b></div>
-          <div>Paralaks Horizontal (HP) = ${data.moonAtSunset.pi.toFixed(4)}° | Refraksi (R) = ${(data.refraction*60).toFixed(2)}' | Dip = ${(data.Dip*60).toFixed(2)}'</div>
-          <div>h_mar'i = h_haqiqi - HP·cos(h_haqiqi) + R + Dip</div>
+          <div>Sudut Jam Bulan (H_m) = H₀ - Δα = ${data.H_m.toFixed(4)}°</div>
+          <div>Tinggi Hilal Hakiki (h_haqiqi) = <b class="text-white">${fmtDMS(data.altHilalHaqiqi)}</b></div>
+          <div class="text-slate-400 text-[10px]">💡 Hilal Mar'i memperhitungkan Paralaks (HP), Refraksi Atmosfer (R), dan Kerendahan Ufuk (Dip).</div>
+          <div>Paralaks (HP) = ${data.moonAtSunset.pi.toFixed(4)}° | Refraksi (R) = ${(data.refraction*60).toFixed(2)}' | Dip = ${(data.Dip*60).toFixed(2)}'</div>
           <div class="p-2 bg-amber-950/40 rounded border border-amber-800/60 mt-1">
-            <span class="text-amber-400 font-bold">★ TINGGI HILAL MAR'I (EPHEMERIS KEMENAG)</span> = <b class="text-yellow-300 text-xs sm:text-sm">${fmtDMS(data.altHilalMarai)}</b>
+            <span class="text-amber-400 font-bold">★ TINGGI HILAL MAR'I (KEMENAG RI)</span> = <b class="text-yellow-300 text-xs sm:text-sm">${fmtDMS(data.altHilalMarai)}</b>
           </div>
         </div>
       </div>
 
       <div class="space-y-1.5">
-        <div class="text-cyan-400 font-bold">[ FASE 6: ELONGASI 3D, MUKTU, CAHAYA HILAL & MABIMS ]</div>
+        <div class="text-cyan-400 font-bold">[ FASE 6: ELONGASI 3D, MUKTU, & KRITERIA MABIMS ]</div>
         <div class="pl-2 text-slate-300 space-y-1">
-          <div>cos(Elongasi 3D) = sin(δ_m)·sin(δ_s) + cos(δ_m)·cos(δ_s)·cos(Δα)</div>
-          <div class="pl-4 text-emerald-400">➔ Busur Elongasi (ψ) = <b class="text-white">${data.elongasi.toFixed(4)}° (${fmtDMS(data.elongasi)})</b></div>
+          <div>Busur Elongasi (ψ) = <b class="text-white">${data.elongasi.toFixed(4)}° (${fmtDMS(data.elongasi)})</b></div>
           <div>Cahaya Hilal (Usbu) = [(1 - cos(ψ)) / 2] × 12 = <span class="text-white">${data.nurulHilalUsbu.toFixed(4)} Usbu</span></div>
           <div>Lama Hilal (Muktu) = h_mar'i × 4 / cos(φ) = <span class="text-white">${data.muktuFormatted}</span></div>
           <div class="mt-2 p-3 bg-indigo-950/60 rounded-xl border border-indigo-700/60 space-y-1">
@@ -752,10 +756,9 @@ function renderKalenderHijriGrid() {
     let sMonth = sunsetDate.getMonth() + 1;
     let sDay = sunsetDate.getDate();
 
-    let jdCurr = gregorianToJD(gYear, gMonth, gDay);
-    let jdInt = Math.floor(jdCurr + 0.5);
-    let hariIdx = (jdInt + 1) % 7;
-    let pasaranIdx = (jdInt + 1) % 5;
+    let cellHP = getHariPasaran(gYear, gMonth, gDay);
+    let hariIdx = cellHP.hariIdx;
+    let pasaranIdx = cellHP.pasaranIdx;
 
     let mData = getMoonDataAtSunset(sYear, sMonth, sDay);
 
