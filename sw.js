@@ -4,10 +4,8 @@ const ASSETS_TO_CACHE = [
   './index.html',
   './falak-engine.js',
   './hilal-module.js',
-  './manifest.json',
-  'https://cdn.tailwindcss.com',
-  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
-  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
+  './manifest.json'
+  // URL CDN eksternal dihapus dari sini agar tidak kena blokir CORS
 ];
 
 self.addEventListener('install', (e) => {
