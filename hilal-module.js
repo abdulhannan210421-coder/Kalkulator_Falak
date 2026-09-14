@@ -1,6 +1,6 @@
 // =========================================================================
 // ENGINE HISAB ASTRONOMI EPHEMERIS HAKIKI & MAR'I HIGH-ACCURACY
-// 100% Presisi Standard Kemenag RI & Digital Falak (Dynamic Timezone Engine)
+// Standard Kemenag RI & Digital Falak (Dynamic Timezone Engine)
 // Modul Utama: Hisab Hilal, Ephemeris Bulan & Kalender Hijriyah Presisi
 // =========================================================================
 
@@ -343,7 +343,9 @@ function getMoonDataAtSunset(yearMasehi, monthMasehi, dayInt) {
   if (altHilalHaqiqi > -1) {
     refraction = (1.02 / Math.tan(rad(altHilalHaqiqi + 10.3 / (altHilalHaqiqi + 5.11)))) / 60.0;
   }
-  let altHilalMarai = altHilalHaqiqi - (moonAtSunset.pi * Math.cos(rad(altHilalHaqiqi))) + refraction;
+  
+  // PERBAIKAN: Menambahkan Dip ke Tinggi Mar'i sesuai Standar Ephemeris Kemenag
+  let altHilalMarai = altHilalHaqiqi - (moonAtSunset.pi * Math.cos(rad(altHilalHaqiqi))) + refraction + Dip;
 
   let cos_psi = Math.sin(rad(moonAtSunset.decl)) * Math.sin(rad(sunAtSunset.decl)) +
                 Math.cos(rad(moonAtSunset.decl)) * Math.cos(rad(sunAtSunset.decl)) * Math.cos(rad(d_alpha));
@@ -355,7 +357,8 @@ function getMoonDataAtSunset(yearMasehi, monthMasehi, dayInt) {
   let azimSyamsDisp = Math.abs(270 - azimSyamsUtara);
   let azimQomarDisp = Math.abs(270 - azimQomarUtara);
 
-  let muktuTotalDetik = altHilalMarai > 0 ? Math.round(altHilalMarai * 240) : 0;
+  // PERBAIKAN: Koreksi perhitungan Muktu terhadap Lintang Tempat (phi)
+  let muktuTotalDetik = altHilalMarai > 0 ? Math.round((altHilalMarai * 240) / Math.cos(rad(phi))) : 0;
   let muktuM = Math.floor(muktuTotalDetik / 60);
   let muktuS = muktuTotalDetik % 60;
   let muktuFormatted = `00:${String(muktuM).padStart(2, '0')}:${String(muktuS).padStart(2, '0')}`;
@@ -433,31 +436,35 @@ function hitungHisabAstronomiPresisiUtuh() {
 
   let T_ijtimak = (JDE_Hakiki - 2451545.0) / 36525.0;
   let sunIjtimak = getSunPosition(T_ijtimak);
+  let moonIjtimak = getMoonPosition(T_ijtimak);
 
   let jamIjtimakLokal = fix24(utHours + tzHours);
   let jamIjtimakWIS = fix24(12.0 + (jamIjtimakLokal - tzHours - 12.0) + (lambda / 15.0) + sunIjtimak.e);
 
   let jdIntLokal = Math.floor(JDE_Lokal + 0.5);
   let hariIdx = (jdIntLokal + 1) % 7;
-  let pasaranIdx = jdIntLokal % 5;
+  // PERBAIKAN: Rumus Pasaran Jawa Presisi (Kliwon/Legi)
+  let pasaranIdx = (jdIntLokal + 1) % 5;
 
   let moonDataSunset = getMoonDataAtSunset(yearMasehi, monthMasehi, dayInt);
 
-  let isImkanRukyatMABIMS = (moonDataSunset.altHilalMarai >= 3.0 && moonDataSunset.elongasi >= 6.4);
-  let isWujudulHilal = (moonDataSunset.altHilalHaqiqi > 0);
+  // PERBAIKAN LOGIKA: Ijtimak harus terjadi SEBELUM Terbenam Matahari (Qoblal Ghurub)
+  let isIjtimakQoblalGhurub = jamIjtimakLokal < moonDataSunset.ghurubLokal;
+  let isWujudulHilal = isIjtimakQoblalGhurub && (moonDataSunset.altHilalHaqiqi > 0);
+  let isImkanRukyatMABIMS = isWujudulHilal && (moonDataSunset.altHilalMarai >= 3.0 && moonDataSunset.elongasi >= 6.4);
 
   let statusVisibilitas = "";
-  let tambahanHari = 1;
+  // PERBAIKAN PENENTUAN AWAL BULAN EPHEMERIS & KITAB SALAF:
+  // Jika Wujudul Hilal / Alt > 0°, maka Awal Bulan = Besok (H+1).
+  // Jika Qoblal Ghurub tidak terpenuhi / Alt <= 0°, wajib Istikmal 30 hari = Lusa (H+2).
+  let tambahanHari = isWujudulHilal ? 1 : 2;
 
   if (isImkanRukyatMABIMS) {
     statusVisibilitas = "Memenuhi Kriteria MABIMS 3-6.4 (Imkanur Rukyat / Hilal Dapat Dilihat)";
-    tambahanHari = 1;
   } else if (isWujudulHilal) {
-    statusVisibilitas = "Wujudul Hilal / Hilal Terlalu Tipis (Belum Memenuhi Imkanur Rukyat MABIMS -> ISTIKMAL 30 Hari)";
-    tambahanHari = 2;
+    statusVisibilitas = "Wujudul Hilal / Hilal Terlalu Tipis (Belum Memenuhi Imkanur Rukyat MABIMS)";
   } else {
     statusVisibilitas = "Hilal di Bawah Ufuk / Qoblal Ghurub (Wajib ISTIKMAL 30 Hari)";
-    tambahanHari = 2;
   }
 
   let dateAwalBulan = new Date(yearMasehi, monthMasehi - 1, dayInt + tambahanHari);
@@ -546,7 +553,7 @@ function hitungHisabAstronomiPresisiUtuh() {
     yHijri, mHijri, namaBulanHijri,
     phi, lambda, latDeg, latMin, latArah, longDeg, longMin, longArah, elevasi, Dip: moonDataSunset.Dip,
     JDE_Hakiki, JDE_Lokal, utHours, tzHours, tzLabel, jamIjtimakLokal, jamIjtimakWIS,
-    sunIjtimak, JD_0h_UT: gregorianToJD(yearMasehi, monthMasehi, dayInt),
+    sunIjtimak, moonIjtimak, JD_0h_UT: gregorianToJD(yearMasehi, monthMasehi, dayInt),
     h_sun_sunset: -(0.8333 + moonDataSunset.Dip), cosH0: moonDataSunset.cosH0, H0: moonDataSunset.H0,
     ghurubUT: moonDataSunset.ghurubLokal - tzHours, ghurubLokal: moonDataSunset.ghurubLokal, ghurubWIS: moonDataSunset.ghurubWIS,
     sunAtSunset: moonDataSunset.sunAtSunset, moonAtSunset: moonDataSunset.moonAtSunset,
@@ -608,7 +615,8 @@ function renderHilalMatrix(data) {
         <div class="pl-2 text-slate-300 space-y-1">
           <div>T (Abad Julian) = (JDE - 2451545.0) / 36525.0</div>
           <div>λ_Matahari (λ☉) = ${data.sunIjtimak.lambda.toFixed(5)}°</div>
-          <div>λ_Bulan (λ☽)    = ${data.sunIjtimak.lambda.toFixed(5)}° (Eksak Selisih Δλ = 0.00000°)</div>
+          <!-- PERBAIKAN: Menampilkan lambda milik Bulan, bukan Matahari -->
+          <div>λ_Bulan (λ☽)    = ${data.moonIjtimak ? data.moonIjtimak.lambda.toFixed(5) : data.sunIjtimak.lambda.toFixed(5)}° (Eksak Selisih Δλ = 0.00000°)</div>
           <div class="p-2 bg-slate-900/80 rounded border border-emerald-800/50 mt-1">
             <span class="text-yellow-300">JDE Hakiki Converged</span> = <b class="text-white">${data.JDE_Hakiki.toFixed(6)}</b>
             <br><span class="text-yellow-300">JDE Waktu Lokal (UTC+${data.tzHours})</span> = ${data.JDE_Lokal.toFixed(6)}
@@ -648,8 +656,8 @@ function renderHilalMatrix(data) {
           <div>H_Bulan (H_m) = H₀ - Δα = ${data.H_m.toFixed(4)}°</div>
           <div>sin(h_haqiqi) = sin(φ)·sin(δ_m) + cos(φ)·cos(δ_m)·cos(H_m)</div>
           <div class="pl-4 text-emerald-400">➔ Tinggi Hilal Hakiki (h_haqiqi) = <b class="text-white">${fmtDMS(data.altHilalHaqiqi)}</b></div>
-          <div>Paralaks Horizontal (HP) = ${data.moonAtSunset.pi.toFixed(4)}° | Refraksi (R) = ${(data.refraction*60).toFixed(2)}'</div>
-          <div>h_mar'i = h_haqiqi - HP·cos(h_haqiqi) + R</div>
+          <div>Paralaks Horizontal (HP) = ${data.moonAtSunset.pi.toFixed(4)}° | Refraksi (R) = ${(data.refraction*60).toFixed(2)}' | Dip = ${(data.Dip*60).toFixed(2)}'</div>
+          <div>h_mar'i = h_haqiqi - HP·cos(h_haqiqi) + R + Dip</div>
           <div class="p-2 bg-amber-950/40 rounded border border-amber-800/60 mt-1">
             <span class="text-amber-400 font-bold">★ TINGGI HILAL MAR'I (EPHEMERIS KEMENAG)</span> = <b class="text-yellow-300 text-xs sm:text-sm">${fmtDMS(data.altHilalMarai)}</b>
           </div>
@@ -662,7 +670,7 @@ function renderHilalMatrix(data) {
           <div>cos(Elongasi 3D) = sin(δ_m)·sin(δ_s) + cos(δ_m)·cos(δ_s)·cos(Δα)</div>
           <div class="pl-4 text-emerald-400">➔ Busur Elongasi (ψ) = <b class="text-white">${data.elongasi.toFixed(4)}° (${fmtDMS(data.elongasi)})</b></div>
           <div>Cahaya Hilal (Usbu) = [(1 - cos(ψ)) / 2] × 12 = <span class="text-white">${data.nurulHilalUsbu.toFixed(4)} Usbu</span></div>
-          <div>Lama Hilal (Muktu) = h_mar'i × 4 Menit = <span class="text-white">${data.muktuFormatted}</span></div>
+          <div>Lama Hilal (Muktu) = h_mar'i × 4 / cos(φ) = <span class="text-white">${data.muktuFormatted}</span></div>
           <div class="mt-2 p-3 bg-indigo-950/60 rounded-xl border border-indigo-700/60 space-y-1">
             <div class="text-yellow-400 font-bold">VERIFIKASI MABIMS (Tinggi ≥ 3° & Elongasi ≥ 6.4°):</div>
             <div>• Imkanur Rukyat (3° / 6.4°): <b class="${data.isImkanRukyatMABIMS ? 'text-emerald-400' : 'text-rose-400'}">${data.isImkanRukyatMABIMS ? 'TERPENUHI (Bisa Dilihat)' : 'BELUM TERPENUHI'}</b></div>
@@ -689,23 +697,24 @@ function renderKalenderHijriGrid() {
   let yHijri = parseInt(inputTahun.value, 10);
   let namaBulanHijri = HIJRI_MONTHS_LIST[mHijri];
 
+  let tzHours = typeof window.currentUtcOffset === 'number' ? window.currentUtcOffset : 7.0;
+
   let JDE_Hakiki = getExactIjtimakJD(yHijri, mHijri);
-  let ijtimakLokal = jdToGregorian(JDE_Hakiki + (7.0 / 24.0));
+  let ijtimakLokal = jdToGregorian(JDE_Hakiki + (tzHours / 24.0));
   let mSunset = getMoonDataAtSunset(ijtimakLokal.year, ijtimakLokal.month, ijtimakLokal.day);
 
-  let isImkan = (mSunset.altHilalMarai >= 3.0 && mSunset.elongasi >= 6.4);
   let isWujud = (mSunset.altHilalHaqiqi > 0);
-  let tambahanHari = (isImkan ? 1 : (isWujud ? 2 : 2));
+  let tambahanHari = isWujud ? 1 : 2;
 
   let dateAwalBulan = new Date(ijtimakLokal.year, ijtimakLokal.month - 1, ijtimakLokal.day + tambahanHari);
 
   let nextM = (mHijri + 1) % 12;
   let nextY = mHijri === 11 ? yHijri + 1 : yHijri;
   let JDE_Next = getExactIjtimakJD(nextY, nextM);
-  let ijtimakNextLokal = jdToGregorian(JDE_Next + (7.0 / 24.0));
+  let ijtimakNextLokal = jdToGregorian(JDE_Next + (tzHours / 24.0));
   let mSunsetNext = getMoonDataAtSunset(ijtimakNextLokal.year, ijtimakNextLokal.month, ijtimakNextLokal.day);
-  let isImkanNext = (mSunsetNext.altHilalMarai >= 3.0 && mSunsetNext.elongasi >= 6.4);
-  let tambahanNext = (isImkanNext ? 1 : 2);
+  let isWujudNext = (mSunsetNext.altHilalHaqiqi > 0);
+  let tambahanNext = isWujudNext ? 1 : 2;
   let dateAwalNext = new Date(ijtimakNextLokal.year, ijtimakNextLokal.month - 1, ijtimakNextLokal.day + tambahanNext);
 
   let totalDaysInMonth = Math.round((dateAwalNext - dateAwalBulan) / (1000 * 60 * 60 * 24));
@@ -746,7 +755,7 @@ function renderKalenderHijriGrid() {
     let jdCurr = gregorianToJD(gYear, gMonth, gDay);
     let jdInt = Math.floor(jdCurr + 0.5);
     let hariIdx = (jdInt + 1) % 7;
-    let pasaranIdx = jdInt % 5;
+    let pasaranIdx = (jdInt + 1) % 5;
 
     let mData = getMoonDataAtSunset(sYear, sMonth, sDay);
 
@@ -762,7 +771,6 @@ function renderKalenderHijriGrid() {
       ? DATABASE_BULAN[gMonth].nama.substring(0, 3) 
       : '';
 
-    // Hand-drawn Circle SVG Overlay jika HARI INI
     let handDrawnCircleSvg = isToday ? `
       <svg class="absolute inset-0 w-full h-full pointer-events-none text-rose-500 dark:text-rose-400 z-10 overflow-visible" viewBox="0 0 100 100" fill="none" stroke="currentColor">
         <path d="M 18,50 C 12,18 82,12 86,46 C 90,78 22,86 18,52 C 16,30 72,16 84,36" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" class="opacity-90"/>
@@ -771,7 +779,6 @@ function renderKalenderHijriGrid() {
 
     let todayContainerBg = isToday ? "bg-rose-50/50 dark:bg-rose-950/20 border-rose-300 dark:border-rose-800/60 shadow-md scale-[1.02]" : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800";
 
-    // PERBAIKAN: Mengirim mHijri (angka 0-11) ke openDetailBulanModal untuk menghindari error tanda petik tunggal
     htmlGrid += `
       <div onclick="openDetailBulanModal(${sYear}, ${sMonth}, ${sDay}, ${d}, ${mHijri}, ${yHijri})" 
            class="relative p-1 sm:p-2 rounded-lg sm:rounded-xl border ${todayContainerBg} hover:border-indigo-500 dark:hover:border-indigo-500 transition-all cursor-pointer shadow-2xs hover:shadow-md group flex flex-col justify-between min-h-[75px] sm:min-h-[105px]">
@@ -852,7 +859,6 @@ function openDetailBulanModal(year, month, day, hDay, hMonth, hYear) {
   const modalBody = document.getElementById('detailBulanModalBody');
   if (!modal || !modalTitle || !modalBody) return;
 
-  // PERBAIKAN: Jika hMonth berupa angka indeks, ambil nama bulan dari array HIJRI_MONTHS_LIST
   let hMonthName = (typeof hMonth === 'number' && HIJRI_MONTHS_LIST[hMonth]) ? HIJRI_MONTHS_LIST[hMonth] : hMonth;
 
   let m = getMoonDataAtSunset(year, month, day);
