@@ -2,10 +2,10 @@ const CACHE_NAME = 'falak-hub-v1';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
+  './tailwind.js',
   './falak-engine.js',
   './hilal-module.js',
   './manifest.json'
-  // URL CDN eksternal dihapus dari sini agar tidak kena blokir CORS
 ];
 
 self.addEventListener('install', (e) => {
