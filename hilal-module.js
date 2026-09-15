@@ -2,6 +2,7 @@
 // ENGINE HISAB ASTRONOMI EPHEMERIS HAKIKI & MAR'I HIGH-ACCURACY
 // Standard Kemenag RI & Digital Falak (Dynamic Timezone Engine)
 // Modul Utama: Hisab Hilal, Ephemeris Bulan & Kalender Hijriyah Presisi
+// Dynamic Imkanur Rukyah & Automatic Istikmal Engine
 // =========================================================================
 
 const HIJRI_MONTHS_LIST = [
@@ -36,6 +37,72 @@ function getHariPasaran(year, month, day) {
   let hariIdx = (jdInt + 1) % 7;
   let pasaranIdx = jdInt % 5;
   return { hariIdx, pasaranIdx, jdInt };
+}
+
+// -------------------------------------------------------------------------
+// HELPER BARU: EVALUASI KRITERIA IMKANUR RUKYAH & ISTIKMAL
+// -------------------------------------------------------------------------
+
+/**
+ * Menhitung Usia Hilal saat Terbenam Matahari (Sunset) dalam jam.
+ */
+function getUsiaHilal(JD_ghurub_exact, JDE_Hakiki) {
+  let usia = (JD_ghurub_exact - JDE_Hakiki) * 24.0;
+  return usia < 0 ? 0 : usia; // 0 jika ijtimak ba'da ghurub
+}
+
+/**
+ * Pilihan Opsi Kriteria:
+ * - 'IMKAN_2_6'        : Default (Alt Haqiqi >= 2° & Usia Hilal >= 6 Jam)
+ * - 'IMKAN_2_8'        : Alt Haqiqi >= 2° & Usia Hilal >= 8 Jam
+ * - 'IMKAN_2_MUTHLAQ'  : Alt Haqiqi >= 2° (Tanpa syarat usia)
+ * - 'MABIMS_BARU'     : Alt Mar'i >= 3° & Elongasi 3D >= 6.4°
+ * - 'WUJUDUL_HILAL'    : Alt Haqiqi > 0° & Qoblal Ghurub
+ */
+function checkImkanRukyah(kriteriaMode, moonDataSunset, JDE_Hakiki) {
+  let usiaHilal = getUsiaHilal(moonDataSunset.JD_ghurub_exact, JDE_Hakiki);
+  let isIjtimakQoblalGhurub = moonDataSunset.JD_ghurub_exact > JDE_Hakiki;
+
+  let isLulus = false;
+  let labelKriteria = "";
+
+  switch (kriteriaMode) {
+    case 'IMKAN_2_8':
+      labelKriteria = "Imkanur Rukyat (Tinggi Haqiqi ≥ 2° & Usia Hilal ≥ 8 Jam)";
+      isLulus = isIjtimakQoblalGhurub && moonDataSunset.altHilalHaqiqi >= 2.0 && usiaHilal >= 8.0;
+      break;
+
+    case 'IMKAN_2_MUTHLAQ':
+      labelKriteria = "Imkanur Rukyat Muthlaq (Tinggi Haqiqi ≥ 2°)";
+      isLulus = isIjtimakQoblalGhurub && moonDataSunset.altHilalHaqiqi >= 2.0;
+      break;
+
+    case 'MABIMS_BARU':
+      labelKriteria = "MABIMS Baru (Tinggi Mar'i ≥ 3° & Elongasi 3D ≥ 6.4°)";
+      isLulus = isIjtimakQoblalGhurub && moonDataSunset.altHilalMarai >= 3.0 && moonDataSunset.elongasi >= 6.4;
+      break;
+
+    case 'WUJUDUL_HILAL':
+      labelKriteria = "Wujudul Hilal (Tinggi Haqiqi > 0° & Qoblal Ghurub)";
+      isLulus = isIjtimakQoblalGhurub && moonDataSunset.altHilalHaqiqi > 0;
+      break;
+
+    case 'IMKAN_2_6':
+    default:
+      labelKriteria = "Imkanur Rukyat (Tinggi Haqiqi ≥ 2° & Usia Hilal ≥ 6 Jam)";
+      isLulus = isIjtimakQoblalGhurub && moonDataSunset.altHilalHaqiqi >= 2.0 && usiaHilal >= 6.0;
+      break;
+  }
+
+  return {
+    isLulus,
+    usiaHilal,
+    isIjtimakQoblalGhurub,
+    labelKriteria,
+    // Jika LULUS kriteria = tambah 1 hari (Besok Awal Bulan).
+    // Jika TIDAK LULUS = ISTIKMAL 30 hari (Tambah 2 hari / Lusa Awal Bulan).
+    tambahanHari: isLulus ? 1 : 2
+  };
 }
 
 // -------------------------------------------------------------------------
@@ -384,6 +451,7 @@ function getMoonDataAtSunset(yearMasehi, monthMasehi, dayInt) {
 
   return {
     yearMasehi, monthMasehi, dayInt,
+    JD_ghurub_exact, // Mengembalikan JD eksak sunset untuk kalkulasi usia hilal
     phi, lambda, latDeg, latMin, latArah, longDeg, longMin, longArah, elevasi, Dip,
     tzHours, tzLabel, ghurubLokal, ghurubWIS,
     sunAtSunset, moonAtSunset, d_alpha, H_m, H0, cosH0,
@@ -450,27 +518,22 @@ function hitungHisabAstronomiPresisiUtuh() {
   let jamIjtimakLokal = fix24(utHours + tzHours);
   let jamIjtimakWIS = fix24(12.0 + (jamIjtimakLokal - tzHours - 12.0) + (lambda / 15.0) + sunIjtimak.e);
 
-  // PERBAIKAN TOTAL PASARAN: Diambil dari tanggal masehi sipil presisi
   let ijtHP = getHariPasaran(yearMasehi, monthMasehi, dayInt);
   let hariIdx = ijtHP.hariIdx;
   let pasaranIdx = ijtHP.pasaranIdx;
 
   let moonDataSunset = getMoonDataAtSunset(yearMasehi, monthMasehi, dayInt);
 
-  let isIjtimakQoblalGhurub = jamIjtimakLokal < moonDataSunset.ghurubLokal;
-  let isWujudulHilal = isIjtimakQoblalGhurub && (moonDataSunset.altHilalHaqiqi > 0);
-  let isImkanRukyatMABIMS = isWujudulHilal && (moonDataSunset.altHilalMarai >= 3.0 && moonDataSunset.elongasi >= 6.4);
+  // Ambil mode kriteria dari input HTML (Default: IMKAN_2_6)
+  const modeKriteria = document.getElementById('selectKriteriaImkan')?.value || 'IMKAN_2_6';
+  
+  // Evaluasi Kriteria Imkanur Rukyah & Usia Hilal
+  let evalImkan = checkImkanRukyah(modeKriteria, moonDataSunset, JDE_Hakiki);
 
-  let statusVisibilitas = "";
-  let tambahanHari = isWujudulHilal ? 1 : 2;
-
-  if (isImkanRukyatMABIMS) {
-    statusVisibilitas = "Memenuhi Kriteria MABIMS 3-6.4 (Imkanur Rukyat / Hilal Dapat Dilihat)";
-  } else if (isWujudulHilal) {
-    statusVisibilitas = "Wujudul Hilal / Hilal Terlalu Tipis (Belum Memenuhi Imkanur Rukyat MABIMS)";
-  } else {
-    statusVisibilitas = "Hilal di Bawah Ufuk / Qoblal Ghurub (Wajib ISTIKMAL 30 Hari)";
-  }
+  let tambahanHari = evalImkan.tambahanHari;
+  let statusVisibilitas = evalImkan.isLulus
+    ? `Memenuhi ${evalImkan.labelKriteria} (Awal Bulan Masuk Besok)`
+    : `TIDAK Memenuhi ${evalImkan.labelKriteria} → (Wajib ISTIKMAL 30 Hari)`;
 
   let dateAwalBulan = new Date(yearMasehi, monthMasehi - 1, dayInt + tambahanHari);
   let awalHP = getHariPasaran(dateAwalBulan.getFullYear(), dateAwalBulan.getMonth() + 1, dateAwalBulan.getDate());
@@ -513,16 +576,16 @@ function hitungHisabAstronomiPresisiUtuh() {
               <span class="font-mono font-bold text-slate-800 dark:text-slate-200">${fmtDMS(moonDataSunset.altHilalHaqiqi)}</span>
             </div>
             <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 flex justify-between">
+              <span class="text-slate-500">Usia Hilal saat Sunset:</span>
+              <span class="font-mono font-bold text-indigo-600 dark:text-indigo-400">${evalImkan.usiaHilal.toFixed(2)} Jam</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 flex justify-between">
               <span class="text-slate-500">Elongasi 3D:</span>
               <span class="font-mono font-bold text-slate-800 dark:text-slate-200">${moonDataSunset.elongasi.toFixed(2)}°</span>
             </div>
             <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 flex justify-between">
               <span class="text-slate-500">Lama Hilal (Muktu):</span>
               <span class="font-mono font-bold text-slate-800 dark:text-slate-200">${moonDataSunset.muktuFormatted}</span>
-            </div>
-            <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 flex justify-between">
-              <span class="text-slate-500">Cahaya Hilal:</span>
-              <span class="font-mono font-bold text-slate-800 dark:text-slate-200">${moonDataSunset.nurulHilalUsbu.toFixed(3)} Usbu</span>
             </div>
           </div>
 
@@ -543,7 +606,7 @@ function hitungHisabAstronomiPresisiUtuh() {
           </div>
 
           <div class="p-3 rounded-xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-900/60 font-bold space-y-1">
-            <div class="text-[10px] uppercase text-indigo-500 tracking-wider">Potensi Visibilitas Hilal MABIMS</div>
+            <div class="text-[10px] uppercase text-indigo-500 tracking-wider">Potensi Visibilitas & Keputusan Awal Bulan</div>
             <div class="text-indigo-950 dark:text-indigo-200 leading-snug text-xs sm:text-sm">${statusVisibilitas}</div>
           </div>
 
@@ -569,8 +632,11 @@ function hitungHisabAstronomiPresisiUtuh() {
     azimSyamsUtara: moonDataSunset.azimSyamsUtara, azimQomarUtara: moonDataSunset.azimQomarUtara,
     azimSyamsDisp: moonDataSunset.azimSyamsDisp, azimQomarDisp: moonDataSunset.azimQomarDisp,
     muktuFormatted: moonDataSunset.muktuFormatted, nurulHilalUsbu: moonDataSunset.nurulHilalUsbu,
-    isImkanRukyatMABIMS, statusVisibilitas
+    evalImkan, statusVisibilitas
   });
+
+  // Render ulang grid kalender agar mengikuti standar kriteria yang aktif
+  renderKalenderHijriGrid();
 }
 
 function copyHisabSummary() {
@@ -594,6 +660,7 @@ function renderHilalMatrix(data) {
   const totalMonths = (data.yHijri - 1) * 12 + data.mHijri;
   const k = totalMonths - 17037;
   const JD_0 = 2451549.50724 + 29.530588861 * k;
+  const evalImkan = data.evalImkan || {};
 
   containerMatrix.innerHTML = `
     <div class="bg-[#0b1329] text-emerald-300 font-mono text-[11px] sm:text-xs p-3 sm:p-5 rounded-2xl border border-emerald-900/60 shadow-2xl space-y-4 overflow-x-auto leading-relaxed">
@@ -670,14 +737,15 @@ function renderHilalMatrix(data) {
       </div>
 
       <div class="space-y-1.5">
-        <div class="text-cyan-400 font-bold">[ FASE 6: ELONGASI 3D, MUKTU, & KRITERIA MABIMS ]</div>
+        <div class="text-cyan-400 font-bold">[ FASE 6: ELONGASI 3D, USIA HILAL & KRITERIA PILIHAN ]</div>
         <div class="pl-2 text-slate-300 space-y-1">
+          <div>Usia Hilal saat Sunset = <b class="text-yellow-300">${(evalImkan.usiaHilal || 0).toFixed(2)} Jam</b></div>
           <div>Busur Elongasi (ψ) = <b class="text-white">${data.elongasi.toFixed(4)}° (${fmtDMS(data.elongasi)})</b></div>
           <div>Cahaya Hilal (Usbu) = [(1 - cos(ψ)) / 2] × 12 = <span class="text-white">${data.nurulHilalUsbu.toFixed(4)} Usbu</span></div>
           <div>Lama Hilal (Muktu) = h_mar'i × 4 / cos(φ) = <span class="text-white">${data.muktuFormatted}</span></div>
           <div class="mt-2 p-3 bg-indigo-950/60 rounded-xl border border-indigo-700/60 space-y-1">
-            <div class="text-yellow-400 font-bold">VERIFIKASI MABIMS (Tinggi ≥ 3° & Elongasi ≥ 6.4°):</div>
-            <div>• Imkanur Rukyat (3° / 6.4°): <b class="${data.isImkanRukyatMABIMS ? 'text-emerald-400' : 'text-rose-400'}">${data.isImkanRukyatMABIMS ? 'TERPENUHI (Bisa Dilihat)' : 'BELUM TERPENUHI'}</b></div>
+            <div class="text-yellow-400 font-bold">VERIFIKASI KRITERIA (${evalImkan.labelKriteria || 'Dinamis'}):</div>
+            <div>• Kriteria Terpenuhi: <b class="${evalImkan.isLulus ? 'text-emerald-400' : 'text-rose-400'}">${evalImkan.isLulus ? 'YA (Hilal Memenuhi Syarat)' : 'TIDAK (Wajib Istikmal 30 Hari)'}</b></div>
             <div>• Status: <span class="text-indigo-200">${data.statusVisibilitas}</span></div>
           </div>
         </div>
@@ -703,12 +771,15 @@ function renderKalenderHijriGrid() {
 
   let tzHours = typeof window.currentUtcOffset === 'number' ? window.currentUtcOffset : 7.0;
 
+  // Baca kriteria yang aktif
+  const modeKriteria = document.getElementById('selectKriteriaImkan')?.value || 'IMKAN_2_6';
+
   let JDE_Hakiki = getExactIjtimakJD(yHijri, mHijri);
   let ijtimakLokal = jdToGregorian(JDE_Hakiki + (tzHours / 24.0));
   let mSunset = getMoonDataAtSunset(ijtimakLokal.year, ijtimakLokal.month, ijtimakLokal.day);
 
-  let isWujud = (mSunset.altHilalHaqiqi > 0);
-  let tambahanHari = isWujud ? 1 : 2;
+  let evalCurrent = checkImkanRukyah(modeKriteria, mSunset, JDE_Hakiki);
+  let tambahanHari = evalCurrent.tambahanHari;
 
   let dateAwalBulan = new Date(ijtimakLokal.year, ijtimakLokal.month - 1, ijtimakLokal.day + tambahanHari);
 
@@ -717,8 +788,10 @@ function renderKalenderHijriGrid() {
   let JDE_Next = getExactIjtimakJD(nextY, nextM);
   let ijtimakNextLokal = jdToGregorian(JDE_Next + (tzHours / 24.0));
   let mSunsetNext = getMoonDataAtSunset(ijtimakNextLokal.year, ijtimakNextLokal.month, ijtimakNextLokal.day);
-  let isWujudNext = (mSunsetNext.altHilalHaqiqi > 0);
-  let tambahanNext = isWujudNext ? 1 : 2;
+  
+  let evalNext = checkImkanRukyah(modeKriteria, mSunsetNext, JDE_Next);
+  let tambahanNext = evalNext.tambahanHari;
+
   let dateAwalNext = new Date(ijtimakNextLokal.year, ijtimakNextLokal.month - 1, ijtimakNextLokal.day + tambahanNext);
 
   let totalDaysInMonth = Math.round((dateAwalNext - dateAwalBulan) / (1000 * 60 * 60 * 24));
