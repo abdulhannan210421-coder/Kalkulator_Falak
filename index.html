@@ -39,6 +39,21 @@
     }
     .table-scroll-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
     #map { height: 320px; width: 100%; border-radius: 0.75rem; }
+
+    /* Modern Select UI Style */
+    .custom-select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2.5' stroke='%236366f1'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5' /%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.65rem center;
+      background-size: 0.9em 0.9em;
+      padding-right: 2.2rem !important;
+    }
+    .dark .custom-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2.5' stroke='%23818cf8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5' /%3E%3C/svg%3E");
+    }
   </style>
 </head>
 <body class="p-2 sm:p-4 md:p-6 pb-20 sm:pb-24 flex flex-col justify-between min-h-screen relative bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
@@ -94,27 +109,22 @@
           <div class="space-y-1">
             <label class="text-[11px] font-bold text-slate-700 dark:text-slate-300">Tanggal & Bulan Acuan</label>
             <div class="grid grid-cols-2 gap-1.5">
-              <input type="number" id="tanggal" min="1" max="31" oninput="hitungFalak()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-2 focus:ring-2 focus:ring-indigo-500 outline-none w-full text-center font-bold">
+              <input type="number" id="tanggal" min="1" max="31" oninput="hitungFalak()" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none w-full text-center font-bold">
               
-              <div class="relative w-full">
-                <select id="bulan" onchange="hitungFalak()" class="w-full appearance-none bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl py-2 px-2.5 pr-7 font-bold outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
-                  <option value="1">Januari</option>
-                  <option value="2">Februari</option>
-                  <option value="3">Maret</option>
-                  <option value="4">April</option>
-                  <option value="5">Mei</option>
-                  <option value="6">Juni</option>
-                  <option value="7">Juli</option>
-                  <option value="8">Agustus</option>
-                  <option value="9">September</option>
-                  <option value="10">Oktober</option>
-                  <option value="11">Nopember</option>
-                  <option value="12">Desember</option>
-                </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-indigo-500">
-                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-                </div>
-              </div>
+              <select id="bulan" onchange="hitungFalak()" class="custom-select w-full bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl py-2 px-2.5 font-bold outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 cursor-pointer transition-all hover:border-indigo-400 dark:hover:border-indigo-500">
+                <option value="1">Januari</option>
+                <option value="2">Februari</option>
+                <option value="3">Maret</option>
+                <option value="4">April</option>
+                <option value="5">Mei</option>
+                <option value="6">Juni</option>
+                <option value="7">Juli</option>
+                <option value="8">Agustus</option>
+                <option value="9">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">Nopember</option>
+                <option value="12">Desember</option>
+              </select>
             </div>
           </div>
 
@@ -125,20 +135,15 @@
               <span class="text-slate-400 font-normal">° '</span>
             </label>
             <div class="flex items-center gap-1">
-              <input type="number" id="latDeg" value="7" placeholder="°" oninput="hitungFalak()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-11 text-center font-bold outline-none">
+              <input type="number" id="latDeg" value="7" placeholder="°" oninput="hitungFalak()" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-11 text-center font-bold outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
               <span class="text-slate-400 font-bold text-xs">°</span>
-              <input type="number" id="latMin" value="39" placeholder="'" oninput="hitungFalak()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-11 text-center font-bold outline-none">
+              <input type="number" id="latMin" value="39" placeholder="'" oninput="hitungFalak()" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-11 text-center font-bold outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
               <span class="text-slate-400 font-bold text-xs">'</span>
               
-              <div class="relative flex-1">
-                <select id="latArah" onchange="hitungFalak()" class="w-full appearance-none bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl py-2 px-2 pr-6 font-bold outline-none cursor-pointer">
-                  <option value="SELATAN" selected>LS (South)</option>
-                  <option value="UTARA">LU (North)</option>
-                </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1.5 text-indigo-500">
-                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-                </div>
-              </div>
+              <select id="latArah" onchange="hitungFalak()" class="custom-select flex-1 bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl py-2 px-2 font-bold outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 cursor-pointer transition-all hover:border-indigo-400 dark:hover:border-indigo-500">
+                <option value="SELATAN" selected>LS (South)</option>
+                <option value="UTARA">LU (North)</option>
+              </select>
             </div>
           </div>
 
@@ -149,20 +154,15 @@
               <span class="text-slate-400 font-normal">° '</span>
             </label>
             <div class="flex items-center gap-1">
-              <input type="number" id="longDeg" value="112" placeholder="°" oninput="hitungFalak()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-11 text-center font-bold outline-none">
+              <input type="number" id="longDeg" value="112" placeholder="°" oninput="hitungFalak()" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-11 text-center font-bold outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
               <span class="text-slate-400 font-bold text-xs">°</span>
-              <input type="number" id="longMin" value="45" placeholder="'" oninput="hitungFalak()" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-11 text-center font-bold outline-none">
+              <input type="number" id="longMin" value="45" placeholder="'" oninput="hitungFalak()" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-11 text-center font-bold outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
               <span class="text-slate-400 font-bold text-xs">'</span>
               
-              <div class="relative flex-1">
-                <select id="longArah" onchange="hitungFalak()" class="w-full appearance-none bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl py-2 px-2 pr-6 font-bold outline-none cursor-pointer">
-                  <option value="TIMUR" selected>BT (East)</option>
-                  <option value="BARAT">BB (West)</option>
-                </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1.5 text-indigo-500">
-                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-                </div>
-              </div>
+              <select id="longArah" onchange="hitungFalak()" class="custom-select flex-1 bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl py-2 px-2 font-bold outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 cursor-pointer transition-all hover:border-indigo-400 dark:hover:border-indigo-500">
+                <option value="TIMUR" selected>BT (East)</option>
+                <option value="BARAT">BB (West)</option>
+              </select>
             </div>
           </div>
 
@@ -170,7 +170,7 @@
           <div class="space-y-1">
             <label class="text-[11px] font-bold text-slate-700 dark:text-slate-300">Cari Kota On-line</label>
             <div class="flex gap-1">
-              <input type="text" id="searchKotaInput" onkeypress="if(event.key==='Enter') cariKotaInternet()" placeholder="mis: pasuruan, jawa timur" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-2 flex-1 font-semibold outline-none">
+              <input type="text" id="searchKotaInput" onkeypress="if(event.key==='Enter') cariKotaInternet()" placeholder="mis: pasuruan, jawa timur" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 flex-1 font-semibold outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
               <button onclick="cariKotaInternet()" class="bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 text-white text-xs font-bold px-3 py-2 rounded-xl transition-all shrink-0">
                 🔍 Cari
               </button>
@@ -367,7 +367,7 @@
           </div>
 
           <div class="flex flex-wrap items-center gap-2">
-            <input type="text" id="searchTabel" onkeyup="filterTabel()" placeholder="Cari langkah / istilah..." class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white text-xs rounded-xl px-3 py-1.5 focus:ring-2 focus:ring-indigo-500 outline-none w-full sm:w-56">
+            <input type="text" id="searchTabel" onkeyup="filterTabel()" placeholder="Cari langkah / istilah..." class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-800 dark:text-white text-xs rounded-xl px-3 py-1.5 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none w-full sm:w-56">
             <div class="text-[10px] bg-indigo-50 dark:bg-indigo-950/60 text-indigo-900 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900 px-2.5 py-1 rounded-xl font-mono font-bold">
               Total: <span id="rowCount" class="font-extrabold text-indigo-600 dark:text-indigo-400">133</span> Langkah
             </div>
@@ -391,33 +391,52 @@
           </div>
         </div>
 
-        <div class="p-3 bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 rounded-xl flex flex-wrap items-center justify-between gap-3">
-          <div class="flex items-center gap-2 flex-1 min-w-[240px]">
-            <label class="text-xs font-bold text-amber-950 dark:text-amber-300 shrink-0">Bulan Hijriah:</label>
-            <select id="selBulanHijri" onchange="hitungHisabAstronomiPresisiUtuh()" class="bg-white dark:bg-slate-800 border border-amber-300 dark:border-amber-800 text-slate-900 dark:text-white text-xs rounded-xl p-2 font-bold outline-none flex-1">
-              <option value="0">Muharram</option>
-              <option value="1">Safar</option>
-              <option value="2">Rabiul Awal</option>
-              <option value="3">Rabiul Akhir</option>
-              <option value="4">Jumadil Awal</option>
-              <option value="5">Jumadil Akhir</option>
-              <option value="6">Rajab</option>
-              <option value="7">Sya'ban</option>
-              <option value="8" selected>Ramadhan</option>
-              <option value="9">Syawal</option>
-              <option value="10">Dzulqa'dah</option>
-              <option value="11">Dzulhijjah</option>
-            </select>
+        <!-- PANEL INPUT PARAMETER HISAB HILAL & KRITERIA IMKAN -->
+        <div class="p-3 sm:p-4 bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 rounded-xl space-y-3">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <!-- BULAN HIJRIAH -->
+            <div class="space-y-1">
+              <label class="text-xs font-bold text-amber-950 dark:text-amber-300">Bulan Hijriah:</label>
+              <select id="selBulanHijri" onchange="hitungHisabAstronomiPresisiUtuh()" class="custom-select w-full bg-white dark:bg-slate-800 border border-amber-300 dark:border-amber-800 text-slate-900 dark:text-white text-xs rounded-xl p-2.5 font-bold outline-none cursor-pointer focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all">
+                <option value="0">Muharram</option>
+                <option value="1">Safar</option>
+                <option value="2">Rabiul Awal</option>
+                <option value="3">Rabiul Akhir</option>
+                <option value="4">Jumadil Awal</option>
+                <option value="5">Jumadil Akhir</option>
+                <option value="6">Rajab</option>
+                <option value="7">Sya'ban</option>
+                <option value="8" selected>Ramadhan</option>
+                <option value="9">Syawal</option>
+                <option value="10">Dzulqa'dah</option>
+                <option value="11">Dzulhijjah</option>
+              </select>
+            </div>
+
+            <!-- TAHUN HIJRIAH -->
+            <div class="space-y-1">
+              <label class="text-xs font-bold text-amber-950 dark:text-amber-300">Tahun Hijriah (H):</label>
+              <input type="number" id="inputTahunHijri" value="1448" oninput="hitungHisabAstronomiPresisiUtuh()" class="bg-white dark:bg-slate-800 border border-amber-300 dark:border-amber-800 text-slate-900 dark:text-white text-xs rounded-xl p-2.5 w-full text-center font-bold outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500">
+            </div>
+
+            <!-- OPSI SELECT BARU: KRITERIA IMKANUR RUKYAH & ISTIKMAL -->
+            <div class="space-y-1">
+              <label class="text-xs font-bold text-amber-950 dark:text-amber-300">Kriteria Imkanur Rukyat / Awal Bulan:</label>
+              <select id="selectKriteriaImkan" onchange="hitungHisabAstronomiPresisiUtuh()" class="custom-select w-full bg-white dark:bg-slate-800 border border-amber-300 dark:border-amber-800 text-slate-900 dark:text-white text-xs rounded-xl p-2.5 font-bold outline-none cursor-pointer focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all">
+                <option value="IMKAN_2_6" selected>Default: Imkan 2° & Usia Hilal 6 Jam</option>
+                <option value="IMKAN_2_8">Imkan 2° & Usia Hilal 8 Jam</option>
+                <option value="IMKAN_2_MUTHLAQ">Imkan 2° Muthlaq (Tanpa Syarat Usia)</option>
+                <option value="MABIMS_BARU">Standar MABIMS Baru (Tinggi 3° & Elongasi 6.4°)</option>
+                <option value="WUJUDUL_HILAL">Wujudul Hilal (Tinggi Haqiqi > 0°)</option>
+              </select>
+            </div>
           </div>
 
-          <div class="flex items-center gap-2 w-40">
-            <label class="text-xs font-bold text-amber-950 dark:text-amber-300 shrink-0">Tahun H:</label>
-            <input type="number" id="inputTahunHijri" value="1448" oninput="hitungHisabAstronomiPresisiUtuh()" class="bg-white dark:bg-slate-800 border border-amber-300 dark:border-amber-800 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-full text-center font-bold outline-none">
+          <div class="flex justify-end">
+            <button onclick="syncHijriFromMasehi()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all shrink-0 shadow-xs flex items-center gap-1.5">
+              <span>🔄</span> Auto Sync dari Masehi
+            </button>
           </div>
-
-          <button onclick="syncHijriFromMasehi()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all shrink-0 shadow-xs">
-            🔄 Auto dari Masehi
-          </button>
         </div>
 
         <div class="flex gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
@@ -460,7 +479,7 @@
         <div class="p-3 bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 rounded-xl flex flex-wrap items-center justify-between gap-3">
           <div class="flex items-center gap-2 flex-1 min-w-[240px]">
             <label class="text-xs font-bold text-emerald-950 dark:text-emerald-300 shrink-0">Bulan Hijriah:</label>
-            <select id="selBulanHijriCal" onchange="renderKalenderHijriGrid()" class="bg-white dark:bg-slate-800 border border-emerald-300 dark:border-emerald-800 text-slate-900 dark:text-white text-xs rounded-xl p-2 font-bold outline-none flex-1">
+            <select id="selBulanHijriCal" onchange="renderKalenderHijriGrid()" class="custom-select bg-white dark:bg-slate-800 border border-emerald-300 dark:border-emerald-800 text-slate-900 dark:text-white text-xs rounded-xl p-2 font-bold outline-none flex-1 cursor-pointer focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all">
               <option value="0">Muharram</option>
               <option value="1">Safar</option>
               <option value="2">Rabiul Awal</option>
@@ -478,7 +497,7 @@
 
           <div class="flex items-center gap-2 w-40">
             <label class="text-xs font-bold text-emerald-950 dark:text-emerald-300 shrink-0">Tahun H:</label>
-            <input type="number" id="inputTahunHijriCal" value="1448" oninput="renderKalenderHijriGrid()" class="bg-white dark:bg-slate-800 border border-emerald-300 dark:border-emerald-800 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-full text-center font-bold outline-none">
+            <input type="number" id="inputTahunHijriCal" value="1448" oninput="renderKalenderHijriGrid()" class="bg-white dark:bg-slate-800 border border-emerald-300 dark:border-emerald-800 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-full text-center font-bold outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500">
           </div>
 
           <!-- TOMBOL NAVIGASI CEPAT -->
@@ -570,7 +589,7 @@
           <span class="text-2xl">🌙</span>
           <div>
             <div class="text-xs font-bold text-amber-950 dark:text-amber-200">Hisab Hilal & Awal Bulan Qamariyah</div>
-            <div class="text-[10px] text-slate-500 dark:text-slate-400">Tinggi Hilal, Ijtimak, & Verifikasi MABIMS</div>
+            <div class="text-[10px] text-slate-500 dark:text-slate-400">Tinggi Hilal, Ijtimak, & Verifikasi Kriteria</div>
           </div>
         </button>
 
@@ -698,11 +717,11 @@
         <div class="space-y-1">
           <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400">Masukkan Sudut (Derajat & Menit):</label>
           <div class="flex items-center gap-2">
-            <div class="flex-1 flex items-center gap-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5">
+            <div class="flex-1 flex items-center gap-1 bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-xl px-2.5 py-1.5">
               <input type="number" id="fwdDeg" value="7" oninput="doFwdCalc()" class="w-full bg-transparent text-slate-900 dark:text-white text-xs font-bold outline-none text-center">
               <span class="text-slate-400 font-bold text-xs">°</span>
             </div>
-            <div class="flex-1 flex items-center gap-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1.5">
+            <div class="flex-1 flex items-center gap-1 bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-xl px-2.5 py-1.5">
               <input type="number" id="fwdMin" value="39" oninput="doFwdCalc()" class="w-full bg-transparent text-slate-900 dark:text-white text-xs font-bold outline-none text-center">
               <span class="text-slate-400 font-bold text-xs">'</span>
             </div>
@@ -725,7 +744,7 @@
         <div class="space-y-1">
           <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400">Pilih Fungsi & Masukkan Nilai Target:</label>
           <div class="flex gap-2">
-            <select id="invType" onchange="doInvCalc()" class="w-36 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl py-2 px-2.5 font-bold outline-none">
+            <select id="invType" onchange="doInvCalc()" class="custom-select w-36 bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl py-2 px-2.5 font-bold outline-none cursor-pointer focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all">
               <option value="LOGSIN">LogSin</option>
               <option value="LOGCOS">LogCos</option>
               <option value="LOGTAN">LogTan</option>
@@ -735,7 +754,7 @@
               <option value="TAN">Tan</option>
               <option value="COT">Cot</option>
             </select>
-            <input type="number" step="0.00001" id="invVal" oninput="doInvCalc()" placeholder="mis: 9.51264" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-2 flex-1 font-bold outline-none">
+            <input type="number" step="0.00001" id="invVal" oninput="doInvCalc()" placeholder="mis: 9.51264" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 flex-1 font-bold outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
           </div>
         </div>
 
