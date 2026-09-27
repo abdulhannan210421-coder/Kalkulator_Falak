@@ -1366,17 +1366,14 @@ async function updateLocationTimezone() {
 
 function updateJamIstiwa() {
   const now = new Date();
-  const utcHours = now.getUTCHours() + now.getUTCMinutes() / 60 + now.getUTCSeconds() / 3600;
-
-  let targetLocalHours = (utcHours + currentUtcOffset) % 24;
-  if (targetLocalHours < 0) targetLocalHours += 24;
-
   const pad = n => String(n).padStart(2, '0');
 
-  const locHrs = Math.floor(targetLocalHours);
-  const locRemMin = (targetLocalHours - locHrs) * 60;
-  const locMins = Math.floor(locRemMin);
-  const locSecs = Math.floor((locRemMin - locMins) * 60);
+  // 1. WAKTU SETEMPAT (Sesuai timezone lokasi terpilih & presisi tanpa lag)
+  // Menghitung timestamp lokal berdasarkan currentUtcOffset lokasi
+  const targetDate = new Date(now.getTime() + (currentUtcOffset * 3600000) + (now.getTimezoneOffset() * 60000));
+  const locHrs = targetDate.getHours();
+  const locMins = targetDate.getMinutes();
+  const locSecs = targetDate.getSeconds();
 
   const elLokal = document.getElementById('liveJamLokal');
   if (elLokal) {
@@ -1388,6 +1385,9 @@ function updateJamIstiwa() {
     const sign = currentUtcOffset >= 0 ? '+' : '';
     labelLokal.innerText = `Waktu Setempat (UTC${sign}${currentUtcOffset})`;
   }
+
+  // 2. JAM ISTIWA' (Perhitungan Matahari Presisi dengan Milidetik)
+  const utcHours = now.getUTCHours() + now.getUTCMinutes() / 60 + (now.getUTCSeconds() + now.getUTCMilliseconds() / 1000) / 3600;
 
   let longDeg = parseFloat(document.getElementById('longDeg')?.value) || 112;
   let longMin = parseFloat(document.getElementById('longMin')?.value) || 45;
@@ -1405,16 +1405,18 @@ function updateJamIstiwa() {
   let solarTimeHours = utcHours + (lon / 15) + (eqTimeMin / 60);
   solarTimeHours = (solarTimeHours % 24 + 24) % 24;
 
-  const hrs = Math.floor(solarTimeHours);
-  const remMin = (solarTimeHours - hrs) * 60;
-  const mins = Math.floor(remMin);
-  const secs = Math.floor((remMin - mins) * 60);
+  let totalSolarSeconds = Math.floor(solarTimeHours * 3600);
+  const hrs = Math.floor(totalSolarSeconds / 3600) % 24;
+  const mins = Math.floor((totalSolarSeconds % 3600) / 60);
+  const secs = totalSolarSeconds % 60;
 
   const elIstiwa = document.getElementById('liveJamIstiwa');
   if (elIstiwa) {
     elIstiwa.innerText = `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
   }
 
+  // 3. SELISIH WAKTU (Istiwa - Lokal)
+  let targetLocalHours = locHrs + locMins / 60 + locSecs / 3600;
   let diffHours = solarTimeHours - targetLocalHours;
   if (diffHours > 12) diffHours -= 24;
   if (diffHours < -12) diffHours += 24;

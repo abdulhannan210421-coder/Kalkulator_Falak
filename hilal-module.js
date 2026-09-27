@@ -112,7 +112,7 @@ function getCurrentHijriDate() {
   const today = new Date();
   const jd = gregorianToJD(today.getFullYear(), today.getMonth() + 1, today.getDate());
   
-  let k = Math.round((jd - 2451549.50724) / 29.530588861);
+  let k = Math.floor((jd - 2451549.50724) / 29.530588861);
   let totalMonths = k + 17037;
   let yHijri = Math.floor(totalMonths / 12) + 1;
   let mHijri = totalMonths % 12;
@@ -133,6 +133,7 @@ function initHijriInputsIfDefault() {
       const current = getCurrentHijriDate();
       selBulan.value = String(current.mHijri);
       inputTahun.value = current.yHijri;
+      if (typeof updateCustomSelectLabel === 'function') updateCustomSelectLabel('selBulanHijri');
     }
   }
 
@@ -143,6 +144,7 @@ function initHijriInputsIfDefault() {
     const thnVal = inputTahun ? inputTahun.value : getCurrentHijriDate().yHijri;
     selCalBulan.value = selVal;
     inputCalTahun.value = thnVal;
+    if (typeof updateCustomSelectLabel === 'function') updateCustomSelectLabel('selBulanHijriCal');
   }
 }
 
@@ -897,6 +899,7 @@ function prevHijriMonth() {
   }
   sel.value = String(m);
   inp.value = y;
+  if (typeof updateCustomSelectLabel === 'function') updateCustomSelectLabel('selBulanHijriCal');
   renderKalenderHijriGrid();
 }
 
@@ -912,6 +915,7 @@ function nextHijriMonth() {
   }
   sel.value = String(m);
   inp.value = y;
+  if (typeof updateCustomSelectLabel === 'function') updateCustomSelectLabel('selBulanHijriCal');
   renderKalenderHijriGrid();
 }
 
@@ -922,6 +926,7 @@ function todayHijriMonth() {
   const current = getCurrentHijriDate();
   sel.value = String(current.mHijri);
   inp.value = current.yHijri;
+  if (typeof updateCustomSelectLabel === 'function') updateCustomSelectLabel('selBulanHijriCal');
   renderKalenderHijriGrid();
 }
 

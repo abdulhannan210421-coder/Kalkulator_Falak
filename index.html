@@ -517,19 +517,19 @@
           </div>
         </div>
 
-        <!-- HEADER NAMA HARI KALENDER STANDAR (7 KOLOM) -->
-        <div class="grid grid-cols-7 gap-1 sm:gap-2 text-center font-bold text-[10px] sm:text-xs uppercase tracking-tight sm:tracking-wider py-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700/60">
-          <div class="text-rose-600 dark:text-rose-400">Ahad</div>
-          <div class="text-slate-700 dark:text-slate-300">Senin</div>
-          <div class="text-slate-700 dark:text-slate-300">Selasa</div>
-          <div class="text-slate-700 dark:text-slate-300">Rabu</div>
-          <div class="text-slate-700 dark:text-slate-300">Kamis</div>
-          <div class="text-emerald-600 dark:text-emerald-400">Jum'at</div>
-          <div class="text-slate-700 dark:text-slate-300">Sabtu</div>
-        </div>
+		<!-- HEADER NAMA HARI KALENDER STANDAR (7 KOLOM - DIR RTL) -->
+		<div dir="rtl" class="grid grid-cols-7 gap-1 sm:gap-2 text-center font-bold text-[10px] sm:text-xs uppercase tracking-tight sm:tracking-wider py-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700/60">
+		  <div class="text-rose-600 dark:text-rose-400">Ahad</div>
+		  <div class="text-slate-700 dark:text-slate-300">Senin</div>
+		  <div class="text-slate-700 dark:text-slate-300">Selasa</div>
+		  <div class="text-slate-700 dark:text-slate-300">Rabu</div>
+		  <div class="text-slate-700 dark:text-slate-300">Kamis</div>
+		  <div class="text-emerald-600 dark:text-emerald-400">Jum'at</div>
+		  <div class="text-slate-700 dark:text-slate-300">Sabtu</div>
+		</div>
 
-        <!-- GRID TANGGAL KALENDER STANDAR -->
-        <div id="kalenderHijriGrid" class="grid grid-cols-7 gap-1 sm:gap-2"></div>
+		<!-- GRID TANGGAL KALENDER STANDAR (DIR RTL) -->
+		<div id="kalenderHijriGrid" dir="rtl" class="grid grid-cols-7 gap-1 sm:gap-2"></div>
       </main>
     </div>
 
@@ -786,6 +786,19 @@
       });
     }
 
+    function updateCustomSelectLabel(selectId) {
+      const select = document.getElementById(selectId);
+      if (!select) return;
+      const wrapper = select.closest('.custom-select-wrapper');
+      if (wrapper) {
+        const label = wrapper.querySelector('.select-label');
+        const selectedOpt = select.options[select.selectedIndex];
+        if (label && selectedOpt) {
+          label.innerText = selectedOpt.text;
+        }
+      }
+    }
+
     function openMenuModal() { document.getElementById('mainMenuModal').classList.remove('hidden'); }
     function closeMenuModal() { document.getElementById('mainMenuModal').classList.add('hidden'); }
 
@@ -962,6 +975,14 @@
           const isHidden = list.classList.toggle('hidden');
           btn.querySelector('.chevron-icon').classList.toggle('rotate-180', !isHidden);
         };
+
+        select.addEventListener('change', () => {
+          const opt = select.options[select.selectedIndex];
+          if (opt && btn.querySelector('.select-label')) {
+            btn.querySelector('.select-label').innerText = opt.text;
+          }
+          buildOptions();
+        });
 
         select.parentNode.insertBefore(wrapper, select);
         wrapper.appendChild(btn);
