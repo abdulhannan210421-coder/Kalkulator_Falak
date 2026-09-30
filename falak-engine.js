@@ -721,7 +721,7 @@ function hitungFalak() {
   R.samtQiblahSinDeg = samtQiblahSinDms.deg;
   R.samtQiblahSinMin = samtQiblahSinDms.min;
 
-  let latVal = R.latDeg + R.latMin / 60;
+let latVal = R.latDeg + R.latMin / 60;
   if (R.latArah === "SELATAN") latVal = -latVal;
 
   longArahInput = document.getElementById('longArah')?.value || "TIMUR";
@@ -736,9 +736,11 @@ function hitungFalak() {
   let x = Math.cos(phiRad) * Math.tan(phiMRad) - Math.sin(phiRad) * Math.cos(dLonRad);
   let qiblaAzimuthDeg = (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
 
-  let isEastOfMakkah = lonVal < 39.95;
-  let qiblaLabel = isEastOfMakkah ? "UT" : "UB";
-  let qiblaAngleDisp = isEastOfMakkah ? qiblaAzimuthDeg : (360 - qiblaAzimuthDeg);
+  // PERBAIKAN LOGIKA GEOGRAFIS:
+  // Kota di Timur Makkah jika Bujur Kota > Bujur Makkah (39.95°)
+  let isEastOfMakkah = lonVal > 39.95; 
+  let qiblaLabel = isEastOfMakkah ? "UB" : "UT";
+  let qiblaAngleDisp = isEastOfMakkah ? (360 - qiblaAzimuthDeg) : qiblaAzimuthDeg;
 
   let qDeg = Math.floor(qiblaAngleDisp);
   let qMin = Math.round((qiblaAngleDisp - qDeg) * 60);
@@ -752,7 +754,7 @@ function hitungFalak() {
 
   const qiblaDescElem = document.getElementById("qiblaDescText");
   if (qiblaDescElem) {
-    qiblaDescElem.innerText = `Azimuth kemiringan dari Utara ke ${R.isEastOfMakkah ? "Timur (UT)" : "Barat (UB)"} (LogCos Method)`;
+    qiblaDescElem.innerText = `Azimuth kemiringan dari Utara ke ${R.isEastOfMakkah ? "Barat (UB)" : "Timur (UT)"} (LogCos Method)`;
   }
 
   currentSamtQiblahDeg = qiblaAngleDisp;
@@ -770,9 +772,9 @@ function hitungFalak() {
   const needle = document.getElementById('compassNeedle');
   if (needle) {
     if (R.isEastOfMakkah) {
-      needle.style.transform = `rotate(${R.qiblaAzimuthDeg}deg)`;
-    } else {
       needle.style.transform = `rotate(-${R.samtQiblahDeg}deg)`;
+    } else {
+      needle.style.transform = `rotate(${R.samtQiblahDeg}deg)`;
     }
   }
 
@@ -1158,21 +1160,22 @@ function closeModalDirect() {
 }
 
 function openRubuModal() {
-  let samtDeg = currentSamtQiblahDeg;
-  let samtRubu = samtDeg > 90 ? Math.abs(180 - samtDeg) : samtDeg;
-  if (samtRubu > 90) samtRubu = 90;
-  if (samtRubu < 0) samtRubu = 0;
+  if (!globalLastR) return;
+
+  const horizonName = globalLastR.isEastOfMakkah ? "Barat" : "Timur";
 
   const rubuDegText = document.getElementById('rubuDegreeText');
-  const labelArah = globalLastR?.qiblaLabel || "UB";
-  if (rubuDegText) rubuDegText.innerText = `${samtRubu.toFixed(2)}° (${labelArah})`;
+  if (rubuDegText) {
+    rubuDegText.innerText = `${globalLastR.samtQiblahCosDeg}° ${globalLastR.samtQiblahCosMin}' (dari ${horizonName})`;
+  }
 
   const rubuHeaderSub = document.getElementById('rubuHeaderSub');
   if (rubuHeaderSub) {
-    rubuHeaderSub.innerText = `Ilustrasi 2D Pengukuran Samtul Qiblah dari Utara ke ${globalLastR?.isEastOfMakkah ? "Timur (UT)" : "Barat (UB)"}`;
+    rubuHeaderSub.innerText = `Ilustrasi 2D Pengukuran Samtul Qiblah dari Sisi ${horizonName} (LOGCOS)`;
   }
 
-  renderRubuSvg(samtRubu);
+  // Panggil tanpa memasukkan parameter angka lagi
+  renderRubuSvg();
   document.getElementById('rubuModal').classList.remove('hidden');
 }
 
@@ -1180,55 +1183,60 @@ function closeRubuModal() {
   document.getElementById('rubuModal').classList.add('hidden');
 }
 
-function renderRubuSvg(samtDeg) {
+function renderRubuSvg() {
   const container = document.getElementById('rubuSvgContainer');
-  if (!container) return;
+  if (!container || !globalLastR) return;
 
-  let rubuAngle = samtDeg;
-  if (rubuAngle > 90) rubuAngle = Math.abs(180 - rubuAngle);
-  if (rubuAngle > 90) rubuAngle = 90;
-  if (rubuAngle < 0) rubuAngle = 0;
+  const R = globalLastR;
 
-  const rad = (rubuAngle * Math.PI) / 180;
+  // 1. Ambil Nilai LOGCOS (Samt Qiblah dari Sisi Datar)
+  const cosDegFloat = R.samtQiblahCosDeg + (R.samtQiblahCosMin / 60);
   
-  // Pusat Markaz di pojok kanan atas (260, 50)
-  const cx = 260, cy = 50, r = 200;
+  // 2. Deteksi Arah Sisi Datar & Tegak Berdasarkan Koordinat Terhadap Makkah
+  const horizonName = R.isEastOfMakkah ? "BARAT" : "TIMUR";
+  
+  let latVal = R.latDeg + R.latMin / 60;
+  if (R.latArah === "SELATAN") latVal = -latVal;
+  const verticalName = (latVal > 21.42) ? "SELATAN" : "UTARA";
 
-  // Koordinat ujung benang pada busur (Qaus)
-  const lineX = cx - r * Math.sin(rad);
-  const lineY = cy + r * Math.cos(rad);
+  // 3. Pengaturan Koordinat SVG Rubu' (Pusat Markaz di Pojok Kanan Atas)
+  const cx = 250, cy = 50, r = 180;
 
-  const labelArah = globalLastR?.qiblaLabel || "UB";
-  const textArahHeader = globalLastR?.isEastOfMakkah ? "TIMUR (90°)" : "BARAT (90°)";
+  // Rumus matematika sudut LOGCOS ditarik dari Sisi Datar (Horizontal)
+  const rad = (cosDegFloat * Math.PI) / 180;
+  const lineX = cx - r * Math.cos(rad);
+  const lineY = cy + r * Math.sin(rad);
 
   container.innerHTML = `
-    <svg class="w-full max-w-[340px] h-auto" viewBox="0 0 310 290">
-      <!-- Badan Rubu' Mujayyab (Seperempat Lingkaran) -->
+    <svg class="w-full max-w-[340px] h-auto" viewBox="-30 10 330 285">
+      <!-- Badan Rubu' Mujayyab -->
       <path d="M ${cx} ${cy} L ${cx - r} ${cy} A ${r} ${r} 0 0 0 ${cx} ${cy + r} Z" fill="#ecfdf5" stroke="#059669" stroke-width="2.5" class="dark:fill-emerald-950/40"/>
       
-      <!-- Garis Kisi-Kisi (Sittiniyah / Grid Rubu') -->
-      <line x1="${cx}" y1="100" x2="110" y2="100" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
-      <line x1="${cx}" y1="150" x2="160" y2="150" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
-      <line x1="${cx}" y1="200" x2="220" y2="200" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
-      <line x1="210" y1="${cy}" x2="210" y2="200" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
-      <line x1="160" y1="${cy}" x2="160" y2="150" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
-      <line x1="110" y1="${cy}" x2="110" y2="100" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
+      <!-- Grid Sittiniyah (Kisi-Kisi 60 Bagian) -->
+      <line x1="${cx}" y1="110" x2="115" y2="110" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
+      <line x1="${cx}" y1="170" x2="170" y2="170" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
+      <line x1="190" y1="${cy}" x2="190" y2="190" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
+      <line x1="130" y1="${cy}" x2="130" y2="130" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
 
       <!-- Label Sisi Alat Rubu' -->
-      <text x="${cx + 12}" y="150" text-anchor="start" font-size="10" font-weight="extrabold" fill="#059669">Sisi Utara (0°)</text>
-      <text x="${cx - r / 2}" y="${cy - 8}" text-anchor="middle" font-size="10" font-weight="extrabold" fill="#0284c7">Sisi ${textArahHeader}</text>
+      <text x="${cx - r - 5}" y="${cy - 10}" text-anchor="start" font-size="10" font-weight="extrabold" fill="#0284c7">Sisi ${horizonName} (0° LOGCOS)</text>
+      <text x="${cx - 5}" y="${cy + r + 16}" text-anchor="end" font-size="10" font-weight="extrabold" fill="#059669">Sisi ${verticalName} (90°)</text>
       
-      <!-- Titik Pusat Markaz -->
+      <!-- Markaz (Pusat Benang) -->
       <circle cx="${cx}" cy="${cy}" r="5" fill="#059669"/>
-      <text x="${cx - 10}" y="${cy - 12}" font-size="9" font-weight="bold" fill="#64748b" text-anchor="end">Markaz (Pusat Benang)</text>
+      <text x="${cx + 8}" y="${cy + 4}" font-size="9" font-weight="bold" fill="#64748b" text-anchor="start">Markaz</text>
 
-      <!-- Garis Benang Kiblat (Khayt) -->
+      <!-- Garis Benang Kiblat (Berdasarkan LOGCOS) -->
       <line x1="${cx}" y1="${cy}" x2="${lineX}" y2="${lineY}" stroke="#dc2626" stroke-width="2.5"/>
       <circle cx="${lineX}" cy="${lineY}" r="4.5" fill="#dc2626"/>
 
-      <!-- Label Sudut Kiblat pada Busur -->
-      <text x="${Math.max(20, lineX - 35)}" y="${Math.min(275, lineY + 18)}" font-size="10" font-weight="black" fill="#dc2626">Kiblat: ${rubuAngle.toFixed(2)}° (${labelArah})</text>
-      <text x="140" y="270" font-size="9" font-weight="bold" fill="#059669" class="dark:fill-emerald-400">Qaus As-Samt (Busur Derajat)</text>
+      <!-- Label Hasil Penarikan Benang -->
+      <text x="${Math.max(-20, lineX - 35)}" y="${lineY + 16}" font-size="10" font-weight="black" fill="#dc2626">
+        Benang: ${R.samtQiblahCosDeg}° ${R.samtQiblahCosMin}' dari ${horizonName}
+      </text>
+      <text x="60" y="275" font-size="9" font-weight="bold" fill="#059669" class="dark:fill-emerald-400">
+        Qaus As-Samt (Skala LogCos ${horizonName}-${verticalName})
+      </text>
     </svg>
   `;
 }
