@@ -1,4 +1,5 @@
-const CACHE_NAME = 'falak-hub-v2';
+const CACHE_NAME = 'falak-hub-v3'; // BUMP VERSI INI SETIAP KALI UPDATE FITUR!
+
 const ASSETS_TO_CACHE = [
   './',
   'index.html',
@@ -8,15 +9,25 @@ const ASSETS_TO_CACHE = [
   'manifest.json'
 ];
 
-// 1. Install & langsung paksa SW baru aktif
+// 1. Install: Paksa download file segar dari server (bypass browser HTTP cache)
 self.addEventListener('install', (e) => {
   self.skipWaiting();
   e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS_TO_CACHE))
+    caches.open(CACHE_NAME).then((cache) => {
+      return Promise.all(
+        ASSETS_TO_CACHE.map((url) => {
+          return fetch(new Request(url, { cache: 'reload' }))
+            .then((response) => {
+              if (response.ok) return cache.put(url, response);
+            })
+            .catch(() => {});
+        })
+      );
+    })
   );
 });
 
-// 2. Activate & Otomatis HAPUS CACHE LAMA
+// 2. Activate: Hapus semua cache versi lama
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys().then((keys) => {
@@ -31,23 +42,33 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-// 3. Fetch Strategy dengan penanganan Fallback Offline aman
+// 3. Fetch Strategy: Network-First (Prioritas Internet, Fallback Offline Cache)
 self.addEventListener('fetch', (e) => {
-  // Abaikan request non-GET atau request dari chrome-extension
   if (e.request.method !== 'GET' || !e.request.url.startsWith('http')) return;
 
   e.respondWith(
-    caches.match(e.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(e.request).catch(() => {
-        // Mencegah error crash jika koneksi offline saat fetch resource luar
-        return new Response('Offline network error', {
-          status: 503,
-          statusText: 'Service Unavailable'
+    fetch(e.request)
+      .then((networkResponse) => {
+        // Jika berhasil mengambil dari server, perbarui cache secara otomatis
+        if (networkResponse && networkResponse.status === 200) {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(e.request, responseToCache);
+          });
+        }
+        return networkResponse;
+      })
+      .catch(() => {
+        // Jika offline atau jaringan gagal, gunakan cache lokal
+        return caches.match(e.request).then((cachedResponse) => {
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          return new Response('Offline network error', {
+            status: 503,
+            statusText: 'Service Unavailable'
+          });
         });
-      });
-    })
+      })
   );
 });
