@@ -28,9 +28,10 @@ const BURUJ_LOOKUP = [
   { dBuruj: 60, arah: "SELATAN" }
 ];
 
-// Fungsi bantuan untuk mengunci presisi 5 desimal
+// Mengunci presisi 5 desimal dengan pemotongan murni (truncation/floor) tanpa pembulatan naik
 function round5(v) {
-  return Math.round(v * 1e5) / 1e5;
+  const factor = 1e5;
+  return (v >= 0 ? Math.floor(v * factor) : Math.ceil(v * factor)) / factor;
 }
 
 function calcLogSin(degFloat) {
