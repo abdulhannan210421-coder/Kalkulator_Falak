@@ -721,7 +721,7 @@ function hitungFalak() {
   R.samtQiblahSinDeg = samtQiblahSinDms.deg;
   R.samtQiblahSinMin = samtQiblahSinDms.min;
 
-let latVal = R.latDeg + R.latMin / 60;
+  let latVal = R.latDeg + R.latMin / 60;
   if (R.latArah === "SELATAN") latVal = -latVal;
 
   longArahInput = document.getElementById('longArah')?.value || "TIMUR";
@@ -1174,7 +1174,6 @@ function openRubuModal() {
     rubuHeaderSub.innerText = `Ilustrasi 2D Pengukuran Samtul Qiblah dari Sisi ${horizonName} (LOGCOS)`;
   }
 
-  // Panggil tanpa memasukkan parameter angka lagi
   renderRubuSvg();
   document.getElementById('rubuModal').classList.remove('hidden');
 }
@@ -1199,28 +1198,29 @@ function renderRubuSvg() {
   if (R.latArah === "SELATAN") latVal = -latVal;
   const verticalName = (latVal > 21.42) ? "SELATAN" : "UTARA";
 
-  // 3. Pengaturan Koordinat SVG Rubu' (Pusat Markaz di Pojok Kanan Atas)
-  const cx = 250, cy = 50, r = 180;
+  // 3. Pengaturan Koordinat SVG Rubu' (Pusat Markaz di Pojok Kanan Bawah)
+  // Ke Kiri = Sisi Datar (BARAT/TIMUR), Ke Atas = Sisi Tegak (UTARA/SELATAN)
+  const cx = 250, cy = 220, r = 180;
 
-  // Rumus matematika sudut LOGCOS ditarik dari Sisi Datar (Horizontal)
+  // Rumus matematika sudut LOGCOS ditarik dari Sisi Datar (Horizontal ke Kiri)
   const rad = (cosDegFloat * Math.PI) / 180;
   const lineX = cx - r * Math.cos(rad);
-  const lineY = cy + r * Math.sin(rad);
+  const lineY = cy - r * Math.sin(rad);
 
   container.innerHTML = `
-    <svg class="w-full max-w-[340px] h-auto" viewBox="-30 10 330 285">
+    <svg class="w-full max-w-[340px] h-auto" viewBox="0 0 320 275">
       <!-- Badan Rubu' Mujayyab -->
-      <path d="M ${cx} ${cy} L ${cx - r} ${cy} A ${r} ${r} 0 0 0 ${cx} ${cy + r} Z" fill="#ecfdf5" stroke="#059669" stroke-width="2.5" class="dark:fill-emerald-950/40"/>
+      <path d="M ${cx} ${cy} L ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx} ${cy - r} Z" fill="#ecfdf5" stroke="#059669" stroke-width="2.5" class="dark:fill-emerald-950/40"/>
       
       <!-- Grid Sittiniyah (Kisi-Kisi 60 Bagian) -->
-      <line x1="${cx}" y1="110" x2="115" y2="110" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
-      <line x1="${cx}" y1="170" x2="170" y2="170" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
-      <line x1="190" y1="${cy}" x2="190" y2="190" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
-      <line x1="130" y1="${cy}" x2="130" y2="130" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
+      <line x1="${cx}" y1="160" x2="110" y2="160" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
+      <line x1="${cx}" y1="100" x2="160" y2="100" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
+      <line x1="190" y1="${cy}" x2="190" y2="80" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
+      <line x1="130" y1="${cy}" x2="130" y2="140" stroke="#a7f3d0" stroke-width="0.8" stroke-dasharray="2 2"/>
 
       <!-- Label Sisi Alat Rubu' -->
-      <text x="${cx - r - 5}" y="${cy - 10}" text-anchor="start" font-size="10" font-weight="extrabold" fill="#0284c7">Sisi ${horizonName} (0° LOGCOS)</text>
-      <text x="${cx - 5}" y="${cy + r + 16}" text-anchor="end" font-size="10" font-weight="extrabold" fill="#059669">Sisi ${verticalName} (90°)</text>
+      <text x="${cx - r}" y="${cy + 18}" text-anchor="start" font-size="10" font-weight="extrabold" fill="#0284c7">Sisi ${horizonName} (0° LOGCOS)</text>
+      <text x="${cx}" y="${cy - r - 12}" text-anchor="middle" font-size="10" font-weight="extrabold" fill="#059669">Sisi ${verticalName} (90°)</text>
       
       <!-- Markaz (Pusat Benang) -->
       <circle cx="${cx}" cy="${cy}" r="5" fill="#059669"/>
@@ -1231,10 +1231,10 @@ function renderRubuSvg() {
       <circle cx="${lineX}" cy="${lineY}" r="4.5" fill="#dc2626"/>
 
       <!-- Label Hasil Penarikan Benang -->
-      <text x="${Math.max(-20, lineX - 35)}" y="${lineY + 16}" font-size="10" font-weight="black" fill="#dc2626">
+      <text x="${Math.max(10, lineX - 10)}" y="${Math.max(20, lineY - 10)}" font-size="10" font-weight="black" fill="#dc2626" text-anchor="end">
         Benang: ${R.samtQiblahCosDeg}° ${R.samtQiblahCosMin}' dari ${horizonName}
       </text>
-      <text x="60" y="275" font-size="9" font-weight="bold" fill="#059669" class="dark:fill-emerald-400">
+      <text x="30" y="262" font-size="9" font-weight="bold" fill="#059669" class="dark:fill-emerald-400">
         Qaus As-Samt (Skala LogCos ${horizonName}-${verticalName})
       </text>
     </svg>
