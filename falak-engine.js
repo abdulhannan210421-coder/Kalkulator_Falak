@@ -28,56 +28,61 @@ const BURUJ_LOOKUP = [
   { dBuruj: 60, arah: "SELATAN" }
 ];
 
+// Fungsi bantuan untuk mengunci presisi 5 desimal
+function round5(v) {
+  return Math.round(v * 1e5) / 1e5;
+}
+
 function calcLogSin(degFloat) {
   const rad = (degFloat * Math.PI) / 180;
   const v = Math.abs(Math.sin(rad));
-  return v === 0 ? 0 : 10 + Math.log10(v);
+  return v === 0 ? 0 : round5(10 + Math.log10(v));
 }
 
 function calcLogCos(degFloat) {
   const rad = (degFloat * Math.PI) / 180;
   const v = Math.abs(Math.cos(rad));
-  return v === 0 ? 0 : 10 + Math.log10(v);
+  return v === 0 ? 0 : round5(10 + Math.log10(v));
 }
 
 function calcLogTan(degFloat) {
   const rad = (degFloat * Math.PI) / 180;
   const v = Math.abs(Math.tan(rad));
-  return v === 0 ? 0 : 10 + Math.log10(v);
+  return v === 0 ? 0 : round5(10 + Math.log10(v));
 }
 
 function calcLogCot(degFloat) {
   const rad = (degFloat * Math.PI) / 180;
   const v = Math.abs(1 / Math.tan(rad));
-  return v === 0 ? 0 : 10 + Math.log10(v);
+  return v === 0 ? 0 : round5(10 + Math.log10(v));
 }
 
 function calcSin(degFloat) {
   const rad = (degFloat * Math.PI) / 180;
-  return Math.sin(rad);
+  return round5(Math.sin(rad));
 }
 
 function calcCos(degFloat) {
   const rad = (degFloat * Math.PI) / 180;
-  return Math.cos(rad);
+  return round5(Math.cos(rad));
 }
 
 function calcTan(degFloat) {
   const rad = (degFloat * Math.PI) / 180;
-  return Math.tan(rad);
+  return round5(Math.tan(rad));
 }
 
 function calcCot(degFloat) {
   const rad = (degFloat * Math.PI) / 180;
-  return 1 / Math.tan(rad);
+  return round5(1 / Math.tan(rad));
 }
 
 function invLogSin(logVal) {
-  let target = Math.round(logVal * 1e5) / 1e5;
+  let target = round5(logVal);
   let bestD = 0, bestM = 0;
   for (let d = 0; d < 90; d++) {
     for (let m = 0; m < 60; m++) {
-      let currentLog = Math.round(calcLogSin(d + m / 60) * 1e5) / 1e5;
+      let currentLog = calcLogSin(d + m / 60);
       if (currentLog <= target) {
         bestD = d; bestM = m;
       }
@@ -87,10 +92,10 @@ function invLogSin(logVal) {
 }
 
 function invLogCos(logVal) {
-  let target = Math.round(logVal * 1e5) / 1e5;
+  let target = round5(logVal);
   for (let d = 0; d < 90; d++) {
     for (let m = 0; m < 60; m++) {
-      let currentLog = Math.round(calcLogCos(d + m / 60) * 1e5) / 1e5;
+      let currentLog = calcLogCos(d + m / 60);
       if (currentLog <= target) {
         return { deg: d, min: m };
       }
@@ -100,11 +105,11 @@ function invLogCos(logVal) {
 }
 
 function invLogTan(logVal) {
-  let target = Math.round(logVal * 1e5) / 1e5;
+  let target = round5(logVal);
   let bestD = 0, bestM = 0;
   for (let d = 0; d < 90; d++) {
     for (let m = 0; m < 60; m++) {
-      let currentLog = Math.round(calcLogTan(d + m / 60) * 1e5) / 1e5;
+      let currentLog = calcLogTan(d + m / 60);
       if (currentLog <= target) {
         bestD = d; bestM = m;
       }
@@ -114,10 +119,10 @@ function invLogTan(logVal) {
 }
 
 function invLogCot(logVal) {
-  let target = Math.round(logVal * 1e5) / 1e5;
+  let target = round5(logVal);
   for (let d = 0; d < 90; d++) {
     for (let m = 0; m < 60; m++) {
-      let currentLog = Math.round(calcLogCot(d + m / 60) * 1e5) / 1e5;
+      let currentLog = calcLogCot(d + m / 60);
       if (currentLog <= target) {
         return { deg: d, min: m };
       }
@@ -127,11 +132,11 @@ function invLogCot(logVal) {
 }
 
 function invSin(sinVal) {
-  let target = Math.round(sinVal * 1e5) / 1e5;
+  let target = round5(sinVal);
   let bestD = 0, bestM = 0;
   for (let d = 0; d < 90; d++) {
     for (let m = 0; m < 60; m++) {
-      let currentSin = Math.round(calcSin(d + m / 60) * 1e5) / 1e5;
+      let currentSin = calcSin(d + m / 60);
       if (currentSin <= target) {
         bestD = d; bestM = m;
       }
@@ -141,10 +146,10 @@ function invSin(sinVal) {
 }
 
 function invCos(cosVal) {
-  let target = Math.round(cosVal * 1e5) / 1e5;
+  let target = round5(cosVal);
   for (let d = 0; d < 90; d++) {
     for (let m = 0; m < 60; m++) {
-      let currentCos = Math.round(calcCos(d + m / 60) * 1e5) / 1e5;
+      let currentCos = calcCos(d + m / 60);
       if (currentCos <= target) {
         return { deg: d, min: m };
       }
@@ -154,11 +159,11 @@ function invCos(cosVal) {
 }
 
 function invTan(tanVal) {
-  let target = Math.round(tanVal * 1e5) / 1e5;
+  let target = round5(tanVal);
   let bestD = 0, bestM = 0;
   for (let d = 0; d < 90; d++) {
     for (let m = 0; m < 60; m++) {
-      let currentTan = Math.round(calcTan(d + m / 60) * 1e5) / 1e5;
+      let currentTan = calcTan(d + m / 60);
       if (currentTan <= target) {
         bestD = d; bestM = m;
       }
@@ -168,10 +173,10 @@ function invTan(tanVal) {
 }
 
 function invCot(cotVal) {
-  let target = Math.round(cotVal * 1e5) / 1e5;
+  let target = round5(cotVal);
   for (let d = 1; d < 90; d++) {
     for (let m = 0; m < 60; m++) {
-      let currentCot = Math.round(calcCot(d + m / 60) * 1e5) / 1e5;
+      let currentCot = calcCot(d + m / 60);
       if (currentCot <= target) {
         return { deg: d, min: m };
       }
@@ -408,8 +413,8 @@ function hitungFalak() {
   R.logSinBud = calcLogSin(R.budDarajah);
   R.maylAzhamDeg = 23; R.maylAzhamMin = 27; R.logSinMaylAzham = 9.59983;
 
-  let totalLogSin1 = R.logSinBud + R.logSinMaylAzham;
-  if (totalLogSin1 >= 10) totalLogSin1 -= 10;
+  let totalLogSin1 = round5(R.logSinBud + R.logSinMaylAzham);
+  if (totalLogSin1 >= 10) totalLogSin1 = round5(totalLogSin1 - 10);
   R.logSinMaylAwwal = totalLogSin1;
 
   const maylAwwalDms = invLogSin(R.logSinMaylAwwal);
@@ -441,8 +446,8 @@ function hitungFalak() {
 
   R.logSinArdhBalad = calcLogSin(R.latDeg + R.latMin / 60);
 
-  let sumLogQutr = R.logSinMaylAwwal + R.logSinArdhBalad;
-  if (sumLogQutr >= 10) sumLogQutr -= 10;
+  let sumLogQutr = round5(R.logSinMaylAwwal + R.logSinArdhBalad);
+  if (sumLogQutr >= 10) sumLogQutr = round5(sumLogQutr - 10);
   R.logSinBudQutr = sumLogQutr;
   const budQutrDms = invLogSin(R.logSinBudQutr);
   R.budQutrDeg = budQutrDms.deg; R.budQutrMin = budQutrDms.min;
@@ -450,25 +455,25 @@ function hitungFalak() {
   R.logCosMaylAwwal = calcLogCos(R.maylAwwalDeg + R.maylAwwalMin / 60);
   R.logCosArdhBalad = calcLogCos(R.latDeg + R.latMin / 60);
 
-  let sumLogAsl = R.logCosMaylAwwal + R.logCosArdhBalad;
-  if (sumLogAsl >= 10) sumLogAsl -= 10;
+  let sumLogAsl = round5(R.logCosMaylAwwal + R.logCosArdhBalad);
+  if (sumLogAsl >= 10) sumLogAsl = round5(sumLogAsl - 10);
   R.logSinAslMutlaq = sumLogAsl;
   const aslMutlaqDms = invLogSin(R.logSinAslMutlaq);
   R.aslMutlaqDeg = aslMutlaqDms.deg; R.aslMutlaqMin = aslMutlaqDms.min;
 
-  R.logSinNishfFadhlah = (R.logSinBudQutr + 10) - R.logSinAslMutlaq;
+  R.logSinNishfFadhlah = round5((R.logSinBudQutr + 10) - R.logSinAslMutlaq);
   const nishfFadhlahDms = invLogSin(R.logSinNishfFadhlah);
   R.nishfFadhlahDeg = nishfFadhlahDms.deg; R.nishfFadhlahMin = nishfFadhlahDms.min;
 
   R.qaus1Deg = 0; R.qaus1Min = 33; R.qaus1Sec = 30; R.sinQaus1 = 0.00975;
   R.sinBudQutr = calcSin(R.budQutrDeg + R.budQutrMin / 60);
 
-  R.sinMujtama1 = R.sinQaus1 + R.sinBudQutr;
+  R.sinMujtama1 = round5(R.sinQaus1 + R.sinBudQutr);
   const mujtama1Dms = invSin(R.sinMujtama1);
   R.mujtama1Deg = mujtama1Dms.deg; R.mujtama1Min = mujtama1Dms.min;
 
   R.logSinMujtama1 = calcLogSin(R.mujtama1Deg + R.mujtama1Min / 60);
-  R.logSinBaqi1 = (R.logSinMujtama1 + 10) - R.logSinAslMutlaq;
+  R.logSinBaqi1 = round5((R.logSinMujtama1 + 10) - R.logSinAslMutlaq);
   const baqi1Dms = invLogSin(R.logSinBaqi1);
   R.baqi1Deg = baqi1Dms.deg; R.baqi1Min = baqi1Dms.min;
 
@@ -477,12 +482,12 @@ function hitungFalak() {
 
   R.qaus2Deg = 0; R.qaus2Min = 15; R.sinQaus2 = 0.00436;
 
-  R.sinMujtama2 = R.sinQaus2 + R.sinBudQutr;
+  R.sinMujtama2 = round5(R.sinQaus2 + R.sinBudQutr);
   const mujtama2Dms = invSin(R.sinMujtama2);
   R.mujtama2Deg = mujtama2Dms.deg; R.mujtama2Min = mujtama2Dms.min;
 
   R.logSinMujtama2 = calcLogSin(R.mujtama2Deg + R.mujtama2Min / 60);
-  R.logSinBaqi2 = (R.logSinMujtama2 + 10) - R.logSinAslMutlaq;
+  R.logSinBaqi2 = round5((R.logSinMujtama2 + 10) - R.logSinAslMutlaq);
   const baqi2Dms = invLogSin(R.logSinBaqi2);
   R.baqi2Deg = baqi2Dms.deg; R.baqi2Min = baqi2Dms.min;
 
@@ -509,7 +514,7 @@ function hitungFalak() {
   R.thuluBox = convertLattice4(R.qausThuluDeg, R.qausThuluMin);
 
   R.inkhifadhIsyaDeg = 17; R.inkhifadhIsyaMin = 0; R.logSinIsyaPaten = 9.46594;
-  R.logSinBaqiIsya = (R.logSinIsyaPaten + 10) - R.logSinAslMutlaq;
+  R.logSinBaqiIsya = round5((R.logSinIsyaPaten + 10) - R.logSinAslMutlaq);
   const baqiIsyaDms = invLogSin(R.logSinBaqiIsya);
   R.baqiIsyaDeg = baqiIsyaDms.deg; R.baqiIsyaMin = baqiIsyaDms.min;
 
@@ -517,9 +522,9 @@ function hitungFalak() {
   R.sinNishfFadhlah = calcSin(R.nishfFadhlahDeg + R.nishfFadhlahMin / 60);
 
   if (R.isArahSama) {
-    R.sinHasilIsya = R.sinBaqiIsya + R.sinNishfFadhlah;
+    R.sinHasilIsya = round5(R.sinBaqiIsya + R.sinNishfFadhlah);
   } else {
-    R.sinHasilIsya = R.sinBaqiIsya - R.sinNishfFadhlah;
+    R.sinHasilIsya = round5(R.sinBaqiIsya - R.sinNishfFadhlah);
   }
   const hasilIsyaDms = invSin(R.sinHasilIsya);
   R.hasilIsyaDeg = hasilIsyaDms.deg; R.hasilIsyaMin = hasilIsyaDms.min;
@@ -537,16 +542,16 @@ function hitungFalak() {
   R.isyaBox = convertLattice4(R.awalIsyaDeg, R.awalIsyaMin);
 
   R.inkhifadhSubhDeg = 19; R.inkhifadhSubhMin = 0; R.logSinSubhPaten = 9.51264;
-  R.logSinBaqiSubh = (R.logSinSubhPaten + 10) - (R.isHighLat ? (calcLogCos(effLatDeg + effLatMin/60) + R.logCosMaylAwwal - 10) : R.logSinAslMutlaq);
+  R.logSinBaqiSubh = round5((R.logSinSubhPaten + 10) - (R.isHighLat ? round5(calcLogCos(effLatDeg + effLatMin/60) + R.logCosMaylAwwal - 10) : R.logSinAslMutlaq));
   const baqiSubhDms = invLogSin(R.logSinBaqiSubh);
   R.baqiSubhDeg = baqiSubhDms.deg; R.baqiSubhMin = baqiSubhDms.min;
 
   R.sinBaqiSubh = calcSin(R.baqiSubhDeg + R.baqiSubhMin / 60);
 
   if (R.isArahSama) {
-    R.sinHasilSubh = R.sinBaqiSubh + R.sinNishfFadhlah;
+    R.sinHasilSubh = round5(R.sinBaqiSubh + R.sinNishfFadhlah);
   } else {
-    R.sinHasilSubh = R.sinBaqiSubh - R.sinNishfFadhlah;
+    R.sinHasilSubh = round5(R.sinBaqiSubh - R.sinNishfFadhlah);
   }
   const hasilSubhDms = invSin(R.sinHasilSubh);
   R.hasilSubhDeg = hasilSubhDms.deg; R.hasilSubhMin = hasilSubhDms.min;
@@ -573,15 +578,15 @@ function hitungFalak() {
   R.sinBudQutrDhuha = calcSin(R.budQutrDeg + R.budQutrMin / 60);
 
   if (R.isArahSama) {
-    R.sinMuaddalDhuha = R.sinIrtifaDhuha - R.sinBudQutrDhuha;
+    R.sinMuaddalDhuha = round5(R.sinIrtifaDhuha - R.sinBudQutrDhuha);
   } else {
-    R.sinMuaddalDhuha = R.sinIrtifaDhuha + R.sinBudQutrDhuha;
+    R.sinMuaddalDhuha = round5(R.sinIrtifaDhuha + R.sinBudQutrDhuha);
   }
   const muaddalDhuhaDms = invSin(Math.abs(R.sinMuaddalDhuha));
   R.muaddalDhuhaDeg = muaddalDhuhaDms.deg; R.muaddalDhuhaMin = muaddalDhuhaDms.min;
 
   R.logSinMuaddalDhuha = calcLogSin(R.muaddalDhuhaDeg + R.muaddalDhuhaMin / 60);
-  R.logSinTamamFadhlDhuha = (R.logSinMuaddalDhuha + 10) - R.logSinAslMutlaq;
+  R.logSinTamamFadhlDhuha = round5((R.logSinMuaddalDhuha + 10) - R.logSinAslMutlaq);
   const tamamFadhlDhuhaDms = invLogSin(R.logSinTamamFadhlDhuha);
   R.tamamFadhlDhuhaDeg = tamamFadhlDhuhaDms.deg; R.tamamFadhlDhuhaMin = tamamFadhlDhuhaDms.min;
 
@@ -593,7 +598,7 @@ function hitungFalak() {
   R.cotGhayahIrtifa = calcCot(R.ghayahIrtifaDeg + R.ghayahIrtifaMin / 60);
   R.qamahDeg = 45; R.qamahMin = 0; R.cotQamah = 1.00000;
 
-  R.cotIrtifaAsr = R.cotGhayahIrtifa + R.cotQamah;
+  R.cotIrtifaAsr = round5(R.cotGhayahIrtifa + R.cotQamah);
   const irtifaAsrDms = invCot(R.cotIrtifaAsr);
   R.irtifaAsrDeg = irtifaAsrDms.deg; R.irtifaAsrMin = irtifaAsrDms.min;
 
@@ -601,15 +606,15 @@ function hitungFalak() {
   R.sinBudQutrAsr = calcSin(R.budQutrDeg + R.budQutrMin / 60);
 
   if (R.isArahSama) {
-    R.sinMuaddalAsr = R.sinIrtifaAsr - R.sinBudQutrAsr;
+    R.sinMuaddalAsr = round5(R.sinIrtifaAsr - R.sinBudQutrAsr);
   } else {
-    R.sinMuaddalAsr = R.sinIrtifaAsr + R.sinBudQutrAsr;
+    R.sinMuaddalAsr = round5(R.sinIrtifaAsr + R.sinBudQutrAsr);
   }
   const muaddalAsrDms = invSin(R.sinMuaddalAsr);
   R.muaddalAsrDeg = muaddalAsrDms.deg; R.muaddalAsrMin = muaddalAsrDms.min;
 
   R.logSinMuaddalAsr = calcLogSin(R.muaddalAsrDeg + R.muaddalAsrMin / 60);
-  R.logSinTamamFadhlAsr = (R.logSinMuaddalAsr + 10) - R.logSinAslMutlaq;
+  R.logSinTamamFadhlAsr = round5((R.logSinMuaddalAsr + 10) - R.logSinAslMutlaq);
   const tamamFadhlAsrDms = invLogSin(R.logSinTamamFadhlAsr); 
   R.tamamFadhlAsrDeg = tamamFadhlAsrDms.deg; R.tamamFadhlAsrMin = tamamFadhlAsrDms.min;
 
@@ -647,8 +652,8 @@ function hitungFalak() {
   R.logSinArdhBaladKiblat = calcLogSin(R.latDeg + R.latMin / 60);
   R.ardhMakkahDeg = 21; R.ardhMakkahMin = 30; R.logSinArdhMakkah = 9.56408;
 
-  let sumLogBudQutrKiblat = R.logSinArdhBaladKiblat + R.logSinArdhMakkah;
-  if (sumLogBudQutrKiblat >= 10) sumLogBudQutrKiblat -= 10;
+  let sumLogBudQutrKiblat = round5(R.logSinArdhBaladKiblat + R.logSinArdhMakkah);
+  if (sumLogBudQutrKiblat >= 10) sumLogBudQutrKiblat = round5(sumLogBudQutrKiblat - 10);
   R.logSinBudQutrKiblat = sumLogBudQutrKiblat;
   const budQutrKiblatDms = invLogSin(R.logSinBudQutrKiblat);
   R.budQutrKiblatDeg = budQutrKiblatDms.deg; R.budQutrKiblatMin = budQutrKiblatDms.min;
@@ -656,13 +661,13 @@ function hitungFalak() {
   R.logCosArdhBaladKiblat = calcLogCos(R.latDeg + R.latMin / 60);
   R.logCosArdhMakkah = 9.96868;
 
-  let sumLogAslKiblat = R.logCosArdhBaladKiblat + R.logCosArdhMakkah;
-  if (sumLogAslKiblat >= 10) sumLogAslKiblat -= 10;
+  let sumLogAslKiblat = round5(R.logCosArdhBaladKiblat + R.logCosArdhMakkah);
+  if (sumLogAslKiblat >= 10) sumLogAslKiblat = round5(sumLogAslKiblat - 10);
   R.logSinAslMutlaqKiblat = sumLogAslKiblat;
   const aslKiblatDms = invLogSin(R.logSinAslMutlaqKiblat);
   R.aslMutlaqKiblatDeg = aslKiblatDms.deg; R.aslMutlaqKiblatMin = aslKiblatDms.min;
 
-  R.logSinNishfFadhlahKiblat = (R.logSinBudQutrKiblat + 10) - R.logSinAslMutlaqKiblat;
+  R.logSinNishfFadhlahKiblat = round5((R.logSinBudQutrKiblat + 10) - R.logSinAslMutlaqKiblat);
   const nishfFadhlahKiblatDms = invLogSin(R.logSinNishfFadhlahKiblat);
   R.nishfFadhlahKiblatDeg = nishfFadhlahKiblatDms.deg; R.nishfFadhlahKiblatMin = nishfFadhlahKiblatDms.min;
 
@@ -671,8 +676,8 @@ function hitungFalak() {
 
   R.logCosFadhlThul = calcLogCos(R.fadhlThulDeg + R.fadhlThulMin / 60);
 
-  let sumLogMajmu1 = R.logCosFadhlThul + R.logSinAslMutlaqKiblat;
-  if (sumLogMajmu1 >= 10) sumLogMajmu1 -= 10;
+  let sumLogMajmu1 = round5(R.logCosFadhlThul + R.logSinAslMutlaqKiblat);
+  if (sumLogMajmu1 >= 10) sumLogMajmu1 = round5(sumLogMajmu1 - 10);
   R.logSinMajmu1Kiblat = sumLogMajmu1;
   const majmu1Dms = invLogSin(R.logSinMajmu1Kiblat);
   R.majmu1KiblatDeg = majmu1Dms.deg; R.majmu1KiblatMin = majmu1Dms.min;
@@ -681,24 +686,24 @@ function hitungFalak() {
   R.sinBudQutrKiblat = calcSin(R.budQutrKiblatDeg + R.budQutrKiblatMin / 60);
 
   if (R.latArah === "UTARA") {
-    R.sinIrtifaKiblat = R.sinMajmu1Kiblat + R.sinBudQutrKiblat;
+    R.sinIrtifaKiblat = round5(R.sinMajmu1Kiblat + R.sinBudQutrKiblat);
   } else {
-    R.sinIrtifaKiblat = R.sinMajmu1Kiblat - R.sinBudQutrKiblat;
+    R.sinIrtifaKiblat = round5(R.sinMajmu1Kiblat - R.sinBudQutrKiblat);
   }
   const irtifaKiblatDms = invSin(R.sinIrtifaKiblat);
   R.irtifaKiblatDeg = irtifaKiblatDms.deg; R.irtifaKiblatMin = irtifaKiblatDms.min;
 
   R.logSinFadhlThul = calcLogSin(R.fadhlThulDeg + R.fadhlThulMin / 60);
 
-  let sumLogMajmu2 = R.logCosArdhMakkah + R.logSinFadhlThul;
-  if (sumLogMajmu2 >= 10) sumLogMajmu2 -= 10;
+  let sumLogMajmu2 = round5(R.logCosArdhMakkah + R.logSinFadhlThul);
+  if (sumLogMajmu2 >= 10) sumLogMajmu2 = round5(sumLogMajmu2 - 10);
   R.logSinMajmu2Kiblat = sumLogMajmu2;
   const majmu2Dms = invLogSin(R.logSinMajmu2Kiblat);
   R.majmu2KiblatDeg = majmu2Dms.deg; R.majmu2KiblatMin = majmu2Dms.min;
 
   R.logCosIrtifaKiblat = calcLogCos(R.irtifaKiblatDeg + R.irtifaKiblatMin / 60);
 
-  R.logCosSamtQiblah = (R.logSinMajmu2Kiblat + 10) - R.logCosIrtifaKiblat;
+  R.logCosSamtQiblah = round5((R.logSinMajmu2Kiblat + 10) - R.logCosIrtifaKiblat);
   const samtQiblahCosDms = invLogCos(R.logCosSamtQiblah);
   const samtQiblahSinDms = invLogSin(R.logCosSamtQiblah);
 
@@ -1369,7 +1374,6 @@ function updateJamIstiwa() {
   const pad = n => String(n).padStart(2, '0');
 
   // 1. WAKTU SETEMPAT (Sesuai timezone lokasi terpilih & presisi tanpa lag)
-  // Menghitung timestamp lokal berdasarkan currentUtcOffset lokasi
   const targetDate = new Date(now.getTime() + (currentUtcOffset * 3600000) + (now.getTimezoneOffset() * 60000));
   const locHrs = targetDate.getHours();
   const locMins = targetDate.getMinutes();
