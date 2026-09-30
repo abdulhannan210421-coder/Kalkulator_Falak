@@ -378,16 +378,24 @@ let globalRows = [];
 let currentSamtQiblahDeg = 24;
 let globalLastR = null;
 
+// Fungsi pembantu mengambil nilai input agar angka 0 tidak dianggap falsy
+function getInputValue(id, defaultValue) {
+  const val = document.getElementById(id)?.value;
+  if (val === undefined || val === null || val.trim() === "") return defaultValue;
+  const parsed = parseFloat(val);
+  return isNaN(parsed) ? defaultValue : parsed;
+}
+
 function hitungFalak() {
   updateLocationTimezone();
-  const tglInput = parseInt(document.getElementById('tanggal')?.value) || 1;
-  const blnInput = parseInt(document.getElementById('bulan')?.value) || 1;
-  const latDegInput = parseInt(document.getElementById('latDeg')?.value) || 7;
-  const latMinInput = parseInt(document.getElementById('latMin')?.value) || 39;
+  const tglInput = getInputValue('tanggal', 1);
+  const blnInput = getInputValue('bulan', 1);
+  const latDegInput = getInputValue('latDeg', 7);
+  const latMinInput = getInputValue('latMin', 39);
   const latArahInput = document.getElementById('latArah')?.value || "SELATAN";
 
-  const longDegInput = parseInt(document.getElementById('longDeg')?.value) || 112;
-  const longMinInput = parseInt(document.getElementById('longMin')?.value) || 45;
+  const longDegInput = getInputValue('longDeg', 112);
+  const longMinInput = getInputValue('longMin', 45);
 
   const refBulan = DATABASE_BULAN[blnInput] || DATABASE_BULAN[9];
   const R = {};
@@ -929,8 +937,8 @@ function updateLokalPrayerTimes(R) {
   const now = new Date();
   const utcHours = now.getUTCHours() + now.getUTCMinutes() / 60 + now.getUTCSeconds() / 3600;
 
-  let longDeg = parseFloat(document.getElementById('longDeg')?.value) || 112;
-  let longMin = parseFloat(document.getElementById('longMin')?.value) || 45;
+  let longDeg = getInputValue('longDeg', 112);
+  let longMin = getInputValue('longMin', 45);
   let longArah = document.getElementById('longArah')?.value || "TIMUR";
   let lon = longDeg + longMin / 60;
   if (longArah === "BARAT") lon = -lon;
@@ -1345,14 +1353,14 @@ function getApproxTimezoneOffset(lat, lon) {
 }
 
 async function updateLocationTimezone() {
-  let latDeg = parseFloat(document.getElementById('latDeg')?.value) || 0;
-  let latMin = parseFloat(document.getElementById('latMin')?.value) || 0;
+  let latDeg = getInputValue('latDeg', 0);
+  let latMin = getInputValue('latMin', 0);
   let latArah = document.getElementById('latArah')?.value || "SELATAN";
   let lat = latDeg + latMin / 60;
   if (latArah === "SELATAN") lat = -lat;
 
-  let longDeg = parseFloat(document.getElementById('longDeg')?.value) || 0;
-  let longMin = parseFloat(document.getElementById('longMin')?.value) || 0;
+  let longDeg = getInputValue('longDeg', 0);
+  let longMin = getInputValue('longMin', 0);
   let longArah = document.getElementById('longArah')?.value || "TIMUR";
   let lon = longDeg + longMin / 60;
   if (longArah === "BARAT") lon = -lon;
@@ -1394,8 +1402,8 @@ function updateJamIstiwa() {
   // 2. JAM ISTIWA' (Perhitungan Matahari Presisi dengan Milidetik)
   const utcHours = now.getUTCHours() + now.getUTCMinutes() / 60 + (now.getUTCSeconds() + now.getUTCMilliseconds() / 1000) / 3600;
 
-  let longDeg = parseFloat(document.getElementById('longDeg')?.value) || 112;
-  let longMin = parseFloat(document.getElementById('longMin')?.value) || 45;
+  let longDeg = getInputValue('longDeg', 112);
+  let longMin = getInputValue('longMin', 45);
   let longArah = document.getElementById('longArah')?.value || "TIMUR";
   let lon = longDeg + longMin / 60;
   if (longArah === "BARAT") lon = -lon;
