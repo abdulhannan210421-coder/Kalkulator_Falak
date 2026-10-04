@@ -34,6 +34,44 @@ function tambahIhtiyat(waktuStr, menitIhtiyat) {
 }
 
 /**
+ * Mengirim seluruh jadwal shalat dari UI ke sistem Native Android (AlarmManager)
+ */
+function kirimJadwalKeAndroidNative() {
+    if (!window.AndroidAdzan) return;
+
+    const daftarSholat = [
+        { nama: 'Subuh', id: 'resSubuhLokal' },
+        { nama: 'Dzuhur', id: 'resDzuhurLokal' },
+        { nama: 'Asar', id: 'resAsrLokal' },
+        { nama: 'Maghrib', id: 'resMaghribLokal' },
+        { nama: 'Isya', id: 'resIsyaLokal' }
+    ];
+
+    daftarSholat.forEach(sholat => {
+        const el = document.getElementById(sholat.id);
+        if (!el || !el.innerText || el.innerText === '00:00:00' || el.innerText === '-') return;
+
+        const timeStr = el.innerText.substring(0, 5); // Ambil format "HH:MM"
+        const parts = timeStr.split(':');
+        if (parts.length < 2) return;
+
+        const jam = parseInt(parts[0], 10);
+        const menit = parseInt(parts[1], 10);
+
+        let targetWaktu = new Date();
+        targetWaktu.setHours(jam, menit, 0, 0);
+
+        // Jika jam shalat hari ini sudah lewat, daftarkan alarm untuk besok di jam yang sama
+        if (targetWaktu.getTime() <= Date.now()) {
+            targetWaktu.setDate(targetWaktu.getDate() + 1);
+        }
+
+        // Kirim timestamp milidetik ke Android
+        window.AndroidAdzan.setAlarm(targetWaktu.getTime(), sholat.nama);
+    });
+}
+
+/**
  * Mengambil data asli/murni dari DOM, menyimpan ke dataset raw,
  * lalu menambahkan Ihtiyat ke elemen tampilan di index.html
  */
@@ -75,6 +113,12 @@ function prosesDanTampilkanIhtiyat() {
 
     // Hitung Waktu Dzuhur (Istiwa 12.00 + Ihtiyat = 12:03:00)
     hitungkanKartuDzuhur(ihtiyat);
+
+    // Otomatis kirim/daftarkan alarm ke Android Native setiap ada perubahan waktu
+    kirimJadwalKeAndroidNative();
+	
+	// SINKRONISASI DATA KE WIDGET
+    syncDataToWidget();
 }
 
 /**
@@ -131,7 +175,7 @@ function initFalakEngineHook() {
             // Jalankan perhitungan asli Falak Engine
             originalHitungFalak();
 
-            // Tambahkan ihtiyat ke hasil UI
+            // Tambahkan ihtiyat ke hasil UI & kirim ke Android
             prosesDanTampilkanIhtiyat();
         };
         window.hitungFalak.hasHooked = true;
@@ -217,7 +261,7 @@ function jalankanPengawasAdzanRealtime() {
             if (jamSekarang === waktuSholat && !adzanSudahBunyiHariIni[pemicuKey]) {
                 adzanSudahBunyiHariIni[pemicuKey] = true;
 
-                // 1. Putar Suara Adzan
+                // 1. Putar Suara Adzan (jika aplikasi sedang aktif dibuka)
                 const audioEl = document.getElementById(sholat.audio);
                 if (audioEl) {
                     audioEl.currentTime = 0;
@@ -242,3 +286,44 @@ window.addEventListener('DOMContentLoaded', () => {
     prosesDanTampilkanIhtiyat();
     jalankanPengawasAdzanRealtime();
 });
+
+async function syncDataToWidget() {
+    const getText = (id) => {
+        const el = document.getElementById(id);
+        return el ? el.innerText : '-';
+    };
+
+    const getValue = (id) => {
+        const el = document.getElementById(id);
+        return el ? el.value : '';
+    };
+
+    const now = new Date();
+    const utcString = String(now.getUTCHours()).padStart(2, '0') + ':' + 
+                      String(now.getUTCMinutes()).padStart(2, '0');
+
+    const widgetData = {
+        updatedAt: now.toISOString(),
+        clocks: {
+            utc: utcString,
+            istiwa: getText('liveJamIstiwa')
+        },
+        schedules: {
+            subuh: getText('resSubuhLokal'),
+            dzuhur: getText('resDzuhurLokal'),
+            ashar: getText('resAsrLokal'),
+            maghrib: getText('resMaghribLokal'),
+            isya: getText('resIsyaLokal')
+        }
+    };
+
+    const jsonString = JSON.stringify(widgetData);
+
+    // 1. Simpan di LocalStorage
+    localStorage.setItem('widget_falak_data', jsonString);
+
+    // 2. Kirim LANGSUNG ke Java Android via Jembatan AndroidAdzan
+    if (window.AndroidAdzan && window.AndroidAdzan.updateWidgetData) {
+        window.AndroidAdzan.updateWidgetData(jsonString);
+    }
+}
