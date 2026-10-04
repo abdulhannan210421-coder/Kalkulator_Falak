@@ -2,7 +2,7 @@
 <html lang="id" class="light">
 <head>
   <meta charset="UTF-8">
-	  <!-- TAG ANTI-CACHE -->
+  <!-- TAG ANTI-CACHE -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -66,6 +66,10 @@
 </head>
 <body class="p-2 sm:p-4 md:p-6 pb-20 sm:pb-24 flex flex-col justify-between min-h-screen relative bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
 
+  <!-- AUDIO ADZAN (ELEMEN TERSEMBUNYI) -->
+  <audio id="audioSubuh" src="adzan-subuh.mp3" preload="auto"></audio>
+  <audio id="audioBiasa" src="adzan.mp3" preload="auto"></audio>
+
   <!-- TOAST NOTIFICATION -->
   <div id="toast" class="fixed top-4 right-4 z-50 transform -translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-3.5 py-2.5 rounded-xl shadow-2xl flex items-center gap-2 border border-slate-800 dark:border-slate-200 text-xs font-semibold">
     <span id="toastIcon">✨</span>
@@ -112,7 +116,7 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
           <!-- TANGGAL & BULAN -->
           <div class="space-y-1">
             <label class="text-[11px] font-bold text-slate-700 dark:text-slate-300">Tanggal & Bulan Acuan</label>
@@ -174,6 +178,21 @@
             </div>
           </div>
 
+          <!-- INPUT IHTIYAT & NOTIFIKASI ADZAN -->
+          <div class="space-y-1">
+            <label class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex justify-between">
+              <span>Ihtiyat & Adzan</span>
+              <span class="text-slate-400 font-normal">Menit</span>
+            </label>
+            <div class="flex items-center gap-1.5">
+              <input type="number" id="inputIhtiyat" value="3" min="0" max="15" oninput="prosesDanTampilkanIhtiyat()" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-14 text-center font-bold outline-none" title="Ihtiyat Pengaman Waktu Sholat">
+              
+              <button id="btnToggleAdzan" onclick="toggleAdzanAudio()" class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold py-2 px-2 rounded-xl transition-all outline-none flex items-center justify-center gap-1 shadow-2xs">
+                🔕 Adzan: Mute
+              </button>
+            </div>
+          </div>
+
           <!-- CARI KOTA ONLINE -->
           <div class="space-y-1">
             <label class="text-[11px] font-bold text-slate-700 dark:text-slate-300">Cari Kota On-line</label>
@@ -226,7 +245,7 @@
           <span class="text-[10px] text-slate-400 hidden sm:inline font-medium">Metode Mikyal & Logaritma Bola Presisi</span>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-2">
           <!-- SUBUH -->
           <div id="cardSubuh" class="white-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-2.5 flex flex-col justify-between border-l-4 border-l-indigo-600 relative overflow-hidden">
             <div class="flex justify-between items-center text-slate-600 dark:text-slate-400">
@@ -273,6 +292,22 @@
               </div>
             </div>
             <div class="text-[9px] text-slate-400 font-medium">☀️ Irtifa': 4° 30'</div>
+          </div>
+
+          <!-- DZUHUR -->
+          <div id="cardDzuhur" class="white-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-2.5 flex flex-col justify-between border-l-4 border-l-emerald-500 relative overflow-hidden">
+            <div class="flex justify-between items-center text-slate-600 dark:text-slate-400">
+              <span class="font-extrabold text-[11px] text-emerald-900 dark:text-emerald-400 tracking-wider">DZUHUR</span>
+              <span class="font-arabic text-xs text-emerald-700 dark:text-emerald-300">الظُّهْر</span>
+            </div>
+            <div class="my-1">
+              <div id="resDzuhur" class="text-xl font-black text-slate-900 dark:text-white tracking-tight font-mono-code">12:03:00</div>
+              <div class="text-[9.5px] font-bold text-emerald-600 dark:text-emerald-400 mt-0.5 flex items-center justify-between font-mono-code">
+                <span class="text-slate-400 font-normal">Lokal:</span>
+                <span id="resDzuhurLokal">12:03:00</span>
+              </div>
+            </div>
+            <div class="text-[9px] text-slate-400 font-medium">☀️ Istiwa' + Zawāl</div>
           </div>
 
           <!-- ASAR -->
@@ -782,8 +817,9 @@
 
   <!-- Scripts Loading -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="falak-engine.js?v=3"></script>
-<script src="hilal-module.js?v=3"></script>
+  <script src="falak-engine.js?v=3"></script>
+  <script src="hilal-module.js?v=3"></script>
+  <script src="app-display.js?v=1"></script>
   <script>
     if ('serviceWorker' in navigator && (window.location.protocol === 'http:' || window.location.protocol === 'https:')) {
       window.addEventListener('load', () => {
