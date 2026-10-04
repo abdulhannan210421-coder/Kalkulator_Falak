@@ -1,4 +1,4 @@
-const CACHE_NAME = 'falak-hub-v3'; // BUMP VERSI INI SETIAP KALI UPDATE FITUR!
+const CACHE_NAME = 'falak-hub-v4'; // Bump versi ke v4 agar cache lama langsung dibersihkan
 
 const ASSETS_TO_CACHE = [
   './',
@@ -6,6 +6,9 @@ const ASSETS_TO_CACHE = [
   'tailwind.js',
   'falak-engine.js',
   'hilal-module.js',
+  'app-display.js',     // Berkas tampilan & ihtiyat baru
+  'adzan.mp3',           // Audio adzan umum
+  'adzan-subuh.mp3',     // Audio adzan subuh
   'manifest.json'
 ];
 
