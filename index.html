@@ -100,111 +100,119 @@
     <!-- WADAH TAB 1: KALKULATOR & HASIL -->
     <div id="tabContent1" class="space-y-2.5 sm:space-y-3">
       
-      <!-- PARAMETER PERHITUNGAN -->
-      <section class="white-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3 sm:p-4 space-y-2.5 shadow-2xs">
-        <div class="flex flex-row items-center justify-between gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
-          <h2 class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-            <span>⚙️</span> Parameter Perhitungan
-          </h2>
-          <div class="flex items-center gap-1.5">
-            <button onclick="openMapModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-2xs shrink-0">
-              <span>🗺️</span> Peta
-            </button>
-            <button onclick="getGPSLocation()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-2xs shrink-0">
-              <span>📍</span> GPS
-            </button>
-          </div>
-        </div>
+		<!-- PARAMETER PERHITUNGAN (ACCORDION COLLAPSIBLE) -->
+		<section class="white-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3 sm:p-4 space-y-2.5 shadow-2xs">
+		  <!-- HEADER ACCORDION -->
+		  <div class="flex flex-row items-center justify-between gap-2 pb-2 border-b border-slate-100 dark:border-slate-800 cursor-pointer select-none" onclick="toggleParameterSection(true)">
+			<h2 class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+			  <span>⚙️</span> Parameter Perhitungan
+			</h2>
+			<div class="flex items-center gap-1.5" onclick="event.stopPropagation()">
+			  <button onclick="openMapModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-2xs shrink-0">
+				<span>🗺️</span> Peta
+			  </button>
+			  <button onclick="getGPSLocation()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-2xs shrink-0">
+				<span>📍</span> GPS
+			  </button>
+			  <!-- TOMBOL PANAH ATAS / BAWAH -->
+			  <button onclick="toggleParameterSection(true)" id="btnToggleParam" class="p-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-slate-600 dark:text-slate-300 transition-all shrink-0">
+				<svg id="chevronParamIcon" class="w-4 h-4 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+			  </button>
+			</div>
+		  </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
-          <!-- TANGGAL & BULAN -->
-          <div class="space-y-1">
-            <label class="text-[11px] font-bold text-slate-700 dark:text-slate-300">Tanggal & Bulan Acuan</label>
-            <div class="grid grid-cols-2 gap-1.5">
-              <input type="number" id="tanggal" min="1" max="31" oninput="hitungFalak()" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none w-full text-center font-bold">
-              
-              <select id="bulan" onchange="hitungFalak()" class="custom-select w-full bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl py-2 px-2.5 font-bold outline-none cursor-pointer">
-                <option value="1">Januari</option>
-                <option value="2">Februari</option>
-                <option value="3">Maret</option>
-                <option value="4">April</option>
-                <option value="5">Mei</option>
-                <option value="6">Juni</option>
-                <option value="7">Juli</option>
-                <option value="8">Agustus</option>
-                <option value="9">September</option>
-                <option value="10">Oktober</option>
-                <option value="11">Nopember</option>
-                <option value="12">Desember</option>
-              </select>
-            </div>
-          </div>
+		  <!-- CONTAINER ISI PARAMETER (BISA MENUTUP SECARA MULUS) -->
+		  <div id="paramContentContainer" class="overflow-hidden transition-all duration-500 ease-in-out">
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 pt-1">
+			  <!-- TANGGAL & BULAN -->
+			  <div class="space-y-1">
+				<label class="text-[11px] font-bold text-slate-700 dark:text-slate-300">Tanggal & Bulan Acuan</label>
+				<div class="grid grid-cols-2 gap-1.5">
+				  <input type="number" id="tanggal" min="1" max="31" oninput="hitungFalak()" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none w-full text-center font-bold">
+				  
+				  <select id="bulan" onchange="hitungFalak()" class="custom-select w-full bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl py-2 px-2.5 font-bold outline-none cursor-pointer">
+					<option value="1">Januari</option>
+					<option value="2">Februari</option>
+					<option value="3">Maret</option>
+					<option value="4">April</option>
+					<option value="5">Mei</option>
+					<option value="6">Juni</option>
+					<option value="7">Juli</option>
+					<option value="8">Agustus</option>
+					<option value="9">September</option>
+					<option value="10">Oktober</option>
+					<option value="11">Nopember</option>
+					<option value="12">Desember</option>
+				  </select>
+				</div>
+			  </div>
 
-          <!-- LINTANG TEMPAT -->
-          <div class="space-y-1">
-            <label class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex justify-between">
-              <span>'Ardh Al-Balad (Latitude)</span>
-              <span class="text-slate-400 font-normal">° '</span>
-            </label>
-            <div class="flex items-center gap-1">
-              <input type="number" id="latDeg" value="7" placeholder="°" oninput="hitungFalak()" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-11 text-center font-bold outline-none">
-              <span class="text-slate-400 font-bold text-xs">°</span>
-              <input type="number" id="latMin" value="39" placeholder="'" oninput="hitungFalak()" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-11 text-center font-bold outline-none">
-              <span class="text-slate-400 font-bold text-xs">'</span>
-              
-              <select id="latArah" onchange="hitungFalak()" class="custom-select flex-1 bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl py-2 px-2 font-bold outline-none cursor-pointer">
-                <option value="SELATAN" selected>LS (South)</option>
-                <option value="UTARA">LU (North)</option>
-              </select>
-            </div>
-          </div>
+			  <!-- LINTANG TEMPAT -->
+			  <div class="space-y-1">
+				<label class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex justify-between">
+				  <span>'Ardh Al-Balad (Latitude)</span>
+				  <span class="text-slate-400 font-normal">° '</span>
+				</label>
+				<div class="flex items-center gap-1">
+				  <input type="number" id="latDeg" value="7" placeholder="°" oninput="hitungFalak()" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-11 text-center font-bold outline-none">
+				  <span class="text-slate-400 font-bold text-xs">°</span>
+				  <input type="number" id="latMin" value="39" placeholder="'" oninput="hitungFalak()" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-11 text-center font-bold outline-none">
+				  <span class="text-slate-400 font-bold text-xs">'</span>
+				  
+				  <select id="latArah" onchange="hitungFalak()" class="custom-select flex-1 bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl py-2 px-2 font-bold outline-none cursor-pointer">
+					<option value="SELATAN" selected>LS (South)</option>
+					<option value="UTARA">LU (North)</option>
+				  </select>
+				</div>
+			  </div>
 
-          <!-- BUJUR TEMPAT -->
-          <div class="space-y-1">
-            <label class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex justify-between">
-              <span>Thul Al-Balad (Longitude)</span>
-              <span class="text-slate-400 font-normal">° '</span>
-            </label>
-            <div class="flex items-center gap-1">
-              <input type="number" id="longDeg" value="112" placeholder="°" oninput="hitungFalak()" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-11 text-center font-bold outline-none">
-              <span class="text-slate-400 font-bold text-xs">°</span>
-              <input type="number" id="longMin" value="45" placeholder="'" oninput="hitungFalak()" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-11 text-center font-bold outline-none">
-              <span class="text-slate-400 font-bold text-xs">'</span>
-              
-              <select id="longArah" onchange="hitungFalak()" class="custom-select flex-1 bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl py-2 px-2 font-bold outline-none cursor-pointer">
-                <option value="TIMUR" selected>BT (East)</option>
-                <option value="BARAT">BB (West)</option>
-              </select>
-            </div>
-          </div>
+			  <!-- BUJUR TEMPAT -->
+			  <div class="space-y-1">
+				<label class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex justify-between">
+				  <span>Thul Al-Balad (Longitude)</span>
+				  <span class="text-slate-400 font-normal">° '</span>
+				</label>
+				<div class="flex items-center gap-1">
+				  <input type="number" id="longDeg" value="112" placeholder="°" oninput="hitungFalak()" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-11 text-center font-bold outline-none">
+				  <span class="text-slate-400 font-bold text-xs">°</span>
+				  <input type="number" id="longMin" value="45" placeholder="'" oninput="hitungFalak()" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-11 text-center font-bold outline-none">
+				  <span class="text-slate-400 font-bold text-xs">'</span>
+				  
+				  <select id="longArah" onchange="hitungFalak()" class="custom-select flex-1 bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl py-2 px-2 font-bold outline-none cursor-pointer">
+					<option value="TIMUR" selected>BT (East)</option>
+					<option value="BARAT">BB (West)</option>
+				  </select>
+				</div>
+			  </div>
 
-          <!-- INPUT IHTIYAT & NOTIFIKASI ADZAN -->
-          <div class="space-y-1">
-            <label class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex justify-between">
-              <span>Ihtiyat & Adzan</span>
-              <span class="text-slate-400 font-normal">Menit</span>
-            </label>
-            <div class="flex items-center gap-1.5">
-              <input type="number" id="inputIhtiyat" value="3" min="0" max="15" oninput="prosesDanTampilkanIhtiyat()" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-14 text-center font-bold outline-none" title="Ihtiyat Pengaman Waktu Sholat">
-              
-              <button id="btnToggleAdzan" onclick="toggleAdzanAudio()" class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold py-2 px-2 rounded-xl transition-all outline-none flex items-center justify-center gap-1 shadow-2xs">
-                🔕 Adzan: Mute
-              </button>
-            </div>
-          </div>
+			  <!-- INPUT IHTIYAT & NOTIFIKASI ADZAN -->
+			  <div class="space-y-1">
+				<label class="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex justify-between">
+				  <span>Ihtiyat & Adzan</span>
+				  <span class="text-slate-400 font-normal">Menit</span>
+				</label>
+				<div class="flex items-center gap-1.5">
+				  <input type="number" id="inputIhtiyat" value="3" min="0" max="15" oninput="prosesDanTampilkanIhtiyat()" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 w-14 text-center font-bold outline-none" title="Ihtiyat Pengaman Waktu Sholat">
+				  
+				  <button id="btnToggleAdzan" onclick="toggleAdzanAudio()" class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold py-2 px-2 rounded-xl transition-all outline-none flex items-center justify-center gap-1 shadow-2xs">
+					🔕 Adzan: Mute
+				  </button>
+				</div>
+			  </div>
 
-          <!-- CARI KOTA ONLINE -->
-          <div class="space-y-1">
-            <label class="text-[11px] font-bold text-slate-700 dark:text-slate-300">Cari Kota On-line</label>
-            <div class="flex gap-1">
-              <input type="text" id="searchKotaInput" onkeypress="if(event.key==='Enter') cariKotaInternet()" placeholder="mis: pasuruan, jawa timur" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 flex-1 font-semibold outline-none">
-              <button onclick="cariKotaInternet()" class="bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 text-white text-xs font-bold px-3 py-2 rounded-xl transition-all shrink-0">
-                🔍 Cari
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+			  <!-- CARI KOTA ONLINE -->
+			  <div class="space-y-1">
+				<label class="text-[11px] font-bold text-slate-700 dark:text-slate-300">Cari Kota On-line</label>
+				<div class="flex gap-1">
+				  <input type="text" id="searchKotaInput" onkeypress="if(event.key==='Enter') cariKotaInternet()" placeholder="mis: pasuruan, jawa timur" class="bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white text-xs rounded-xl p-2 flex-1 font-semibold outline-none">
+				  <button onclick="cariKotaInternet()" class="bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 text-white text-xs font-bold px-3 py-2 rounded-xl transition-all shrink-0">
+					🔍 Cari
+				  </button>
+				</div>
+			  </div>
+			</div>
+		  </div>
+		</section>
 
       <!-- WIDGET JAM ISTIWA' & LOKAL REAL-TIME -->
       <section class="white-card bg-gradient-to-r from-amber-500/10 via-indigo-500/5 to-transparent border border-amber-300 dark:border-amber-800/60 p-2.5 sm:p-3 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-3 shadow-2xs">
@@ -652,6 +660,32 @@
           </div>
         </button>
       </div>
+	  <!-- OPSI SAKELAR NOTIFIKASI BILAH STATUS -->
+		<div class="p-3 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl flex items-center justify-between transition-all">
+		  <div class="flex items-center gap-3">
+			<span class="text-2xl">🔔</span>
+			<div>
+			  <div class="text-xs font-bold text-slate-900 dark:text-white">Notifikasi Bilah Status</div>
+			  <div class="text-[10px] text-slate-500 dark:text-slate-400">Jam Istiwa real-time di atas layar</div>
+			</div>
+		  </div>
+		  <button id="btnToggleNotifService" onclick="togglePersistentNotif()" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded-xl transition-all shadow-xs shrink-0">
+			✅ Aktif
+		  </button>
+		</div>
+		<!-- OPSI SAKELAR LONCENG JAM (3 JAMAN) -->
+		<div class="p-3 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl flex items-center justify-between transition-all">
+		  <div class="flex items-center gap-3">
+			<span class="text-2xl">⏰</span>
+			<div>
+			  <div class="text-xs font-bold text-slate-900 dark:text-white">Lonceng Jam Kelipatan 3</div>
+			  <div class="text-[10px] text-slate-500 dark:text-slate-400">Bunyi setiap 3 jam</div>
+			</div>
+		  </div>
+		  <button id="btnToggleChime" onclick="toggleChime()" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded-xl transition-all shadow-xs shrink-0">
+			🔔 Lonceng: Aktif
+		  </button>
+		</div>
     </div>
   </div>
 
@@ -1042,5 +1076,25 @@
       renderModernSelects();
     });
   </script>
+  <!-- Pop-up Melayang Kontrol Audio Adzan -->
+<div id="modalAdzanControl" class="fixed top-4 left-4 right-4 z-50 hidden bg-slate-900/95 text-white p-4 rounded-2xl shadow-2xl border border-emerald-500/30 backdrop-blur-md">
+    <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2">
+            <span class="text-2xl">🕌</span>
+            <div>
+                <h4 class="font-bold text-sm text-emerald-400" id="adzanTitle">Adzan Berkumandang</h4>
+                <p class="text-xs text-slate-300">Waktu sholat telah tiba</p>
+            </div>
+        </div>
+    </div>
+    <div class="flex gap-2">
+        <button onclick="hentikanAdzan()" class="flex-1 py-2 px-3 bg-red-600 hover:bg-red-700 text-white font-semibold text-xs rounded-xl transition-all shadow">
+            🛑 Hentikan Adzan
+        </button>
+        <button onclick="kecilkanVolumeAdzan()" class="flex-1 py-2 px-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs rounded-xl transition-all shadow">
+            🔉 Volume 10%
+        </button>
+    </div>
+</div>
 </body>
 </html>
