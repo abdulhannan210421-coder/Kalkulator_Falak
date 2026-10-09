@@ -346,12 +346,18 @@ async function syncDataToWidget() {
     };
 
     const now = new Date();
+    // Gunakan tanggal lokal YYYY-MM-DD agar sinkron dengan Java/Kotlin
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const localDateISO = `${yyyy}-${mm}-${dd}T${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+
     const liveJamIstiwaStr = getText('liveJamIstiwa'); 
 
     let istiwaOffsetMs = 0;
     let selisihMenit = 0;
     if (liveJamIstiwaStr && liveJamIstiwaStr !== '00:00:00' && liveJamIstiwaStr !== '-') {
-        const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+        const dateStr = `${yyyy}-${mm}-${dd}`;
         
         const istiwaDate = new Date(`${dateStr}T${liveJamIstiwaStr}`);
         const hpLocalDate = new Date(`${dateStr}T${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`);
@@ -365,8 +371,8 @@ async function syncDataToWidget() {
     const selisihFormatted = (selisihMenit >= 0 ? "+" : "") + selisihMenit + "m";
 
     const widgetData = {
-        updatedAt: now.toISOString(),
-        tanggalHijri: getTodayHijriFormatted(), // <- PROPERTI BARU DITERUSKAN KE WIDGET
+        updatedAt: localDateISO, // <-- MENGGUNAKAN TANGGAL LOKAL HP
+        tanggalHijri: getTodayHijriFormatted(),
         istiwaOffsetMs: istiwaOffsetMs,
         selisih: selisihFormatted,
         schedules: {
