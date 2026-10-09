@@ -9,6 +9,12 @@ let adzanSudahBunyiHariIni = {};
 let dzuhurLokalTerakhir = ""; 
 let isParamOpen = true;
 
+const DAFTAR_INPUT_PENGATURAN = [
+    'latDeg', 'latMin', 'latArah',
+    'longDeg', 'longMin', 'longArah',
+    'elevasi', 'inputIhtiyat', 'selectKriteriaImkan'
+];
+
 function tambahIhtiyat(waktuStr, menitIhtiyat) {
     if (!waktuStr || waktuStr === '-' || waktuStr === '00:00:00') return waktuStr;
 
@@ -35,7 +41,6 @@ function kirimJadwalKeAndroidNative() {
 
     const getText = (id) => {
         const el = document.getElementById(id);
-        // Jangan potong substring(0, 5), ambil string waktu utuh (HH:mm:ss)
         return (el && el.innerText && el.innerText !== '00:00:00' && el.innerText !== '-') ? el.innerText.trim() : '';
     };
 
@@ -60,11 +65,11 @@ function kirimJadwalKeAndroidNative() {
         if (parts.length >= 2) {
             const jam = parseInt(parts[0], 10);
             const menit = parseInt(parts[1], 10);
-            const detik = parts[2] ? parseInt(parts[2], 10) : 0; // Ambil nilai detik jika ada
+            const detik = parts[2] ? parseInt(parts[2], 10) : 0;
 
             if (!isNaN(jam) && !isNaN(menit)) {
                 let targetWaktu = new Date();
-                targetWaktu.setHours(jam, menit, detik, 0); // Masukkan nilai detik presisi
+                targetWaktu.setHours(jam, menit, detik, 0);
 
                 if (targetWaktu.getTime() <= Date.now()) {
                     targetWaktu.setDate(targetWaktu.getDate() + 1);
@@ -322,12 +327,63 @@ function jalankanPengawasAdzanRealtime() {
     // Pengawas adzan sepenuhnya ditangani oleh AlarmManager Native
 }
 
+function saveAllSettingsToLocalStorage() {
+    DAFTAR_INPUT_PENGATURAN.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            localStorage.setItem(`pref_${id}`, el.value);
+        }
+    });
+}
+
+function loadAllSettingsFromLocalStorage() {
+    DAFTAR_INPUT_PENGATURAN.forEach(id => {
+        const el = document.getElementById(id);
+        const savedValue = localStorage.getItem(`pref_${id}`);
+        if (el && savedValue !== null) {
+            el.value = savedValue;
+        }
+    });
+}
+
+function initAutoSaveListeners() {
+    DAFTAR_INPUT_PENGATURAN.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('change', () => {
+                saveAllSettingsToLocalStorage();
+                if (typeof window.hitungFalak === 'function') {
+                    window.hitungFalak(); // Hitung ulang astronomis koordinat baru
+                } else {
+                    prosesDanTampilkanIhtiyat();
+                }
+            });
+            el.addEventListener('input', () => {
+                saveAllSettingsToLocalStorage();
+            });
+        }
+    });
+}
+
 window.addEventListener('DOMContentLoaded', () => {
+    // 1. Muat pengaturan tersimpan TERLEBIH DAHULU agar input HTML terisi
+    loadAllSettingsFromLocalStorage();
+    initAutoSaveListeners();
+
+    // 2. Pasang hook engine
     initFalakEngineHook();
-    prosesDanTampilkanIhtiyat();
+
+    // 3. Jalankan rumus falak utama jika tersedia
+    if (typeof window.hitungFalak === 'function') {
+        window.hitungFalak();
+    } else {
+        prosesDanTampilkanIhtiyat();
+    }
+
+    // 4. Muat status adzan dan notifikasi
     loadAdzanState();
     loadNotifServiceState();
-	loadChimeState();
+    loadChimeState();
     jalankanPengawasAdzanRealtime();
 
     const container = document.getElementById('paramContentContainer');
@@ -346,7 +402,6 @@ async function syncDataToWidget() {
     };
 
     const now = new Date();
-    // Gunakan tanggal lokal YYYY-MM-DD agar sinkron dengan Java/Kotlin
     const yyyy = now.getFullYear();
     const mm = String(now.getMonth() + 1).padStart(2, '0');
     const dd = String(now.getDate()).padStart(2, '0');
@@ -371,7 +426,7 @@ async function syncDataToWidget() {
     const selisihFormatted = (selisihMenit >= 0 ? "+" : "") + selisihMenit + "m";
 
     const widgetData = {
-        updatedAt: localDateISO, // <-- MENGGUNAKAN TANGGAL LOKAL HP
+        updatedAt: localDateISO,
         tanggalHijri: getTodayHijriFormatted(),
         istiwaOffsetMs: istiwaOffsetMs,
         selisih: selisihFormatted,
@@ -533,7 +588,6 @@ function getTodayHijriFormatted() {
     const gMonth = now.getMonth() + 1;
     const gDay = now.getDate();
 
-    // 1. Ambil Hari & Pasaran
     let hariIdx = now.getDay();
     let pasaranIdx = 0;
     if (typeof getHariPasaran === 'function') {
@@ -545,7 +599,6 @@ function getTodayHijriFormatted() {
     const namaHari = (typeof NAMA_HARI !== 'undefined' && NAMA_HARI[hariIdx]) ? NAMA_HARI[hariIdx] : "Ahad";
     const namaPasaran = (typeof NAMA_PASARAN !== 'undefined' && NAMA_PASARAN[pasaranIdx]) ? NAMA_PASARAN[pasaranIdx] : "Legi";
 
-    // 2. Kalkulasi Tanggal Hijriah Presisi Sesuai Kriteria Aktif
     let dHijri = 1, mHijri = 0, yHijri = 1448;
     try {
         const cur = (typeof getCurrentHijriDate === 'function') ? getCurrentHijriDate() : { yHijri: 1448, mHijri: 0 };
